@@ -1,0 +1,11 @@
+package it.algos.@LOWERPROGETTO@.@LOWERNAME@;
+
+import it.algos.webbase.web.entity.BaseEntity_;
+
+import javax.persistence.metamodel.SingularAttribute;
+import javax.persistence.metamodel.StaticMetamodel;
+
+@StaticMetamodel(@NAME@.class)
+public class @NAME@_ extends BaseEntity_ {
+	public static volatile SingularAttribute<@NAME@, String> nome;
+}// end of entity class

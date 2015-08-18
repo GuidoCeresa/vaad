@@ -1,0 +1,98 @@
+package it.algos.@LOWERPROGETTO@.@LOWERNAME@;
+
+import it.algos.vaad.ui.AlgosModulePop;
+
+import javax.persistence.metamodel.Attribute;
+
+@SuppressWarnings("serial")
+public class @NAME@Mod extends AlgosModulePop {
+
+    // indirizzo interno del modulo (serve nei menu)
+    public static String MENU_ADDRESS="@NAME@";
+
+    public @NAME@Mod() {
+        super(@NAME@.class, MENU_ADDRESS);
+    }// end of constructor
+
+    /**
+     * Titolo (caption) dei dialogo nuovo record. <br>
+     * Come default usa il titolo standard <br>
+     * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
+     */
+    @Override
+    protected String getCaptionNew() {
+        return "Nuovo @LOWERNAME@";
+    }// end of method
+
+    /**
+     * Titolo (caption) dei dialogo di modifica. <br>
+     * Come default usa il titolo standard <br>
+     * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
+     */
+    @Override
+    protected String getCaptionEdit() {
+        return "Modifica @LOWERNAME@";
+    }// end of method
+
+    /**
+     * Titolo (caption) dei dialogo di ricerca. <br>
+     * Come default usa il titolo standard <br>
+     * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
+     */
+    @Override
+    protected String getCaptionSearch() {
+        return "Ricerca @LOWERNAME@";
+    }// end of method
+
+     /**
+      * Crea i campi visibili nella lista (table)
+      * <p>
+      * Come default spazzola tutti i campi della Entity <br>
+      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
+      * Serve anche per l'ordine con cui vengono presentati i campi nella lista <br>
+      */
+     @Override
+     protected Attribute<?, ?>[] creaFieldsList() {
+         return super.creaFieldsList();
+     }// end of method
+
+     /**
+      * Crea i campi visibili nella scheda (form)
+      * <p>
+      * Come default spazzola tutti i campi della Entity <br>
+      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
+      * Serve anche per l'ordine con cui vengono presentati i campi nella scheda <br>
+      */
+     @Override
+     protected Attribute<?, ?>[] creaFieldsForm() {
+         return super.creaFieldsForm();
+     }// end of method
+
+     /**
+      * Crea i campi visibili nella scheda (search)
+      * <p>
+      * Come default spazzola tutti i campi della Entity <br>
+      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
+      * Serve anche per l'ordine con cui vengono presentati i campi nella scheda <br>
+      */
+     @Override
+     protected Attribute<?, ?>[] creaFieldsSearch() {
+         return super.creaFieldsSearch();
+     }// end of method
+
+    /**
+     * Crea i campi visibili
+     * <p>
+     * Come default spazzola tutti i campi della Entity <br>
+     * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
+     * Non garantiscel'ordine con cui vengono presentati i campi nella scheda <br>
+     * Può mostrare anche il campo ID, oppure no <br>
+     * Se si vuole differenziare tra Table, Form e Search, <br>
+     * sovrascrivere creaFieldsList, creaFieldsForm e creaFieldsSearch <br>
+     */
+    @Override
+    protected Attribute<?, ?>[] creaFieldsAll() {
+        return new Attribute[]{@NAME@_.nome};
+    }// end of method/*
+
+}// end of class

@@ -1,0 +1,118 @@
+package it.algos.@LOWERPROGETTO@.@LOWERNAME@;
+
+import it.algos.webbase.web.entity.BaseEntity;
+import it.algos.webbase.web.query.AQuery;
+import org.apache.commons.beanutils.BeanUtils;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.persistence.Entity;
+import java.util.ArrayList;
+
+/**
+ * Classe di tipo JavaBean
+ * <p>
+ * 1) la classe deve avere un costruttore senza argomenti
+ * 2) le proprietà devono essere private e accessibili solo con get, set e is (usato per i boolenai al posto di get)
+ * 3) la classe deve implementare l'interfaccia Serializable (la fa nella superclasse)
+ * 4) la classe non deve contenere nessun metodo per la gestione degli eventi
+ */
+@Entity
+public class @NAME@ extends BaseEntity {
+
+	@NotEmpty
+	private String nome = "";
+
+    /**
+     * Costruttore senza argomenti
+     * Necessario per le specifiche JavaBean
+     */
+	public @NAME@() {
+		this("");
+    }// end of nullary constructor
+
+	public @NAME@(String nome) {
+		super();
+		this.setNome(nome);
+	}// end of constructor
+
+	/**
+	 * Recupera una istanza di @NAME@ usando la query specifica
+	 *
+	 * @return istanza di @NAME@, null se non trovata
+	 */
+	public static @NAME@ find(long id) {
+		@NAME@ instance = null;
+		BaseEntity entity = AQuery.queryById(@NAME@.class, id);
+
+		if (entity != null) {
+			if (entity instanceof @NAME@) {
+				instance = (@NAME@) entity;
+			}// end of if cycle
+		}// end of if cycle
+
+		return instance;
+	}// end of method
+
+	/**
+	 * Recupera una istanza di @NAME@ usando la query specifica
+	 *
+	 * @return istanza di @NAME@, null se non trovata
+	 */
+	public static @NAME@ find(String nome) {
+		@NAME@ instance = null;
+		BaseEntity entity = AQuery.queryOne(@NAME@.class, @NAME@_.nome, nome);
+
+		if (entity != null) {
+			if (entity instanceof @NAME@) {
+				instance = (@NAME@) entity;
+			}// end of if cycle
+		}// end of if cycle
+
+		return instance;
+	}// end of method
+
+    public synchronized static int count() {
+        int totRec = 0;
+        long totTmp = AQuery.getCount(@NAME@.class);
+
+        if (totTmp > 0) {
+            totRec = (int) totTmp;
+        }// fine del blocco if
+
+        return totRec;
+    }// end of method
+
+    public synchronized static ArrayList<@NAME@> findAll() {
+        return (ArrayList<@NAME@>) AQuery.getList(@NAME@.class);
+    }// end of method
+
+    @Override
+    public String toString() {
+        return nome;
+    }// end of method
+
+    /**
+     * @return the nome
+     */
+    public String getNome() {
+        return nome;
+    }// end of getter method
+
+    /**
+     * @param nome the nome to set
+     */
+    public void setNome(String nome) {
+        this.nome = nome;
+    }// end of setter method
+
+
+    @Override
+    public Bolla clone() throws CloneNotSupportedException {
+        try {
+            return (Bolla) BeanUtils.cloneBean(this);
+        } catch (Exception ex) {
+            throw new CloneNotSupportedException();
+        }// fine del blocco try-catch
+    }// end of method
+
+}// end of domain class

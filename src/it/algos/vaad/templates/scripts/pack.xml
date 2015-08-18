@@ -1,0 +1,235 @@
+<?xml version="1.0"?>
+<project name="pack" basedir="." default="newonly">
+    <property name="boot" value="BootStrap"/>
+    <property name="servlet" value="Servlet"/>
+    <property name="ui" value="UI"/>
+    <property name="app" value="App"/>
+    <property name="persistence" value="persistence"/>
+    <property name="web" value="web"/>
+    <property name="addons" value="addons"/>
+    <property name="theme" value="algos"/>
+    <property name="styles" value="styles"/>
+
+    <property name="risalita" value="/../../../../../../.."/>
+    <property name="discesa" value="/src/it/algos/"/>
+    <property name="discesaMeta" value="/src/META-INF/"/>
+    <property name="discesaWeb" value="/web/WEB-INF/"/>
+    <property name="discesaThemes" value="/vaadin/themes/"/>
+
+    <property name="baseSrc" value="${basedir}/.."/>
+    <property name="srcDir" value="${baseSrc}/sources"/>
+    <property name="srcSuffix" value=".txt"/>
+    <property name="destSufJava" value=".java"/>
+    <property name="destSufXml" value=".xml"/>
+    <property name="destSufScss" value=".scss"/>
+    <property name="srcBoot" value="${srcDir}/${boot}${srcSuffix}"/>
+    <property name="srcServlet" value="${srcDir}/${servlet}${srcSuffix}"/>
+    <property name="srcUI" value="${srcDir}/${ui}${srcSuffix}"/>
+    <property name="srcApp" value="${srcDir}/${app}${srcSuffix}"/>
+    <property name="srcPersistence" value="${srcDir}/${persistence}${srcSuffix}"/>
+    <property name="srcWeb" value="${srcDir}/${web}${srcSuffix}"/>
+    <property name="srcAddons" value="${srcDir}/${addons}${srcSuffix}"/>
+    <property name="srcTheme" value="${srcDir}/${theme}${srcSuffix}"/>
+    <property name="srcStyles" value="${srcDir}/${styles}${srcSuffix}"/>
+
+    <property name="baseDest" value="${basedir}${risalita}"/>
+
+    <target name="input" description="Acquisizione del nome del progetto in cui creare le nuove classi">
+        <input addproperty="pack" message="Nome (maiuscolo) del nuovo progetto:" defaultvalue="Prova"/>
+        <input addproperty="sqlUnit" message="Unit per legare persistence ed entity:" defaultvalue="MySqlUnit"/>
+        <input addproperty="dataBase" message="Nome (minuscolo) del database mysql:" defaultvalue="test"/>
+        <!--<input addproperty="modulo" message="Nome (maiuscolo) del primo modulo:" defaultvalue="Bolla"/>-->
+        <lower string="${pack}" to="lowerPack"/>
+        <lower string="${sqlUnit}" to="lowerSqlUnit"/>
+        <lower string="${dataBase}" to="lowerDataBase"/>
+        <lower string="${modulo}" to="lowerModulo"/>
+
+        <property name="destDir" value="${baseDest}/${lowerPack}"/>
+        <property name="destDirIt" value="${baseDest}/${lowerPack}${discesa}${lowerPack}"/>
+        <property name="destDirMeta" value="${baseDest}/${lowerPack}${discesaMeta}"/>
+        <property name="destDirThemses" value="${baseDest}/${lowerPack}${discesaThemes}/${theme}"/>
+        <property name="destBoot" value="${destDirIt}/${pack}${boot}${destSufJava}"/>
+        <property name="destServlet" value="${destDirIt}/${pack}${servlet}${destSufJava}"/>
+        <property name="destUI" value="${destDirIt}/${pack}${ui}${destSufJava}"/>
+        <property name="destApp" value="${destDirIt}/${pack}${app}${destSufJava}"/>
+        <property name="destPersistence" value="${destDirMeta}/${persistence}${destSufXml}"/>
+        <property name="destWeb" value="${destDir}/${discesaWeb}${web}${destSufXml}"/>
+        <property name="destAddons" value="${destDirThemses}/${addons}${destSufScss}"/>
+        <property name="destTheme" value="${destDirThemses}/${theme}${destSufScss}"/>
+        <property name="destStyles" value="${destDirThemses}/${styles}${destSufScss}"/>
+
+        <!--<antcall target="creaPrimoModulo">-->
+        <!--</antcall>-->
+    </target>
+
+    <!--<target name="creaPrimoModulo" description="Creazione del primo modulo">-->
+    <!--<echo message="modulo=${basedir}/modulo.xml"/>-->
+    <!--<ant antfile="modulo.xml" dir="${basedir}" />-->
+    <!--&lt;!&ndash;<condition>&ndash;&gt;-->
+    <!--&lt;!&ndash;<equals arg1="${modulo}" arg2=""/>&ndash;&gt;-->
+    <!--&lt;!&ndash;</condition>&ndash;&gt;-->
+    <!--<echo message="modulo=${modulo}"/>-->
+    <!--<echo message="lowerModulo=${lowerModulo}"/>-->
+    <!--</target>-->
+
+
+    <target name="deleteSingoloFile" depends="input" description="Cancella il singolo file passato come parametro">
+        <delete file="${destFile}" quiet="false"/>
+
+        <echo message="destFile=${destFile}"/>
+    </target>
+
+
+    <target name="creaSingoloFile" description="Copia il singolo file passato come parametro">
+        <copy file="${sourceFile}" tofile="${destFile}" overwrite="false">
+            <filterset>
+                <filter token="PACK" value="${pack}"/>
+                <filter token="LOWERPACK" value="${lowerPack}"/>
+                <filter token="SQLUNIT" value="${lowerSqlUnit}"/>
+                <filter token="DATABASE" value="${lowerDataBase}"/>
+            </filterset>
+        </copy>
+
+        <echo message="sourceFile=${sourceFile}"/>
+        <echo message="destFile=${destFile}"/>
+    </target>
+
+    <target name="sovrascriveSingoloFile" description="Sovrascrive il singolo file passato come parametro">
+        <antcall target="deleteSingoloFile">
+            <param name="destFile" value="${destFile}"/>
+        </antcall>
+
+        <antcall target="creaSingoloFile">
+            <param name="sourceFile" value="${sourceFile}"/>
+            <param name="destFile" value="${destFile}"/>
+        </antcall>
+
+        <echo message="sourceFile=${sourceFile}"/>
+        <echo message="destFile=${destFile}"/>
+    </target>
+
+    <target name="crea" depends="input" description="Copia tutti i files">
+        <antcall target="creaSingoloFile">
+            <param name="sourceFile" value="${srcBoot}"/>
+            <param name="destFile" value="${destBoot}"/>
+        </antcall>
+        <antcall target="creaSingoloFile">
+            <param name="sourceFile" value="${srcServlet}"/>
+            <param name="destFile" value="${destServlet}"/>
+        </antcall>
+        <antcall target="creaSingoloFile">
+            <param name="sourceFile" value="${srcUI}"/>
+            <param name="destFile" value="${destUI}"/>
+        </antcall>
+        <antcall target="creaSingoloFile">
+            <param name="sourceFile" value="${srcApp}"/>
+            <param name="destFile" value="${destApp}"/>
+        </antcall>
+        <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcPersistence}"/>
+            <param name="destFile" value="${destPersistence}"/>
+        </antcall>
+        <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcWeb}"/>
+            <param name="destFile" value="${destWeb}"/>
+        </antcall>
+
+        <antcall target="creaSingoloFile">
+            <param name="sourceFile" value="${srcAddons}"/>
+            <param name="destFile" value="${destAddons}"/>
+        </antcall>
+        <antcall target="creaSingoloFile">
+            <param name="sourceFile" value="${srcTheme}"/>
+            <param name="destFile" value="${destTheme}"/>
+        </antcall>
+        <antcall target="creaSingoloFile">
+            <param name="sourceFile" value="${srcStyles}"/>
+            <param name="destFile" value="${destStyles}"/>
+        </antcall>
+    </target>
+
+    <target name="sovrascrive" depends="input" description="Sovrascrive tutti i files">
+        <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcBoot}"/>
+            <param name="destFile" value="${destBoot}"/>
+        </antcall>
+        <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcServlet}"/>
+            <param name="destFile" value="${destServlet}"/>
+        </antcall>
+        <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcUI}"/>
+            <param name="destFile" value="${destUI}"/>
+        </antcall>
+        <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcApp}"/>
+            <param name="destFile" value="${destApp}"/>
+        </antcall>
+        <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcPersistence}"/>
+            <param name="destFile" value="${destPersistence}"/>
+        </antcall>
+        <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcWeb}"/>
+            <param name="destFile" value="${destWeb}"/>
+        </antcall>
+
+        <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcAddons}"/>
+            <param name="destFile" value="${destAddons}"/>
+        </antcall>
+        <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcTheme}"/>
+            <param name="destFile" value="${destTheme}"/>
+        </antcall>
+        <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcStyles}"/>
+            <param name="destFile" value="${destStyles}"/>
+        </antcall>
+    </target>
+
+    <!-- Using Javascript functions to convert the string -->
+    <!-- To lower case -->
+    <scriptdef language="javascript" name="lower">
+        <attribute name="string"/>
+        <attribute name="to"/>
+        project.setProperty(attributes.get("to"),attributes.get("string").toLowerCase());
+    </scriptdef>
+
+    <target name="messaggi" depends="input" description="Messaggi coi parametri">
+        <echo message="basedir: ${basedir}"/>
+        <echo message="baseSrc: ${baseSrc}"/>
+        <echo message="srcDir: ${srcDir}"/>
+        <echo message="baseDest: ${baseDest}"/>
+
+        <echo message=""/>
+
+        <echo message="destDir: ${destDir}"/>
+
+        <echo message=""/>
+
+        <echo message="pack: ${pack}"/>
+        <echo message="lowerPack: ${lowerPack}"/>
+        <echo message="sqlUnit: ${sqlUnit}"/>
+        <echo message="dataBase: ${dataBase}"/>
+        <echo message="lowerDataBase: ${lowerDataBase}"/>
+        <echo message="destDir: ${destDir}"/>
+        <echo message="destBoot: ${destBoot}"/>
+        <echo message="destServlet: ${destServlet}"/>
+        <echo message="destUI: ${destUI}"/>
+        <echo message="destPersistence: ${destPersistence}"/>
+        <echo message="pack: ${pack}"/>
+    </target>
+
+    <target name="debug" depends="messaggi" description="Controllo parametri">
+    </target>
+
+
+    <target name="newonly" depends="crea" description="Ciclo completo. Crea i file SOLO se non ci sono">
+    </target>
+
+    <target name="overwrite" depends="sovrascrive" description="Ciclo completo. Sovrascrive i files esistenti">
+    </target>
+
+
+</project>

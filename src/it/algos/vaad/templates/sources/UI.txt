@@ -1,0 +1,37 @@
+package it.algos.@LOWERPACK@;
+
+import com.vaadin.annotations.Theme;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
+import it.algos.vaad.ui.VaadAlgosUI;
+import it.algos.webbase.domain.versione.VersioneModulo;
+import it.algos.webbase.web.lib.LibPath;
+import it.algos.webbase.web.module.ModulePop;
+
+@Theme("valo")
+public class @PACK@UI extends VaadAlgosUI {
+
+    private ModulePop moduloPartenza;
+
+    /**
+     * Crea i menu specifici
+     * Sovrascritto nella sottoclasse
+     */
+    @Override
+    protected void addAllModuli() {
+        moduloPartenza = new VersioneModulo();
+        this.addModulo(moduloPartenza);
+    }// end of method
+
+    /**
+     * Modulo da visualizzare alla partenza
+     * Sovrascritto nella sottoclasse
+     */
+    @Override
+    protected String startModulo() {
+        return LibPath.getClassName(moduloPartenza);
+    }// end of method
+    
+}//end of UI class
+

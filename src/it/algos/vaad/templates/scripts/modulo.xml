@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<project name="modulo" basedir="." default="minimo">
+
+    <property name="srcDomainTag" value="Domain"/>
+    <property name="srcEntityTag" value="Entity"/>
+    <!--<property name="srcModuloTag" value="Modulo"/>-->
+    <property name="persistenceTag" value="persistence"/>
+
+    <property name="destDomainTag" value=""/>
+    <property name="destEntityTag" value="_"/>
+    <property name="destModuloTag" value="Mod"/>
+
+    <property name="risalita" value="/../../../../../../.."/>
+    <property name="discesa" value="/src/it/algos/"/>
+
+    <property name="baseSrc" value="${basedir}/.."/>
+    <property name="srcDir" value="${baseSrc}/sources"/>
+    <property name="srcSuffix" value=".txt"/>
+    <property name="destSuffix" value=".java"/>
+    <property name="srcDomain" value="${srcDir}/${srcDomainTag}${srcSuffix}"/>
+    <property name="srcEntity" value="${srcDir}/${srcEntityTag}${srcSuffix}"/>
+
+    <property name="baseDest" value="${basedir}${risalita}"/>
+
+
+    <target name="input" description="Acquisizione del nome del progetto e del modulo da creare">
+        <input addproperty="progetto" message="Nome (maiuscolo) del progetto di riferimento:" defaultvalue="Prova"/>
+        <input addproperty="pack" message="Nome (maiuscolo) del nuovo package:" defaultvalue="Bolla"/>
+        <lower string="${progetto}" to="lowerProgetto"/>
+        <lower string="${pack}" to="lowerPack"/>
+
+        <property name="destDir" value="${baseDest}/${lowerProgetto}${discesa}${lowerProgetto}/${lowerPack}"/>
+        <property name="destDomain" value="${destDir}/${pack}${destDomainTag}${destSuffix}"/>
+        <property name="destEntity" value="${destDir}/${pack}${destEntityTag}${destSuffix}"/>
+        <property name="destModulo" value="${destDir}/${pack}${destModuloTag}${destSuffix}"/>
+        <property name="destPersistence" value="${destDir}/${persistenceTag}${destSufXml}"/>
+    </target>
+
+    <target name="clean" depends="input" description="Cancella il file">
+        <delete file="${destDomain}" quiet="false"/>
+        <delete file="${destEntity}" quiet="false"/>
+        <delete file="${destModulo}" quiet="false"/>
+    </target>
+
+    <target name="copy" depends="clean" description="Copia il file">
+        <copy file="${srcDomain}" tofile="${destDomain}" overwrite="false">
+            <filterset>
+                <filter token="LOWERPROGETTO" value="${lowerProgetto}"/>
+                <filter token="LOWERNAME" value="${lowerPack}"/>
+                <filter token="NAME" value="${pack}"/>
+            </filterset>
+        </copy>
+
+        <copy file="${srcEntity}" tofile="${destEntity}" overwrite="false">
+            <filterset>
+                <filter token="LOWERPROGETTO" value="${lowerProgetto}"/>
+                <filter token="LOWERNAME" value="${lowerPack}"/>
+                <filter token="NAME" value="${pack}"/>
+            </filterset>
+        </copy>
+
+        <copy file="${srcModulo}" tofile="${destModulo}" overwrite="false">
+            <filterset>
+                <filter token="LOWERPROGETTO" value="${lowerProgetto}"/>
+                <filter token="LOWERNAME" value="${lowerPack}"/>
+                <filter token="NAME" value="${pack}"/>
+            </filterset>
+        </copy>
+
+        <!--<copy file="${destPersistence}" tofile="${destPersistence}" overwrite="true">-->
+        <!--<filterchain>-->
+        <!--<replacetokens>-->
+        <!--<token key="<class>it.algos.web.entity.BaseEntity</class>" value="PIPPOZ"/>-->
+        <!--</replacetokens>-->
+        <!--</filterchain>-->
+        <!--</copy>-->
+
+        <!--<loadresource property="${destPersistence}">-->
+        <!--<propertyresource name="${destPersistence}"/>-->
+        <!--<filterchain>-->
+        <!--<tokenfilter>-->
+        <!--<filetokenizer/>-->
+        <!--<replacestring from="${test}" to="it.algos.web.entity.BaseEntityPIPPOZ"/>-->
+        <!--</tokenfilter>-->
+        <!--</filterchain>-->
+        <!--</loadresource>-->
+    </target>
+
+    <!-- Using Javascript functions to convert the string -->
+    <!-- To lower case -->
+    <scriptdef language="javascript" name="lower">
+        <attribute name="string"/>
+        <attribute name="to"/>
+        project.setProperty(attributes.get("to"),attributes.get("string").toLowerCase());
+    </scriptdef>
+
+
+    <target name="minimo"  description="Ciclo completo">
+        <property name="srcModuloTag" value="ModMin"/>
+        <property name="srcModulo" value="${srcDir}/${srcModuloTag}${srcSuffix}"/>
+        <antcall target="copy">
+        </antcall>
+    </target>
+
+    <target name="all"  description="Ciclo completo">
+        <property name="srcModuloTag" value="ModMax"/>
+        <property name="srcModulo" value="${srcDir}/${srcModuloTag}${srcSuffix}"/>
+        <antcall target="copy">
+        </antcall>
+    </target>
+
+</project>
