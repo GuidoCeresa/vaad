@@ -18,25 +18,26 @@ public class Wiki extends BaseEntity {
     /** nomi interni dei campi (ordine non garantito) */
     //--parametri wiki base
     private int pageid;
-    private String title;
     private int ns;
+    private String title;
 
     //--parametri wiki info
-    private String contentmodel;
     private String pagelanguage;
-    private String touched;    //ultima visita effettuata da chicchessia sul server wiki - attualmente (27-10-13) non utilizzato
-    private int lastrevid;
-    private int length;
+//    private int lastrevid;
+//    private int length;
 
     //--parametri wiki revisions
     private int revid;
     private int parentid;
+    private boolean minor;
     private String user;
+    private boolean anon;
     private int userid;
     private Date timestamp;
     private int size;
     private String comment;
     private String contentformat;
+    private String contentmodel;
 
     //--forse
 //    private String starttimestamp;
@@ -142,30 +143,6 @@ public class Wiki extends BaseEntity {
         this.pagelanguage = pagelanguage;
     }
 
-    public String getTouched() {
-        return touched;
-    }
-
-    public void setTouched(String touched) {
-        this.touched = touched;
-    }
-
-    public int getLastrevid() {
-        return lastrevid;
-    }
-
-    public void setLastrevid(int lastrevid) {
-        this.lastrevid = lastrevid;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
-
     public int getRevid() {
         return revid;
     }
@@ -228,5 +205,21 @@ public class Wiki extends BaseEntity {
 
     public void setContentformat(String contentformat) {
         this.contentformat = contentformat;
+    }
+
+    public boolean isMinor() {
+        return minor;
+    }
+
+    public void setMinor(boolean minor) {
+        this.minor = minor;
+    }
+
+    public boolean isAnon() {
+        return anon;
+    }
+
+    public void setAnon(boolean anon) {
+        this.anon = anon;
     }
 }// end of entity class

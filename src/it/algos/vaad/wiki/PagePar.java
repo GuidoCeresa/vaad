@@ -35,16 +35,8 @@ public enum PagePar {
         }// end of method
     },
 
+
     //--parametri wiki info
-    contentmodel(true, true, true, true, TypePar.letturascrittura, TypeField.string) {
-        @Override
-        public Wiki setWiki(Wiki wiki, Object value) {
-            if (value instanceof String) {
-                wiki.setContentmodel((String) value);
-            }// fine del blocco if
-            return wiki;
-        }// end of method
-    },
     pagelanguage(true, true, true, true, TypePar.letturascrittura, TypeField.string) {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
@@ -54,39 +46,13 @@ public enum PagePar {
             return wiki;
         }// end of method
     },
-    touched(true, true, true, true, TypePar.letturascrittura, TypeField.date) {
-        @Override
-        public Wiki setWiki(Wiki wiki, Object value) {
-            if (value instanceof String) {
-                wiki.setTouched((String) value);
-            }// fine del blocco if
-            return wiki;
-        }// end of method
-    },
-    lastrevid(true, true, true, true, TypePar.letturascrittura, TypeField.integernotzero) {
-        @Override
-        public Wiki setWiki(Wiki wiki, Object value) {
-            if (value instanceof Integer) {
-                wiki.setLastrevid((Integer) value);
-            }// fine del blocco if
-            return wiki;
-        }// end of method
-    },
-    length(true, true, true, true, TypePar.letturascrittura, TypeField.integernotzero) {
-        @Override
-        public Wiki setWiki(Wiki wiki, Object value) {
-            if (value instanceof Integer) {
-                wiki.setLength((Integer) value);
-            }// fine del blocco if
-            return wiki;
-        }// end of method
-    },
+
 
     csrftoken(false, false, false, true, TypePar.soloscrittura, TypeField.string),
     starttimestamp(false, false, false, true, TypePar.soloscrittura, TypeField.date),
 
     //--parametri wiki revisions
-    revid(false, true, false, false, TypePar.letturascrittura, TypeField.integernotzero) {
+    revid(true, true, false, false, TypePar.letturascrittura, TypeField.integernotzero) {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
             if (value instanceof Integer) {
@@ -95,7 +61,7 @@ public enum PagePar {
             return wiki;
         }// end of method
     },
-    parentid(false, true, false, false, TypePar.letturascrittura, TypeField.integerzero) {
+    parentid(true, true, false, false, TypePar.letturascrittura, TypeField.integerzero) {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
             if (value instanceof Integer) {
@@ -104,7 +70,16 @@ public enum PagePar {
             return wiki;
         }// end of method
     },
-    user(false, true, false, false, TypePar.letturascrittura, TypeField.string) {
+    minor(true, true, false, false, TypePar.letturascrittura, TypeField.booleano) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof Integer) {
+                wiki.setParentid((Integer) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
+    user(true, true, false, false, TypePar.letturascrittura, TypeField.string) {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
             if (value instanceof String) {
@@ -113,7 +88,16 @@ public enum PagePar {
             return wiki;
         }// end of method
     },
-    userid(false, true, false, false, TypePar.letturascrittura, TypeField.integerzero) {
+    anon(true, true, false, false, TypePar.letturascrittura, TypeField.booleano) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof Integer) {
+                wiki.setParentid((Integer) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
+    userid(true, true, false, false, TypePar.letturascrittura, TypeField.integerzero) {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
             if (value instanceof Integer) {
@@ -122,7 +106,7 @@ public enum PagePar {
             return wiki;
         }// end of method
     },
-    timestamp(false, true, false, false, TypePar.letturascrittura, TypeField.date) {
+    timestamp(true, true, false, false, TypePar.letturascrittura, TypeField.date) {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
             if (value instanceof Date) {
@@ -131,7 +115,7 @@ public enum PagePar {
             return wiki;
         }// end of method
     },
-    size(false, true, false, false, TypePar.letturascrittura, TypeField.integernotzero) {
+    size(true, true, false, false, TypePar.letturascrittura, TypeField.integernotzero) {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
             if (value instanceof Integer) {
@@ -140,7 +124,7 @@ public enum PagePar {
             return wiki;
         }// end of method
     },
-    comment(false, true, false, false, TypePar.letturascrittura, TypeField.string) {
+    comment(true, true, false, false, TypePar.letturascrittura, TypeField.string) {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
             if (value instanceof String) {
@@ -158,6 +142,15 @@ public enum PagePar {
             return wiki;
         }// end of method
     },
+    contentmodel(true, true, true, true, TypePar.letturascrittura, TypeField.string) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof String) {
+                wiki.setContentmodel((String) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
     content(true, false, false, false, TypePar.letturascrittura, TypeField.string) {
     },
 
@@ -165,15 +158,15 @@ public enum PagePar {
     missing(false, false, false, false, TypePar.provvisorio, TypeField.string),
     revisions(false, false, false, false, TypePar.provvisorio, TypeField.string);
 
-    private boolean obbligatorioRequest;
+    private boolean read;
     private boolean permanente;
     private boolean obbligatorioDatabase;
     private boolean info;
     private TypePar typePar;
     private TypeField typeField;
 
-    PagePar(boolean obbligatorioRequest, boolean permanente, boolean obbligatorioDatabase, boolean info, TypePar typePar, TypeField typeField) {
-        this.obbligatorioRequest = obbligatorioRequest;
+    PagePar(boolean read, boolean permanente, boolean obbligatorioDatabase, boolean info, TypePar typePar, TypeField typeField) {
+        this.read = read;
         this.permanente = permanente;
         this.obbligatorioDatabase = obbligatorioDatabase;
         this.info = info;
@@ -216,6 +209,23 @@ public enum PagePar {
      */
     public static TypeField getParField(String key) {
         return getPar(key).getType();
+    }// end of method
+
+    /**
+     * Restituisce una collezione degli elementi di una Request Read
+     *
+     * @return collezione
+     */
+    public static List<PagePar> getRead() {
+        List<PagePar> lista = new ArrayList<PagePar>();
+
+        for (PagePar par : values()) {
+            if (par.read) {
+                lista.add(par);
+            }// fine del blocco if
+        } // fine del ciclo for-each
+
+        return lista;
     }// end of method
 
     /**
@@ -286,9 +296,9 @@ public enum PagePar {
         List<PagePar> lista = new ArrayList<PagePar>();
 
         for (PagePar par : values()) {
-            if (par.obbligatorioRequest) {
-                lista.add(par);
-            }// fine del blocco if
+//            if (par.obbligatorioRequest) {
+//                lista.add(par);
+//            }// fine del blocco if
         } // fine del ciclo for-each
 
         return lista;
@@ -311,22 +321,6 @@ public enum PagePar {
         return lista;
     }// end of method
 
-    /**
-     * Restituisce una collezione degli elementi da restituire in lettura
-     *
-     * @return collezione
-     */
-    public static List<PagePar> getRead() {
-        List<PagePar> lista = new ArrayList<PagePar>();
-
-        for (PagePar par : values()) {
-            if (par.typePar == TypePar.letturascrittura) {
-                lista.add(par);
-            }// fine del blocco if
-        } // fine del ciclo for-each
-
-        return lista;
-    }// end of method
 
     /**
      * Restituisce una collezione degli elementi da restituire in lettura e scrittura
@@ -435,7 +429,7 @@ public enum PagePar {
      * Enumeration di tipologie dei campi
      */
     public static enum TypeField {
-        string, integerzero, integernotzero, date
+        string, integerzero, integernotzero, date, booleano
     }// fine della Enumeration interna
 
 } // fine della Enumeration
