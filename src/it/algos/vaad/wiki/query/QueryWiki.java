@@ -1,4 +1,8 @@
-package it.algos.vaad.wiki;
+package it.algos.vaad.wiki.query;
+
+import it.algos.vaad.wiki.Cost;
+import it.algos.vaad.wiki.TipoRequest;
+import it.algos.vaad.wiki.TipoRicerca;
 
 /**
  * Superclasse per le Request al server MediaWiki

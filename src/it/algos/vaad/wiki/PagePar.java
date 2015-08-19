@@ -1,5 +1,7 @@
 package it.algos.vaad.wiki;
 
+import it.algos.vaad.wiki.entities.wiki.Wiki;
+
 import java.util.*;
 
 public enum PagePar {

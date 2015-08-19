@@ -1,6 +1,7 @@
-package it.algos.vaad.wiki;
+package it.algos.vaad.wiki.query;
 
-import java.net.URLEncoder;
+import it.algos.vaad.wiki.TipoRequest;
+import it.algos.vaad.wiki.TipoRicerca;
 
 /**
  * Created by Gac on 15 ago 2015.

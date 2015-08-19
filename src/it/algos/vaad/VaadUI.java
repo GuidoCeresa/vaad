@@ -1,8 +1,7 @@
 package it.algos.vaad;
 
 import com.vaadin.annotations.Theme;
-import it.algos.vaad.wiki.Api;
-import it.algos.vaad.wiki.WikiBioMod;
+import it.algos.vaad.wiki.entities.wikibio.WikiBioMod;
 import it.algos.webbase.domain.versione.VersioneModulo;
 import it.algos.vaad.log.LogMod;
 import it.algos.vaad.pref.PrefMod;

@@ -1,4 +1,4 @@
-package it.algos.vaad.wiki;
+package it.algos.vaad.wiki.query;
 
 /**
  * Classe concreta per le Request sul Web

@@ -1,4 +1,4 @@
-package it.algos.vaad.wiki;
+package it.algos.vaad.wiki.entities.wikibio;
 
 import it.algos.webbase.web.entity.BaseEntity_;
 

@@ -1,4 +1,6 @@
-package it.algos.vaad.wiki;
+package it.algos.vaad.wiki.entities.wikibio;
+
+import it.algos.vaad.wiki.entities.wiki.Wiki;
 
 import javax.persistence.Entity;
 

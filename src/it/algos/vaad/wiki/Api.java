@@ -1,5 +1,11 @@
 package it.algos.vaad.wiki;
 
+import it.algos.vaad.wiki.entities.wiki.Wiki;
+import it.algos.vaad.wiki.entities.wikibio.WikiBio;
+import it.algos.vaad.wiki.query.QueryReadPageid;
+import it.algos.vaad.wiki.query.QueryReadTitle;
+import it.algos.vaad.wiki.query.QueryWiki;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

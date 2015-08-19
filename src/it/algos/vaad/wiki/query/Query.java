@@ -1,4 +1,4 @@
-package it.algos.vaad.wiki;
+package it.algos.vaad.wiki.query;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

@@ -1,6 +1,7 @@
-package it.algos.vaad.wiki;
+package it.algos.vaad.wiki.entities.wikibio;
 
 import it.algos.vaad.ui.AlgosModulePop;
+import it.algos.vaad.wiki.entities.wiki.Wiki_;
 import it.algos.webbase.web.table.TablePortal;
 
 import javax.persistence.metamodel.Attribute;

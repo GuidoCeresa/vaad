@@ -1,8 +1,8 @@
 package it.algos.vaad.test;
 
 import it.algos.vaad.wiki.Page;
-import it.algos.vaad.wiki.QueryWiki;
-import it.algos.vaad.wiki.QueryReadTitle;
+import it.algos.vaad.wiki.query.QueryWiki;
+import it.algos.vaad.wiki.query.QueryReadTitle;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

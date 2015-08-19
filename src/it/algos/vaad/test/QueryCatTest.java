@@ -1,6 +1,6 @@
 package it.algos.vaad.test;
 
-import it.algos.vaad.wiki.QueryCat;
+import it.algos.vaad.wiki.query.QueryCat;
 import org.junit.Test;
 
 import java.util.ArrayList;

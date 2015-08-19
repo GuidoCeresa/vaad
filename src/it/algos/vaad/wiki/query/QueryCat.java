@@ -1,4 +1,9 @@
-package it.algos.vaad.wiki;
+package it.algos.vaad.wiki.query;
+
+import it.algos.vaad.wiki.Cost;
+import it.algos.vaad.wiki.LibWiki;
+import it.algos.vaad.wiki.TipoRequest;
+import it.algos.vaad.wiki.TipoRicerca;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;

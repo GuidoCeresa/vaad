@@ -5,6 +5,7 @@ package it.algos.vaad.wiki;
  * .
  */
 
+import it.algos.vaad.wiki.query.QueryCat;
 import it.algos.webbase.web.lib.LibText;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -473,13 +474,13 @@ public abstract class LibWiki {
         JSONObject queryObj = (JSONObject) allObj.get(QUERY);
         Object pagesObj = queryObj.get(PAGES);
 
-        if (pagesObj instanceof JSONObject) {
-            mappa = fixMappa((JSONObject) pagesObj);
+        if (pagesObj instanceof JSONArray) {
+            mappa = fixMappa((JSONArray) pagesObj);
         }// fine del blocco if
 
-        if (pagesObj instanceof JSONArray) {
-            mappa = estraeMappaJson((JSONArray) pagesObj);
-        }// fine del blocco if
+//        if (pagesObj instanceof JSONArray) {
+//            mappa = estraeMappaJson((JSONArray) pagesObj);
+//        }// fine del blocco if
 
         return mappa;
     } // fine del metodo
@@ -493,7 +494,7 @@ public abstract class LibWiki {
      * @param mappaJson JSONObject in ingresso
      * @return mappa standard (valori String)
      */
-    private static LinkedHashMap fixMappa(JSONObject mappaJson) {
+    private static LinkedHashMap fixMappa(JSONArray mappaJson) {
         LinkedHashMap<String, Object> mappaOut = new LinkedHashMap<String, Object>();
         HashMap<String, Object> mappaValoriInfo = estraeMappaJson(mappaJson);
         HashMap<String, Object> mappaValoriRev = null;
@@ -522,15 +523,63 @@ public abstract class LibWiki {
             } // fine del ciclo for-each
         }// fine del blocco if
 
-        //--patch per il nome 'atipico' del campo text
-        if (mappaOut.containsKey(PATCH_OLD)) {
-            value = mappaOut.get(PATCH_OLD);
-            mappaOut.remove(PATCH_OLD);
-            mappaOut.put(PATCH_NEW, value);
-        }// fine del blocco if
+//        //--patch per il nome 'atipico' del campo text
+//        if (mappaOut.containsKey(PATCH_OLD)) {
+//            value = mappaOut.get(PATCH_OLD);
+//            mappaOut.remove(PATCH_OLD);
+//            mappaOut.put(PATCH_NEW, value);
+//        }// fine del blocco if
 
         return mappaOut;
     } // fine del metodo
+
+//    /**
+//     * Crea una mappa standard (valori String) da una mappa JSON di una pagina
+//     * <p>
+//     * Prima i parametri delle info
+//     * Poi, se ci sono, i parametri della revisione
+//     *
+//     * @param mappaJson JSONObject in ingresso
+//     * @return mappa standard (valori String)
+//     */
+//    private static LinkedHashMap fixMappaOld(JSONObject mappaJson) {
+//        LinkedHashMap<String, Object> mappaOut = new LinkedHashMap<String, Object>();
+//        HashMap<String, Object> mappaValoriInfo = estraeMappaJson(mappaJson);
+//        HashMap<String, Object> mappaValoriRev = null;
+//        String key;
+//        Object value = null;
+//
+//        //--valori dei parametri ricavati dalle info della pagina
+//        for (PagePar par : PagePar.getInf()) {
+//            key = par.toString();
+//            value = mappaValoriInfo.get(key);
+//            if (value != null) {
+//                mappaOut.put(key, value);
+//            }// fine del blocco if
+//        } // fine del ciclo for-each
+//
+//        //--controlla che esistano i valori della revisione
+//        if (mappaValoriInfo.containsKey(REVISIONS) && mappaValoriInfo.get(REVISIONS) instanceof JSONArray) {
+//            mappaValoriRev = estraeMappaJson((JSONArray) mappaValoriInfo.get(REVISIONS));
+//        }// fine del blocco if
+//
+//        //--valori dei parametri ricavati dall'ultima revisione della pagina
+//        if (mappaValoriRev != null) {
+//            for (String keyRev : mappaValoriRev.keySet()) {
+//                value = mappaValoriRev.get(keyRev);
+//                mappaOut.put(keyRev, value);
+//            } // fine del ciclo for-each
+//        }// fine del blocco if
+//
+//        //--patch per il nome 'atipico' del campo text
+//        if (mappaOut.containsKey(PATCH_OLD)) {
+//            value = mappaOut.get(PATCH_OLD);
+//            mappaOut.remove(PATCH_OLD);
+//            mappaOut.put(PATCH_NEW, value);
+//        }// fine del blocco if
+//
+//        return mappaOut;
+//    } // fine del metodo
 
     /**
      * Estrae una mappa standard da un JSONObject

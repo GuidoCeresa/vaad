@@ -1,4 +1,8 @@
-package it.algos.vaad.wiki;
+package it.algos.vaad.wiki.query;
+
+import it.algos.vaad.wiki.Cost;
+import it.algos.vaad.wiki.TipoRequest;
+import it.algos.vaad.wiki.TipoRicerca;
 
 /**
  * Query standard per leggere/scrivere il risultato di una pagina
@@ -13,7 +17,7 @@ public abstract class QueryPage extends QueryWiki {
 
     // tag per la costruzione della stringa della request
     protected static String TAG_INI = "https://it.wikipedia.org/w/api.php?format=json&action=query";
-    protected static String TAG_PROP = "&prop=info|revisions&rvprop=content";
+    protected static String TAG_PROP = Cost.CONTENT_ALL;
     protected static String TAG_QUERY = TAG_INI + TAG_PROP;
     protected static String TAG_TITOLO = "&titles=";
     protected static String TAG_PAGEID = "&pageids=";
