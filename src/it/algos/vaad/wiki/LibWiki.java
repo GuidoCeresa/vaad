@@ -48,6 +48,7 @@ public abstract class LibWiki {
     public static final int INT_NULLO = -1;
 
     public static Date DATA_NULLA = new Date(70, 0, 1);
+    private static String BATCH = "batchcomplete";
     private static String QUERY = "query";
     private static String PAGEID = "pageid";
     private static String PAGES = "pages";
@@ -76,7 +77,7 @@ public abstract class LibWiki {
 //            case PagePar.TypeField.string:
 //                valueObj = valueTxt
 //                break;
-//            case PagePar.TypeField.integerzero:     //--conversione degli interi
+//            case PagePar.TypeField.longzero:     //--conversione degli interi
 //            case PagePar.TypeField.integernotzero:  //--conversione degli interi
 //                try { // prova ad eseguire il codice
 //                    valueObj = Integer.decode(valueTxt)
@@ -461,13 +462,116 @@ public abstract class LibWiki {
         return estraeTmplEsclusi(testo, BIO);
     }// fine del metodo
 
+
     /**
      * Crea una mappa standard (valori String) dal testo JSON di una pagina
      *
      * @param textJSON in ingresso
      * @return mappa standard (valori String)
      */
-    public static LinkedHashMap creaMappa(String textJSON) {
+    public static HashMap<String, Object> creaMappa(String textJSON) {
+        HashMap<String, Object> mappa = null;
+        JSONObject objectAll;
+        boolean batchcomplete = false;
+        JSONObject objectQuery = null;
+        JSONArray arrayPages = null;
+        JSONObject objectRev = null;
+        JSONArray arrayRev = null;
+
+        // recupera i due oggetti al livello root del testo (batchcomplete e query)
+        objectAll = (JSONObject) JSONValue.parse(textJSON);
+
+        // controllo
+        if (objectAll == null) {
+            return null;
+        }// fine del blocco if
+
+        //recupera il valore del parametro di controllo per la gestione dell'ultima versione di mediawiki
+        if (objectAll.get(BATCH) != null && objectAll.get(BATCH) instanceof Boolean) {
+            batchcomplete = (Boolean) objectAll.get(BATCH);
+        }// fine del blocco if
+
+        //recupera i valori dei parametri base (3) ed info (1)
+        if (objectAll.get(QUERY) != null && objectAll.get(QUERY) instanceof JSONObject) {
+            objectQuery = (JSONObject) objectAll.get(QUERY);
+            if (objectQuery.get(PAGES) != null && objectQuery.get(PAGES) instanceof JSONArray) {
+                arrayPages = (JSONArray) objectQuery.get(PAGES);
+            }// fine del blocco if
+        }// fine del blocco if
+
+        //recupera i valori dei parametri revisions (12)
+        if (arrayPages != null && arrayPages.get(0) != null && arrayPages.get(0) instanceof JSONObject) {
+            objectRev = (JSONObject) arrayPages.get(0);
+            if (objectRev != null) {
+                arrayRev = (JSONArray) objectRev.get(REVISIONS);
+            }// fine del blocco if
+        }// fine del blocco if
+
+        // crea la mappa
+        if (arrayPages != null && arrayRev != null) {
+            mappa = mixJSON(batchcomplete, arrayPages, arrayRev);
+        }// fine del blocco if
+
+        return patchMappa(mappa);
+    } // fine del metodo
+
+    /**
+     * Correzioni/aggiunte per eventuali patch
+     * Il parametro ''anon'' è presente nel ritorno della Request SOLO se l'ultimo utente è un IP
+     *
+     * @param mappa in ingresso
+     * @return mappa in uscita
+     */
+    public static HashMap<String, Object> patchMappa(HashMap<String, Object> mappa) {
+        if (!mappa.containsKey(PagePar.anon.toString())) {
+            mappa.put(PagePar.anon.toString(), false);
+        }// fine del blocco if
+
+        return mappa;
+    } // fine del metodo
+
+    /**
+     * Crea una mappa standard (valori String) dalle mappe JSON parziali
+     *
+     * @param batchcomplete flag di controllo
+     * @param arrayPages    parametri base (3) ed info (1)
+     * @param arrayRev      parametri revisions (12)
+     * @return mappa standard (valori String)
+     */
+    public static HashMap<String, Object> mixJSON(boolean batchcomplete, JSONArray arrayPages, JSONArray arrayRev) {
+        HashMap<String, Object> mappa = new HashMap<String, Object>();
+        HashMap<String, Object> mappaPages = null;
+        HashMap<String, Object> mappaRev = null;
+        Object value;
+
+        //recupera il valore del parametro di controllo per la gestione dell'ultima versione di mediawiki
+        mappa.put(BATCH, batchcomplete);
+
+        //recupera i valori dei parametri base (3) ed info (1)
+        mappaPages = estraeMappaJsonPar(arrayPages);
+        for (String key : mappaPages.keySet()) {
+            value = mappaPages.get(key);
+            mappa.put(key, value);
+        } // fine del ciclo for-each
+
+        //recupera i valori dei parametri revisions (12)
+        mappaRev = estraeMappaJsonPar(arrayRev);
+        for (String key : mappaRev.keySet()) {
+            value = mappaRev.get(key);
+            mappa.put(key, value);
+        } // fine del ciclo for-each
+
+        return mappa;
+    } // fine del metodo
+
+    /**
+     * Crea una mappa standard (valori String) dal testo JSON di una pagina
+     *
+     * @param textJSON in ingresso
+     * @return mappa standard (valori String)
+     * @deprecated
+     */
+    public static LinkedHashMap creaMappaOld(String textJSON) {
         LinkedHashMap mappa = null;
 
         JSONObject allObj = (JSONObject) JSONValue.parse(textJSON);
@@ -493,6 +597,7 @@ public abstract class LibWiki {
      *
      * @param mappaJson JSONObject in ingresso
      * @return mappa standard (valori String)
+     * @deprecated
      */
     private static LinkedHashMap fixMappa(JSONArray mappaJson) {
         LinkedHashMap<String, Object> mappaOut = new LinkedHashMap<String, Object>();
@@ -587,10 +692,9 @@ public abstract class LibWiki {
      * @param mappaJson JSONObject in ingresso
      * @return mappa standard (valori String)
      */
-    private static LinkedHashMap<String, Object> estraeMappaJson(JSONObject mappaJson) {
-        LinkedHashMap<String, Object> mappaOut = new LinkedHashMap<String, Object>();
+    private static HashMap<String, Object> estraeMappaJson(JSONObject mappaJson) {
+        HashMap<String, Object> mappaOut = new HashMap<String, Object>();
         Set setJson = mappaJson.keySet();
-        Object mappaValoriInfo = mappaJson.values();
         String key;
         Object value = null;
         JSONObject mappaGrezza = null;
@@ -620,12 +724,44 @@ public abstract class LibWiki {
 
     /**
      * Estrae una mappa standard da un JSONArray
+     * Considera SOLO i valori della Enumeration PagePar
+     *
+     * @param arrayJson JSONArray in ingresso
+     * @return mappa standard (valori String)
+     */
+    private static HashMap<String, Object> estraeMappaJsonPar(JSONArray arrayJson) {
+        HashMap<String, Object> mappaOut = new HashMap<String, Object>();
+        JSONObject mappaJSON = null;
+        String key;
+        Object value;
+
+        if (arrayJson != null && arrayJson.size() == 1) {
+            if (arrayJson.get(0) != null && arrayJson.get(0) instanceof JSONObject) {
+                mappaJSON = (JSONObject) arrayJson.get(0);
+            }// fine del blocco if
+        }// fine del blocco if
+
+        if (mappaJSON != null) {
+            for (PagePar par : PagePar.getRead()) {
+                key = par.toString();
+                if (mappaJSON.get(key) != null) {
+                    value = mappaJSON.get(key);
+                    mappaOut.put(key, value);
+                }// fine del blocco if
+            } // fine del ciclo for-each
+        }// fine del blocco if
+
+        return mappaOut;
+    } // fine del metodo
+
+    /**
+     * Estrae una mappa standard da un JSONArray
      *
      * @param mappaJson JSONArray in ingresso
      * @return mappa standard (valori String)
      */
-    private static LinkedHashMap<String, Object> estraeMappaJson(JSONArray mappaJson) {
-        LinkedHashMap<String, Object> mappaOut = new LinkedHashMap<String, Object>();
+    private static HashMap<String, Object> estraeMappaJson(JSONArray mappaJson) {
+        HashMap<String, Object> mappaOut = new HashMap<String, Object>();
 
         if (mappaJson.size() == 1) {
             for (Object obj : mappaJson) {
@@ -668,8 +804,8 @@ public abstract class LibWiki {
      * @param mappaIn standard (valori String) in ingresso
      * @return mappa typizzata secondo PagePar
      */
-    public static LinkedHashMap<String, Object> converteMappa(LinkedHashMap mappaIn) {
-        LinkedHashMap<String, Object> mappaOut = new LinkedHashMap<String, Object>();
+    public static HashMap<String, Object> converteMappa(HashMap mappaIn) {
+        HashMap<String, Object> mappaOut = new HashMap<String, Object>();
         String key = "";
         String valueTxt;
         Object valueObj = null;
@@ -888,19 +1024,25 @@ public abstract class LibWiki {
             valueOut = valueIn;
         }// fine del blocco if
 
-        if (typo == PagePar.TypeField.integerzero || typo == PagePar.TypeField.integernotzero) {
+        if (typo == PagePar.TypeField.booleano) {
+            valueOut = valueIn;
+        }// fine del blocco if
+
+        if (typo == PagePar.TypeField.longzero || typo == PagePar.TypeField.longnotzero) {
             if (valueIn instanceof String) {
                 try { // prova ad eseguire il codice
-                    valueOut = Integer.decode((String) valueIn);
+                    valueOut = Long.decode((String) valueIn);
+                } catch (Exception unErrore) { // intercetta l'errore
+                }// fine del blocco try-catch
+            }// fine del blocco if
+            if (valueIn instanceof Integer) {
+                try { // prova ad eseguire il codice
+                    valueOut = new Long(valueIn.toString());
                 } catch (Exception unErrore) { // intercetta l'errore
                 }// fine del blocco try-catch
             }// fine del blocco if
             if (valueIn instanceof Long) {
-                try { // prova ad eseguire il codice
-                    valueOut = new Integer(valueIn.toString());
-                } catch (Exception unErrore) { // intercetta l'errore
-                    int a = 67;
-                }// fine del blocco try-catch
+                valueOut = valueIn;
             }// fine del blocco if
         }// fine del blocco if
 

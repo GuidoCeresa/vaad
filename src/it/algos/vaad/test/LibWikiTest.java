@@ -6,10 +6,7 @@ import it.algos.vaad.wiki.query.QueryCat;
 import it.algos.vaad.wiki.query.QueryReadTitle;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -28,14 +25,14 @@ public class LibWikiTest extends VaadTest {
     /**
      * Controllo di validità della mappa di stringhe
      */
-    public static void isMappaStringheValida(Map mappa) {
+    public static void isMappaStringheValidaRead(Map mappa) {
         String key;
         Object value;
 
         assertNotNull("'Mappa non esistente", mappa);
-        assertTrue("Mappa di lunghezza errata", mappa.size() == 10);
+        assertTrue("Mappa di lunghezza errata", mappa.size() == 17);
 
-        for (PagePar par : PagePar.getObbReq()) {
+        for (PagePar par : PagePar.getRead()) {
             key = par.toString();
             value = mappa.get(key);
             assertNotNull("Manca il valore del campo: " + key, value);
@@ -45,14 +42,14 @@ public class LibWikiTest extends VaadTest {
     /**
      * Controllo di validità della mappa di stringhe
      */
-    public static void isMappaValoriValida(Map mappa) {
+    public static void isMappaValoriValidaRead(Map mappa) {
         String key;
         Object value;
 
         assertNotNull("'Mappa non esistente", mappa);
-        assertTrue("Mappa di lunghezza errata", mappa.size() == 10);
+        assertTrue("Mappa di lunghezza errata", mappa.size() == 17);
 
-        for (PagePar par : PagePar.getObbReq()) {
+        for (PagePar par : PagePar.getRead()) {
             isCampoTypoValido(mappa, par);
         } // fine del ciclo for-each
     }// end of method
@@ -72,17 +69,21 @@ public class LibWikiTest extends VaadTest {
             assertNotNull("Manca il campo: " + key, value);
         }// fine del blocco if
 
-        if (type == PagePar.TypeField.integerzero) {
-            assertTrue("Il campo " + key + " non è un intero", value instanceof Integer);
+        if (type == PagePar.TypeField.longzero) {
+            assertTrue("Il campo " + key + " non è un lungo", value instanceof Long);
         }// fine del blocco if
 
-        if (type == PagePar.TypeField.integernotzero) {
+        if (type == PagePar.TypeField.longnotzero) {
             assertNotSame("Il valore del campo " + key + " non può essere uguale a zero", value, 0);
-            assertTrue("Il campo " + key + " non è un intero", value instanceof Integer);
+            assertTrue("Il campo " + key + " non è un lungo", value instanceof Long);
         }// fine del blocco if
 
         if (type == PagePar.TypeField.date) {
             assertTrue("Il campo " + key + " non è una data valida", value instanceof Date);
+        }// fine del blocco if
+
+        if (type == PagePar.TypeField.booleano) {
+            assertTrue("Il campo " + key + " non è un valore booleano", value instanceof Boolean);
         }// fine del blocco if
 
     }// end of method
@@ -572,12 +573,12 @@ public class LibWikiTest extends VaadTest {
      * @return mappa standard (valori String)
      */
     public void creaMappa() {
-        LinkedHashMap mappa;
+        HashMap mappa;
         String textPagina = new QueryReadTitle(TITOLO).getContenuto();
 
         mappa = LibWiki.creaMappa(textPagina);
         assertNotNull(mappa);
-        isMappaStringheValida(mappa);
+        isMappaStringheValidaRead(mappa);
     }// end of single test
 
     @Test
@@ -588,15 +589,15 @@ public class LibWikiTest extends VaadTest {
      * @return mappa typizzata secondo PagePar
      */
     public void converteMappa() {
-        LinkedHashMap mappaString;
-        LinkedHashMap mappaConvertita;
+        HashMap mappaString;
+        HashMap mappaConvertita;
 
         String textPagina = new QueryReadTitle(TITOLO).getContenuto();
         mappaString = LibWiki.creaMappa(textPagina);
-        isMappaStringheValida(mappaString);
+        isMappaStringheValidaRead(mappaString);
 
         mappaConvertita = LibWiki.converteMappa(mappaString);
-        isMappaValoriValida(mappaConvertita);
+        isMappaValoriValidaRead(mappaConvertita);
     }// end of single test
 
     @Test

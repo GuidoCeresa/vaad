@@ -1,8 +1,9 @@
 package it.algos.vaad.test;
 
 import it.algos.vaad.wiki.Page;
-import it.algos.vaad.wiki.query.QueryWiki;
+import it.algos.vaad.wiki.PagePar;
 import it.algos.vaad.wiki.query.QueryReadTitle;
+import it.algos.vaad.wiki.query.QueryWiki;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -11,7 +12,7 @@ import static org.junit.Assert.*;
  * Created by gac on 28 giu 2015.
  * Using specific Templates (Entity, Domain, Modulo)
  */
-public class PageTest extends VaadTest{
+public class PageTest extends VaadTest {
 
     @Test
     public void creaPagina() {
@@ -26,10 +27,10 @@ public class PageTest extends VaadTest{
 
         mappaTxt = page.getMappaTxt();
         assertNotNull(mappaTxt);
-        LibWikiTest.isMappaStringheValida(mappaTxt);
+        LibWikiTest.isMappaStringheValidaRead(mappaTxt);
 
         mappaObj = page.getMappa();
-        LibWikiTest.isMappaValoriValida(mappaObj);
+        LibWikiTest.isMappaValoriValidaRead(mappaObj);
 
         previsto = TITOLO;
         ottenuto = page.getTitle();
@@ -38,6 +39,14 @@ public class PageTest extends VaadTest{
         numPrevisto = PAGEID;
         numOttenuto = page.getPageid();
         assertEquals(numOttenuto, numPrevisto);
+
+        boolPrevisto = true;
+        boolOttenuto = (boolean) mappaObj.get(PagePar.minor.toString());
+        assertEquals(boolOttenuto, boolPrevisto);
+
+        boolPrevisto = false;
+        boolOttenuto = (boolean) mappaObj.get(PagePar.anon.toString());
+        assertEquals(boolOttenuto, boolPrevisto);
 
         ottenuto = page.getText();
         assertTrue(ottenuto.startsWith(TAG_INI_VOCE));

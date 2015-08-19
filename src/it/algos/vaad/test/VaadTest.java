@@ -37,8 +37,8 @@ public abstract class VaadTest {
     // alcuni parametri utilizzati
     protected List<PagePar> listaPrevista = null;
     protected List<PagePar> listaOttenuta = null;
-    protected int numPrevisto = 0;
-    protected int numOttenuto = 0;
+    protected long numPrevisto = 0;
+    protected long numOttenuto = 0;
     protected PagePar parPrevisto = null;
     protected PagePar parOttenuto = null;
     protected PagePar.TypeField fieldPrevisto = null;
@@ -50,8 +50,8 @@ public abstract class VaadTest {
     protected String previsto = "";
     protected String ottenuto = "";
     protected String tag = "";
-    protected LinkedHashMap mappaTxt;
-    protected LinkedHashMap mappaObj;
+    protected HashMap mappaTxt;
+    protected HashMap mappaObj;
     protected String contenuto;
     protected Page page = null;
     protected Page pagePrevista = null;

@@ -19,9 +19,12 @@ public class PageParTest extends VaadTest {
     public void creaMappa() {
         mappa = new HashMap<String, Object>();
 
+        //--parametro di controllo
+        add(PagePar.batchcomplete, true);
+
         //--parametri wiki base
-        add(PagePar.pageid, 24);
-        add(PagePar.ns, 0);
+        add(PagePar.pageid, 24L);
+        add(PagePar.ns, 0L);
         add(PagePar.title, "Titolo della voce");
 
         //--parametri wiki info
@@ -30,20 +33,20 @@ public class PageParTest extends VaadTest {
         add(PagePar.starttimestamp, new Date());
 
         //--parametri wiki revisions
-        add(PagePar.revid, 2435);
-        add(PagePar.parentid, 6574);
+        add(PagePar.revid, 2435L);
+        add(PagePar.parentid, 6574L);
         add(PagePar.minor, false);
         add(PagePar.user, "utente");
         add(PagePar.anon, false);
-        add(PagePar.userid, 8765);
+        add(PagePar.userid, 8765L);
         add(PagePar.timestamp, new Date());
-        add(PagePar.size, 8239);
+        add(PagePar.size, 8239L);
         add(PagePar.comment, "commento");
         add(PagePar.contentformat, "formato");
         add(PagePar.contentmodel, "modello");
         add(PagePar.content, "testo");
 
-        //--parametri altri
+        //--parametri altri controlli
         add(PagePar.missing, "missing");
         add(PagePar.revisions, "revisions");
 
@@ -60,7 +63,7 @@ public class PageParTest extends VaadTest {
      * @return collezione
      */
     public void getAll() {
-        numPrevisto = 20;
+        numPrevisto = 21;
         listaOttenuta = PagePar.getAll();
         assertNotNull(listaOttenuta);
         numOttenuto = listaOttenuta.size();
@@ -75,14 +78,14 @@ public class PageParTest extends VaadTest {
      * @return collezione
      */
     public void getRead() {
-        numPrevisto = 16;
+        numPrevisto = 17;
         listaOttenuta = PagePar.getRead();
         assertNotNull(listaOttenuta);
         numOttenuto = listaOttenuta.size();
         assertEquals(numOttenuto, numPrevisto);
     }// end of single test
 
-//    @Test
+    @Test
     /**
      * Restituisce il parametro, individuato dal nome
      *
@@ -99,7 +102,7 @@ public class PageParTest extends VaadTest {
     }// end of single test
 
 
-//    @Test
+    @Test
     /**
      * Restituisce il tipo di campo di un parametro, individuato dal nome
      *
@@ -107,17 +110,17 @@ public class PageParTest extends VaadTest {
      * @return tipo di campo
      */
     public void getParField() {
-//        fieldPrevisto = PagePar.lastrevid.getType();
-//        String tagNome = "lastrevid";
-//        fieldOttenuto = PagePar.getParField(tagNome);
-//        assertNotNull(fieldOttenuto);
-//        assertEquals(fieldOttenuto, fieldPrevisto);
+        fieldPrevisto = PagePar.parentid.getType();
+        String tagNome = "parentid";
+        fieldOttenuto = PagePar.getParField(tagNome);
+        assertNotNull(fieldOttenuto);
+        assertEquals(fieldOttenuto, fieldPrevisto);
 
-//        fieldPrevisto = PagePar.TypeField.integerzero;
-//        tagNome = "parentid";
-//        fieldOttenuto = PagePar.getParField(tagNome);
-//        assertNotNull(fieldOttenuto);
-//        assertEquals(fieldOttenuto, fieldPrevisto);
+        fieldPrevisto = PagePar.TypeField.longzero;
+        tagNome = "parentid";
+        fieldOttenuto = PagePar.getParField(tagNome);
+        assertNotNull(fieldOttenuto);
+        assertEquals(fieldOttenuto, fieldPrevisto);
     }// end of single test
 
 //    @Test
@@ -206,7 +209,7 @@ public class PageParTest extends VaadTest {
         assertEquals(numOttenuto, numPrevisto);
     }// end of single test
 
-//    @Test
+    @Test
     /**
      * Controlla che tutti i parametri abbiano un valore valido
      *
@@ -214,11 +217,11 @@ public class PageParTest extends VaadTest {
      * @return true se tutti sono validi
      */
     public void isParValidi() {
-        boolOttenuto = PagePar.isParValidi(mappa);
+        boolOttenuto = PagePar.isParValidiRead(mappa);
         assertTrue(boolOttenuto);
     }// end of single test
 
-//    @Test
+    @Test
     /**
      * Controlla che tutti i parametri abbiano un valore valido
      *
@@ -230,11 +233,11 @@ public class PageParTest extends VaadTest {
         HashMap<String, Object> mappaLoc = (HashMap<String, Object>) mappa.clone();
 
         mappaLoc.put(PagePar.pageid.toString(), 0);
-        boolOttenuto = PagePar.isParValidi(mappaLoc);
+        boolOttenuto = PagePar.isParValidiRead(mappaLoc);
         assertFalse(boolOttenuto);
     }// end of single test
 
-//    @Test
+    @Test
     /**
      * Controlla che tutti i parametri abbiano un valore valido
      *
@@ -246,7 +249,7 @@ public class PageParTest extends VaadTest {
         HashMap<String, Object> mappaLoc = (HashMap<String, Object>) mappa.clone();
 
         mappaLoc.remove(PagePar.title.toString());
-        boolOttenuto = PagePar.isParValidi(mappaLoc);
+        boolOttenuto = PagePar.isParValidiRead(mappaLoc);
         assertFalse(boolOttenuto);
     }// end of single test
 

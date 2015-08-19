@@ -2,6 +2,7 @@ package it.algos.vaad.wiki;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
@@ -30,8 +31,8 @@ public class Page implements Serializable {
 
 //    private String text //risultato completo della pagina
 
-    private LinkedHashMap mappaTxt = new LinkedHashMap();
-    private LinkedHashMap mappaObj = new LinkedHashMap();
+    private HashMap mappaTxt = new HashMap();
+    private HashMap mappaObj = new HashMap();
 
     public Page() {
     }// fine del metodo costruttore
@@ -46,7 +47,7 @@ public class Page implements Serializable {
         this.tipoRequest = tipoRequest;
         mappaTxt = LibWiki.creaMappa(testoPagina);
         mappaObj = LibWiki.converteMappa(mappaTxt);
-        valida = PagePar.isParValidi(mappaObj);
+        valida = PagePar.isParValidiRead(mappaObj);
     }// fine del metodo costruttore
 
     private static String apici(String entrata) {
@@ -79,7 +80,7 @@ public class Page implements Serializable {
         String textPulito;
         String key;
         Object obj;
-        LinkedHashMap mappaObj = this.getMappa();
+        HashMap mappaObj = this.getMappa();
 
 //        lista ?.each {
 //            if (it == PagePar.text) {
@@ -97,16 +98,16 @@ public class Page implements Serializable {
         return graffe(textJSON);
     }// fine del metodo
 
-    public LinkedHashMap getMappaTxt() {
+    public HashMap getMappaTxt() {
         return mappaTxt;
     }// fine del metodo
 
-    public LinkedHashMap getMappa() {
+    public HashMap getMappa() {
         return mappaObj;
     }// fine del metodo
 
-    public int getPageid() {
-        return (Integer) mappaObj.get(PagePar.pageid.toString());
+    public long getPageid() {
+        return (long) mappaObj.get(PagePar.pageid.toString());
     }// fine del metodo
 
     public String getTitle() {

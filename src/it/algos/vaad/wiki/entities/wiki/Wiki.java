@@ -17,8 +17,8 @@ public class Wiki extends BaseEntity {
 
     /** nomi interni dei campi (ordine non garantito) */
     //--parametri wiki base
-    private int pageid;
-    private int ns;
+    private long pageid;
+    private long ns;
     private String title;
 
     //--parametri wiki info
@@ -27,14 +27,14 @@ public class Wiki extends BaseEntity {
 //    private int length;
 
     //--parametri wiki revisions
-    private int revid;
-    private int parentid;
+    private long revid;
+    private long parentid;
     private boolean minor;
     private String user;
     private boolean anon;
-    private int userid;
+    private long userid;
     private Date timestamp;
-    private int size;
+    private long size;
     private String comment;
     private String contentformat;
     private String contentmodel;
@@ -103,11 +103,11 @@ public class Wiki extends BaseEntity {
         return "";
     }// end of method
 
-    public int getPageid() {
+    public long getPageid() {
         return pageid;
     }
 
-    public void setPageid(int pageid) {
+    public void setPageid(long pageid) {
         this.pageid = pageid;
     }
 
@@ -119,11 +119,11 @@ public class Wiki extends BaseEntity {
         this.title = title;
     }
 
-    public int getNs() {
+    public long getNs() {
         return ns;
     }
 
-    public void setNs(int ns) {
+    public void setNs(long ns) {
         this.ns = ns;
     }
 
@@ -143,19 +143,19 @@ public class Wiki extends BaseEntity {
         this.pagelanguage = pagelanguage;
     }
 
-    public int getRevid() {
+    public long getRevid() {
         return revid;
     }
 
-    public void setRevid(int revid) {
+    public void setRevid(long revid) {
         this.revid = revid;
     }
 
-    public int getParentid() {
+    public long getParentid() {
         return parentid;
     }
 
-    public void setParentid(int parentid) {
+    public void setParentid(long parentid) {
         this.parentid = parentid;
     }
 
@@ -167,11 +167,11 @@ public class Wiki extends BaseEntity {
         this.user = user;
     }
 
-    public int getUserid() {
+    public long getUserid() {
         return userid;
     }
 
-    public void setUserid(int userid) {
+    public void setUserid(long userid) {
         this.userid = userid;
     }
 
@@ -183,11 +183,11 @@ public class Wiki extends BaseEntity {
         this.timestamp = timestamp;
     }
 
-    public int getSize() {
+    public long getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(long size) {
         this.size = size;
     }
 

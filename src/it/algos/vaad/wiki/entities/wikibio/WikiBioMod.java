@@ -21,17 +21,13 @@ public class WikiBioMod extends AlgosModulePop {
     }// end of constructor
 
     /**
-     * Crea i campi visibili
+     * Crea i campi visibili nella lista (table)
      * <p>
      * Come default spazzola tutti i campi della Entity <br>
      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
-     * Non garantisce l'ordine con cui vengono presentati i campi nella scheda <br>
-     * Può mostrare anche il campo ID, oppure no <br>
-     * Se si vuole differenziare tra Table, Form e Search, <br>
-     * sovrascrivere creaFieldsList, creaFieldsForm e creaFieldsSearch <br>
+     * Serve anche per l'ordine con cui vengono presentati i campi nella lista <br>
      */
-    @Override
-    protected Attribute<?, ?>[] creaFieldsAll() {
+    protected Attribute<?, ?>[] creaFieldsList() {
         return new Attribute[]{Wiki_.pageid, Wiki_.title, Wiki_.timestamp, Wiki_.user, Wiki_.comment};
     }// end of method
 

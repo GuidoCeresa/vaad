@@ -494,8 +494,8 @@ public class Api {
                 value = mappa.get(key);
             }// fine del blocco if
 
-            //--controllo degli interi che POSSONO esser anche zero
-            if (par.getType() == PagePar.TypeField.integerzero) {
+            //--controllo dei LONG che POSSONO esser anche zero
+            if (par.getType() == PagePar.TypeField.longzero) {
                 if (value == null) {
                     value = 0;
                 }// fine del blocco if
@@ -521,7 +521,7 @@ public class Api {
 //            }// fine del blocco if
 //
 //            //--controllo degli interi che POSSONO esser anche zero
-//            if (it.type == PagePar.TypeField.integerzero) {
+//            if (it.type == PagePar.TypeField.longzero) {
 //                if (!value) {
 //                    value = 0
 //                }// fine del blocco if

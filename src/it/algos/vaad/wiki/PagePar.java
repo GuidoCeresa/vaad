@@ -6,21 +6,26 @@ import java.util.*;
 
 public enum PagePar {
 
+    //--parametro di controllo
+    batchcomplete(true, true, false, false, TypePar.letturascrittura, TypeField.booleano) {
+    },
+
+
     //--parametri wiki base
-    pageid(true, true, true, true, TypePar.letturascrittura, TypeField.integernotzero) {
+    pageid(true, true, true, true, TypePar.letturascrittura, TypeField.longnotzero) {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
-            if (value instanceof Integer) {
-                wiki.setPageid((int) value);
+            if (value instanceof Long) {
+                wiki.setPageid((long) value);
             }// fine del blocco if
             return wiki;
         }// end of method
     },
-    ns(true, true, true, true, TypePar.letturascrittura, TypeField.integerzero) {
+    ns(true, true, true, true, TypePar.letturascrittura, TypeField.longzero) {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
-            if (value instanceof Integer) {
-                wiki.setNs((int) value);
+            if (value instanceof Long) {
+                wiki.setNs((long) value);
             }// fine del blocco if
             return wiki;
         }// end of method
@@ -52,20 +57,20 @@ public enum PagePar {
     starttimestamp(false, false, false, true, TypePar.soloscrittura, TypeField.date),
 
     //--parametri wiki revisions
-    revid(true, true, false, false, TypePar.letturascrittura, TypeField.integernotzero) {
+    revid(true, true, false, false, TypePar.letturascrittura, TypeField.longnotzero) {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
-            if (value instanceof Integer) {
-                wiki.setRevid((Integer) value);
+            if (value instanceof Long) {
+                wiki.setRevid((long) value);
             }// fine del blocco if
             return wiki;
         }// end of method
     },
-    parentid(true, true, false, false, TypePar.letturascrittura, TypeField.integerzero) {
+    parentid(true, true, false, false, TypePar.letturascrittura, TypeField.longzero) {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
-            if (value instanceof Integer) {
-                wiki.setParentid((Integer) value);
+            if (value instanceof Long) {
+                wiki.setParentid((long) value);
             }// fine del blocco if
             return wiki;
         }// end of method
@@ -73,8 +78,8 @@ public enum PagePar {
     minor(true, true, false, false, TypePar.letturascrittura, TypeField.booleano) {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
-            if (value instanceof Integer) {
-                wiki.setParentid((Integer) value);
+            if (value instanceof Boolean) {
+                wiki.setMinor((boolean) value);
             }// fine del blocco if
             return wiki;
         }// end of method
@@ -91,17 +96,17 @@ public enum PagePar {
     anon(true, true, false, false, TypePar.letturascrittura, TypeField.booleano) {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
-            if (value instanceof Integer) {
-                wiki.setParentid((Integer) value);
+            if (value instanceof Boolean) {
+                wiki.setAnon((boolean) value);
             }// fine del blocco if
             return wiki;
         }// end of method
     },
-    userid(true, true, false, false, TypePar.letturascrittura, TypeField.integerzero) {
+    userid(true, true, false, false, TypePar.letturascrittura, TypeField.longzero) {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
-            if (value instanceof Integer) {
-                wiki.setUserid((Integer) value);
+            if (value instanceof Long) {
+                wiki.setUserid((long) value);
             }// fine del blocco if
             return wiki;
         }// end of method
@@ -115,11 +120,11 @@ public enum PagePar {
             return wiki;
         }// end of method
     },
-    size(true, true, false, false, TypePar.letturascrittura, TypeField.integernotzero) {
+    size(true, true, false, false, TypePar.letturascrittura, TypeField.longnotzero) {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
-            if (value instanceof Integer) {
-                wiki.setSize((Integer) value);
+            if (value instanceof Long) {
+                wiki.setSize((long) value);
             }// fine del blocco if
             return wiki;
         }// end of method
@@ -340,23 +345,21 @@ public enum PagePar {
     }// end of method
 
     /**
-     * Controlla che tutti i parametri abbiano un valore valido (ai fini della registrazione sul database)
+     * Controlla che tutti i parametri abbiano un valore valido (ai fini della lettura della Request Read)
      *
      * @param mappa dei valori
      * @return true se tutti sono validi
      */
-    public static boolean isParValidi(HashMap mappa) {
+    public static boolean isParValidiRead(HashMap mappa) {
         boolean status = true;
         String key;
         Object value = null;
 
-        for (PagePar par : getPerm()) {
+        for (PagePar par : getRead()) {
             key = par.toString();
             value = mappa.get(key);
-            if (par.obbligatorioDatabase) {
-                if (!isParValido(par, value)) {
-                    status = false;
-                }// fine del blocco if
+            if (!isParValido(par, value)) {
+                status = false;
             }// fine del blocco if
         } // fine del ciclo for-each
 
@@ -380,20 +383,26 @@ public enum PagePar {
             }// fine del blocco if
         }// fine del blocco if
 
-        if (type == TypeField.integerzero) {
-            if (value instanceof Integer) {
+        if (type == TypeField.longzero) {
+            if (value instanceof Long) {
                 status = true;
             }// fine del blocco if
         }// fine del blocco if
 
-        if (type == TypeField.integernotzero) {
-            if (value instanceof Integer && (Integer) value > 0) {
+        if (type == TypeField.longnotzero) {
+            if (value instanceof Long && (Long) value > 0) {
                 status = true;
             }// fine del blocco if
         }// fine del blocco if
 
         if (type == TypeField.date) {
             if (value != null && value instanceof Date) {
+                status = true;
+            }// fine del blocco if
+        }// fine del blocco if
+
+        if (type == TypeField.booleano) {
+            if (value != null && value instanceof Boolean) {
                 status = true;
             }// fine del blocco if
         }// fine del blocco if
@@ -429,7 +438,7 @@ public enum PagePar {
      * Enumeration di tipologie dei campi
      */
     public static enum TypeField {
-        string, integerzero, integernotzero, date, booleano
+        string, longzero, longnotzero, date, booleano
     }// fine della Enumeration interna
 
 } // fine della Enumeration
