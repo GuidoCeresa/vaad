@@ -114,7 +114,7 @@ public class Page implements Serializable {
     }// fine del metodo
 
     public String getText() {
-        return (String)mappaObj.get(PagePar.text.toString());
+        return (String)mappaObj.get(PagePar.content.toString());
     }// fine del metodo
 
     public boolean isValida() {

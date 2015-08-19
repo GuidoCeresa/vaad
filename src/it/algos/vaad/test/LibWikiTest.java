@@ -2,6 +2,7 @@ package it.algos.vaad.test;
 
 import it.algos.vaad.wiki.LibWiki;
 import it.algos.vaad.wiki.PagePar;
+import it.algos.vaad.wiki.QueryCat;
 import it.algos.vaad.wiki.QueryReadTitle;
 import org.junit.Test;
 
@@ -16,7 +17,7 @@ import static org.junit.Assert.*;
  * Created by gac on 20 giu 2015.
  * Using specific Templates (Entity, Domain, Modulo)
  */
-public class LibWikiTest extends VaadTest{
+public class LibWikiTest extends VaadTest {
 
     // alcuni valori di riferimento
     private static String SPAZI_MULTIPLI = "Abc    def ghi   lmn";
@@ -608,14 +609,14 @@ public class LibWikiTest extends VaadTest{
     public void creaListaCatJson() {
         ArrayList<Integer> lista;
         String titolo = "Eventi del 1902";
-//        QueryCat categoria;
-//        String risultato;
-//
-//        categoria = new QueryCat(titolo);
-//        risultato = categoria.getRisultato();
-//        lista = LibWiki.creaListaCatJson(risultato);
-//        assertNotNull(lista);
-//        assertTrue(lista.size() == 2);
+        QueryCat categoria;
+        String risultato;
+
+        categoria = new QueryCat(titolo);
+        risultato = categoria.getContenuto();
+        lista = LibWiki.creaListaCatJson(risultato);
+        assertNotNull(lista);
+        assertTrue(lista.size() == 2);
     }// end of single test
 
     @Test
@@ -626,9 +627,9 @@ public class LibWikiTest extends VaadTest{
         ArrayList<Integer> lista;
         String titolo = "Eventi del 1902";
 
-//        lista = LibWiki.creaListaCat(titolo);
-//        assertNotNull(lista);
-//        assertTrue(lista.size() == 2);
+        lista = LibWiki.creaListaCat(titolo);
+        assertNotNull(lista);
+        assertTrue(lista.size() == 2);
     }// end of method
 
     @Test
@@ -639,9 +640,9 @@ public class LibWikiTest extends VaadTest{
         ArrayList<Integer> lista;
         String titolo = "Nati nel 1420";
 
-//        lista = LibWiki.creaListaCat(titolo);
-//        assertNotNull(lista);
-//        assertTrue(lista.size() == 33);
+        lista = LibWiki.creaListaCat(titolo);
+        assertNotNull(lista);
+        assertTrue(lista.size() == 34);
     }// end of method
 
     @Test
@@ -659,9 +660,9 @@ public class LibWikiTest extends VaadTest{
         lista.add(7);
         lista.add(98);
 
-//        previsto = "23|45|5389|7|98";
-//        ottenuto = LibWiki.creaListaPageids(lista);
-//        assertEquals(ottenuto, previsto);
+        previsto = "23|45|5389|7|98";
+        ottenuto = LibWiki.creaListaPageids(lista);
+        assertEquals(ottenuto, previsto);
     }// end of single test
 
 }// end of testing class

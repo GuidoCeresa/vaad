@@ -29,7 +29,7 @@ public abstract class Query {
     /**
      * Metodo iniziale
      */
-    protected void inizializza()  {
+    protected void inizializza() {
         try { // prova ad eseguire il codice
             this.request();
         } catch (Exception unErrore) { // intercetta l'errore
@@ -37,9 +37,9 @@ public abstract class Query {
         }// fine del blocco try-catch
     } // fine del metodo
 
-        /**
-         * Recupera il contenuto completo della pagina web
-         */
+    /**
+     * Recupera il contenuto completo della pagina web
+     */
     protected void request() throws Exception {
         URLConnection connection = null;
         InputStream input = null;
@@ -72,6 +72,7 @@ public abstract class Query {
         input.close();
 
         // controlla il valore di ritorno della request e regola il risultato
+        contenuto = textBuffer.toString();
         regolaRisultato(textBuffer.toString());
         trovata = isValida();
     } // fine del metodo
@@ -80,8 +81,8 @@ public abstract class Query {
      * Regola il risultato
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
-    protected void regolaRisultato(String risultato) {
-        contenuto = risultato;
+    protected void regolaRisultato(String risultatoRequest) {
+        contenuto = risultatoRequest;
     } // fine del metodo
 
     public String getContenuto() {

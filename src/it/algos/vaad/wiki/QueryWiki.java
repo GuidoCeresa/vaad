@@ -66,34 +66,12 @@ public abstract class QueryWiki extends Query{
     }// fine del metodo costruttore
 
     protected void inizializza(String titlepageid) {
-        String tipoRicercaTxt = tipoRicerca.toString();
-        Read read = null;
-//        String domain = "";
-
         if (titlepageid != null) {
             title = titlepageid;
             pageid = titlepageid;
             domain = this.getDomain();
             super.inizializza();
-
-//            read = new Read(domain);
         }// fine del blocco if
-
-//        if (read != null) {
-//            contenuto = read.getContenuto();
-//        }// fine del blocco if
-
-
-//        if (read != null && isValida()) {
-//            if (!contenuto.startsWith(TAG_MISSING)) {
-//                trovata = true;
-//            }// fine del blocco if
-//        }// fine del blocco if
-
-//        firstRequest();
-//        while (!continua.equals('')) {
-//            firstRequest();
-//        } // fine del blocco while
     } // fine del metodo
 
 
@@ -142,8 +120,19 @@ public abstract class QueryWiki extends Query{
 //        this.mappa = mappa
 //    }
 
+    @Override
     public boolean isValida() {
-        return false;
+        boolean valida = true;
+
+        if (contenuto.equals("")) {
+            valida = false;
+        }// fine del blocco if
+
+        if (contenuto.length() < 200 && contenuto.contains("missing")) {
+            valida = false;
+        }// fine del blocco if
+
+        return valida;
     } // end of getter method
 
     public String getContenuto() {

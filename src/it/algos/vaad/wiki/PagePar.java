@@ -5,29 +5,159 @@ import java.util.*;
 public enum PagePar {
 
     //--parametri wiki base
-    pageid(true, true, true, true, TypePar.letturascrittura, TypeField.integernotzero),
-    ns(true, true, true, true, TypePar.letturascrittura, TypeField.integerzero),
-    title(true, true, true, true, TypePar.letturascrittura, TypeField.string),
+    pageid(true, true, true, true, TypePar.letturascrittura, TypeField.integernotzero) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof Integer) {
+                wiki.setPageid((int) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
+    ns(true, true, true, true, TypePar.letturascrittura, TypeField.integerzero) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof Integer) {
+                wiki.setNs((int) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
+    title(true, true, true, true, TypePar.letturascrittura, TypeField.string) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof String) {
+                wiki.setTitle((String) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
 
     //--parametri wiki info
-    contentmodel(true, true, true, true, TypePar.letturascrittura, TypeField.string),
-    pagelanguage(true, true, true, true, TypePar.letturascrittura, TypeField.string),
-    touched(true, true, true, true, TypePar.letturascrittura, TypeField.date),
-    lastrevid(true, true, true, true, TypePar.letturascrittura, TypeField.integernotzero),
-    length(true, true, true, true, TypePar.letturascrittura, TypeField.integernotzero),
+    contentmodel(true, true, true, true, TypePar.letturascrittura, TypeField.string) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof String) {
+                wiki.setContentmodel((String) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
+    pagelanguage(true, true, true, true, TypePar.letturascrittura, TypeField.string) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof String) {
+                wiki.setPagelanguage((String) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
+    touched(true, true, true, true, TypePar.letturascrittura, TypeField.date) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof String) {
+                wiki.setTouched((String) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
+    lastrevid(true, true, true, true, TypePar.letturascrittura, TypeField.integernotzero) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof Integer) {
+                wiki.setLastrevid((Integer) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
+    length(true, true, true, true, TypePar.letturascrittura, TypeField.integernotzero) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof Integer) {
+                wiki.setLength((Integer) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
+
     csrftoken(false, false, false, true, TypePar.soloscrittura, TypeField.string),
     starttimestamp(false, false, false, true, TypePar.soloscrittura, TypeField.date),
 
     //--parametri wiki revisions
-    revid(false, true, false, false, TypePar.letturascrittura, TypeField.integernotzero),
-    parentid(false, true, false, false, TypePar.letturascrittura, TypeField.integerzero),
-    user(false, true, false, false, TypePar.letturascrittura, TypeField.string),
-    userid(false, true, false, false, TypePar.letturascrittura, TypeField.integerzero),
-    timestamp(false, true, false, false, TypePar.letturascrittura, TypeField.date),
-    size(false, true, false, false, TypePar.letturascrittura, TypeField.integernotzero),
-    comment(false, true, false, false, TypePar.letturascrittura, TypeField.string),
-    contentformat(true, true, true, false, TypePar.letturascrittura, TypeField.string),
-    text(true, false, false, false, TypePar.letturascrittura, TypeField.string),
+    revid(false, true, false, false, TypePar.letturascrittura, TypeField.integernotzero) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof Integer) {
+                wiki.setRevid((Integer) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
+    parentid(false, true, false, false, TypePar.letturascrittura, TypeField.integerzero) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof Integer) {
+                wiki.setParentid((Integer) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
+    user(false, true, false, false, TypePar.letturascrittura, TypeField.string) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof String) {
+                wiki.setUser((String) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
+    userid(false, true, false, false, TypePar.letturascrittura, TypeField.integerzero) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof Integer) {
+                wiki.setUserid((Integer) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
+    timestamp(false, true, false, false, TypePar.letturascrittura, TypeField.date) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof Date) {
+                wiki.setTimestamp((Date) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
+    size(false, true, false, false, TypePar.letturascrittura, TypeField.integernotzero) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof Integer) {
+                wiki.setSize((Integer) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
+    comment(false, true, false, false, TypePar.letturascrittura, TypeField.string) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof String) {
+                wiki.setComment((String) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
+    contentformat(true, true, true, false, TypePar.letturascrittura, TypeField.string) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof String) {
+                wiki.setContentformat((String) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    },
+    content(true, false, false, false, TypePar.letturascrittura, TypeField.string) {
+    },
 
     //--parametri altri
     missing(false, false, false, false, TypePar.provvisorio, TypeField.string),
@@ -213,7 +343,6 @@ public enum PagePar {
         return lista;
     }// end of method
 
-
     /**
      * Controlla che tutti i parametri abbiano un valore valido (ai fini della registrazione sul database)
      *
@@ -274,6 +403,19 @@ public enum PagePar {
         }// fine del blocco if
 
         return status;
+    }// end of method
+
+    /**
+     * Inserisce nell'istanza il valore passato come parametro
+     * La property dell'istanza ha lo stesso nome della enumeration
+     * DEVE essere sovrascritto
+     *
+     * @param wiki  istanza da regolare
+     * @param value valore da inserire
+     * @return istanza regolata
+     */
+    public Wiki setWiki(Wiki wiki, Object value) {
+        return wiki;
     }// end of method
 
     public TypeField getType() {

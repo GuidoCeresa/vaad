@@ -186,7 +186,7 @@ public abstract class LibWiki {
 
     /**
      * Elimina la testa iniziale della stringa, se esiste. <br>
-     * <p/>
+     * <p>
      * Esegue solo se la stringa è valida. <br>
      * Se manca la testa, restituisce la stringa. <br>
      * Elimina spazi vuoti iniziali e finali. <br>
@@ -214,7 +214,7 @@ public abstract class LibWiki {
 
     /**
      * Elimina la coda terminale della stringa, se esiste.
-     * <p/>
+     * <p>
      * Esegue solo se la stringa è valida. <br>
      * Se manca la coda, restituisce la stringa. <br>
      * Elimina spazi vuoti iniziali e finali. <br>
@@ -301,7 +301,7 @@ public abstract class LibWiki {
 
     /**
      * Chiude il template
-     * <p/>
+     * <p>
      * Il testo inizia col template, ma prosegue (forse) anche oltre
      * Cerco la prima doppia graffa che abbia all'interno lo stesso numero di aperture e chiusure
      * Spazzola il testo fino a pareggiare le graffe
@@ -339,12 +339,12 @@ public abstract class LibWiki {
      * Estrae il testo di un template dal testo completo della voce
      * Esamina il PRIMO template che trova
      * Gli estremi sono COMPRESI
-     * <p/>
+     * <p>
      * Recupera il tag iniziale con o senza ''Template''
      * Recupera il tag iniziale con o senza primo carattere maiuscolo
      * Recupera il tag finale di chiusura con o senza ritorno a capo precedente
      * Controlla che non esistano doppie graffe dispari all'interno del template
-     * <p/>
+     * <p>
      * Prova anche col tag minuscolo
      */
     public static String estraeTmplCompresi(String testo, String tag) {
@@ -367,7 +367,7 @@ public abstract class LibWiki {
      * Estrae il testo di un template dal testo completo della voce
      * Esamina il PRIMO template che trova
      * Gli estremi sono COMPRESI
-     * <p/>
+     * <p>
      * Recupera il tag iniziale con o senza ''Template''
      * Recupera il tag iniziale con o senza primo carattere maiuscolo
      * Recupera il tag finale di chiusura con o senza ritorno a capo precedente
@@ -423,7 +423,7 @@ public abstract class LibWiki {
      * Estrae il testo di un template dal testo completo della voce
      * Esamina il PRIMO template che trova
      * Gli estremi sono ESCLUSI
-     * <p/>
+     * <p>
      * Recupera il tag iniziale con o senza ''Template''
      * Recupera il tag finale di chiusura con o senza ritorno a capo precedente
      * Controlla che non esistano doppie graffe dispari all'interno del template
@@ -438,7 +438,7 @@ public abstract class LibWiki {
      * Estrae il testo di un template BIO dal testo completo della voce
      * Esamina il PRIMO template che trova (ce ne dovrebbe essere solo uno)
      * Gli estremi sono COMPRESI
-     * <p/>
+     * <p>
      * Recupera il tag iniziale con o senza ''Template''
      * Recupera il tag finale di chiusura con o senza ritorno a capo precedente
      * Controlla che non esistano doppie graffe dispari all'interno del template
@@ -451,7 +451,7 @@ public abstract class LibWiki {
      * Estrae il testo di un template BIO dal testo completo della voce
      * Esamina il PRIMO template che trova
      * Gli estremi sono ESCLUSI
-     * <p/>
+     * <p>
      * Recupera il tag iniziale con o senza ''Template''
      * Recupera il tag finale di chiusura con o senza ritorno a capo precedente
      * Controlla che non esistano doppie graffe dispari all'interno del template
@@ -469,16 +469,16 @@ public abstract class LibWiki {
     public static LinkedHashMap creaMappa(String textJSON) {
         LinkedHashMap mappa = null;
 
-        JSONObject allTxt = (JSONObject) JSONValue.parse(textJSON);
-        JSONObject queryTxt = (JSONObject) allTxt.get(QUERY);
-        Object pagesTxt = queryTxt.get(PAGES);
+        JSONObject allObj = (JSONObject) JSONValue.parse(textJSON);
+        JSONObject queryObj = (JSONObject) allObj.get(QUERY);
+        Object pagesObj = queryObj.get(PAGES);
 
-        if (pagesTxt instanceof JSONObject) {
-            mappa = fixMappa((JSONObject) pagesTxt);
+        if (pagesObj instanceof JSONObject) {
+            mappa = fixMappa((JSONObject) pagesObj);
         }// fine del blocco if
 
-        if (pagesTxt instanceof JSONArray) {
-            mappa = estraeMappaJson((JSONArray) pagesTxt);
+        if (pagesObj instanceof JSONArray) {
+            mappa = estraeMappaJson((JSONArray) pagesObj);
         }// fine del blocco if
 
         return mappa;
@@ -486,7 +486,7 @@ public abstract class LibWiki {
 
     /**
      * Crea una mappa standard (valori String) da una mappa JSON di una pagina
-     * <p/>
+     * <p>
      * Prima i parametri delle info
      * Poi, se ci sono, i parametri della revisione
      *
@@ -644,11 +644,9 @@ public abstract class LibWiki {
      */
     public static ArrayList<Integer> creaListaCat(String title) {
         ArrayList<Integer> lista = null;
-//        QueryCat query = new QueryCat(title);
-//
-//        if (query) {
-//            lista = query.getListaPageids();
-//        }// fine del blocco if
+        QueryCat query = new QueryCat(title);
+
+        lista = query.getListaPageids();
 
         return lista;
     }// end of method
@@ -656,22 +654,32 @@ public abstract class LibWiki {
     /**
      * Crea una lista di pagine (valori pageids) dal testo JSON di una pagina
      *
-     * @param text in ingresso
+     * @param textJSON in ingresso
      * @return lista pageid (valori Integer)
      */
     public static ArrayList<Integer> creaListaCatJson(String textJSON) {
         ArrayList<Integer> lista = null;
-        ArrayList listaTmp = null;
-//        def result
-//        JsonSlurper slurper = new JsonSlurper()
-//        result = slurper.parseText(textJSON)
-//
-//        if (result. "${QUERY}"){
-//            if (result. "${QUERY}". "${CATEGORY_MEMBERS}"){
-//                listaTmp = result. "${QUERY}". "${CATEGORY_MEMBERS}"
-//                lista = converteListaCat(listaTmp)
-//            }// fine del blocco if
-//        }// fine del blocco if-else
+        JSONObject jsonObject = null;
+        Object longPageid = null;
+        int pageid = 0;
+
+        JSONObject allObj = (JSONObject) JSONValue.parse(textJSON);
+        JSONObject queryObj = (JSONObject) allObj.get(QUERY);
+        JSONArray catObj = (JSONArray) queryObj.get(CATEGORY_MEMBERS);
+
+        if (catObj != null) {
+            lista = new ArrayList<>();
+            for (Object obj : catObj) {
+                if (obj instanceof JSONObject) {
+                    jsonObject = (JSONObject) obj;
+                    longPageid = jsonObject.get(PAGEID);
+                    if (longPageid instanceof Long) {
+                        pageid = ((Long) longPageid).intValue();
+                        lista.add(pageid);
+                    }// fine del blocco if
+                }// fine del blocco if
+            } // fine del ciclo for-each
+        }// fine del blocco if
 
         return lista;
     } // fine del metodo
@@ -679,23 +687,28 @@ public abstract class LibWiki {
     /**
      * Estrae il valore del parametro continue dal testo JSON di una pagina
      *
-     * @param text in ingresso
+     * @param textJSON in ingresso
      * @return parametro continue
      */
     public static String creaCatContinue(String textJSON) {
         String textContinue = VUOTA;
-//        LazyMap lazyMap
-//        def result
-//        JsonSlurper slurper = new JsonSlurper()
-//        result = slurper.parseText(textJSON)
-//
-//        if (result. "${QUERY_CONTINUE}"){
-//            if (result. "${QUERY_CONTINUE}". "${CATEGORY_MEMBERS}"){
-//                lazyMap = result. "${QUERY_CONTINUE}". "${CATEGORY_MEMBERS}"
-//                textContinue = estraeContinue(lazyMap)
-//            }// fine del blocco if
-//        }// fine del blocco if-else
+        JSONObject allObj;
+        JSONObject queryObj = null;
+        JSONObject catObj = null;
 
+        allObj = (JSONObject) JSONValue.parse(textJSON);
+        if (allObj != null) {
+            queryObj = (JSONObject) allObj.get(QUERY_CONTINUE);
+        }// fine del blocco if
+        if (queryObj != null) {
+            catObj = (JSONObject) queryObj.get(CATEGORY_MEMBERS);
+        }// fine del blocco if
+        if (catObj != null && catObj.size() == 1) {
+            textContinue = catObj.values().toString();
+        }// fine del blocco if
+
+        textContinue = LibText.levaCoda(textContinue, "]");
+        textContinue = LibText.levaTesta(textContinue, "[");
         return textContinue;
     } // fine del metodo
 
@@ -708,14 +721,14 @@ public abstract class LibWiki {
 //    private static String estraeContinue(LazyMap lazyMap) {
 //        String valore=VUOTA;
 //        String textContinue = VUOTA;
-////        def mappaValori
-////        String sep = '\\|'
-////        def parti
-////
-////        mappaValori = lazyMap.values()
-////        valore = mappaValori[0]
-////        parti = valore.split(sep)
-////        textContinue = parti[1]
+//        Object mappaValori;
+//        String sep = "\\|";
+//        Object parti;
+//
+//        mappaValori = lazyMap.values();
+//        valore = mappaValori[0];
+//        parti = valore.split(sep);
+//        textContinue = parti[1];
 //
 //        //@todo rimetto il valore intero (e non le parti) perché così adesso funziona
 //        return valore;
@@ -723,7 +736,7 @@ public abstract class LibWiki {
 
     /**
      * Converte i typi di una mappa secondo i parametri PagePar
-     * <p/>
+     * <p>
      * La mappa in ingresso contiene ns, pageid e title
      * Utilizzo solo il pageid (Integer)
      *
@@ -752,11 +765,11 @@ public abstract class LibWiki {
         String testo = VUOTA;
         String sep = "|";
 
-//        lista ?.each {
-//            testo += it
-//            testo += sep
-//        } // fine del ciclo each
-//        testo = levaCoda(testo, sep)
+        for (Integer intero : lista) {
+            testo += intero;
+            testo += sep;
+        } // fine del ciclo for-each
+        testo = levaCoda(testo, sep);
 
         return testo;
     } // fine del metodo

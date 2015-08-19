@@ -10,13 +10,6 @@ import java.net.URLEncoder;
  */
 public class QueryReadTitle extends QueryPage {
 
-    // tag per la costruzione della stringa della request
-    private static String TAG_INI = "https://it.wikipedia.org/w/api.php?format=json&action=query";
-    private static String TAG_PROP = "&prop=info|revisions&rvprop=content";
-    private static String TAG_QUERY = TAG_INI + TAG_PROP;
-    private static String TAG_TITOLO = "&titles=";
-    private static String TAG_PAGEID = "&pageids=";
-
     /**
      * Costruttore completo
      * Rinvia al costruttore della superclasse, specificando i flag
@@ -36,7 +29,7 @@ public class QueryReadTitle extends QueryPage {
         String domain = "";
 
         try { // prova ad eseguire il codice
-            domain = TAG_QUERY + TAG_TITOLO + URLEncoder.encode(title, ENCODE);
+            domain = API_BASE + TAG_PROP + TAG_TITOLO + URLEncoder.encode(title, ENCODE);
         } catch (Exception unErrore) { // intercetta l'errore
         }// fine del blocco try-catch
 

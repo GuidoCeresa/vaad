@@ -43,7 +43,7 @@ public class PageParTest extends VaadTest{
         add(PagePar.size, 8239);
         add(PagePar.comment, "commento");
         add(PagePar.contentformat, "formato");
-        add(PagePar.text, "testo");
+        add(PagePar.content, "testo");
 
         //--parametri altri
         add(PagePar.missing, "missing");

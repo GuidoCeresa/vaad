@@ -1,5 +1,7 @@
 package it.algos.vaad.wiki;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Api {
@@ -17,7 +19,6 @@ public class Api {
      * Di default suppone il title
      *
      * @param title della pagina wiki
-     *
      * @return risultato della pagina (JSON) oppure della voce (text) oppure del template (text)
      */
     public static String legge(String title) {
@@ -32,7 +33,6 @@ public class Api {
      *
      * @param titlePageid (title oppure pageid)
      * @param tipoRicerca title o pageId
-     *
      * @return risultato della pagina (JSON) oppure della voce (text) oppure del template (text)
      */
     public static String legge(String titlePageid, TipoRicerca tipoRicerca) {
@@ -48,7 +48,6 @@ public class Api {
      * @param titlePageid (title oppure pageid)
      * @param tipoRicerca title o pageId
      * @param tipoQuery   (pagina, voce o template)
-     *
      * @return risultato della pagina (JSON) oppure della voce (text) oppure del template (text)
      */
     public static String legge(String titlePageid, TipoRicerca tipoRicerca, TipoQuery tipoQuery) {
@@ -64,7 +63,6 @@ public class Api {
      * @param tipoRicerca title o pageId
      * @param tipoQuery   (pagina, voce o template)
      * @param tagTemplate da usare
-     *
      * @return risultato della pagina (JSON) oppure della voce (text) oppure del template (text)
      */
     public static String legge(String titlePageid, TipoRicerca tipoRicerca, TipoQuery tipoQuery, String tagTemplate) {
@@ -97,7 +95,6 @@ public class Api {
      * @param titlePageid (title oppure pageid)
      * @param tipoRicerca title o pageId
      * @param params      passati
-     *
      * @return contenuto del template bio
      */
     public static String legge(String titlePageid, TipoRicerca tipoRicerca, Map params) {
@@ -134,7 +131,6 @@ public class Api {
      * <p>
      *
      * @param title della pagina
-     *
      * @return contenuto completo della pagina (con i metadati mediawiki)
      */
     public static Page leggePage(String title) {
@@ -146,7 +142,6 @@ public class Api {
      * <p>
      *
      * @param pageId della pagina
-     *
      * @return contenuto completo della pagina (con i metadati mediawiki)
      */
     public static Page leggePage(int pageId) {
@@ -159,7 +154,6 @@ public class Api {
      *
      * @param titlePageid (title oppure pageid)
      * @param tipoRicerca title o pageId
-     *
      * @return pagina (con i metadati mediawiki)
      */
     public static Page leggePage(String titlePageid, TipoRicerca tipoRicerca) {
@@ -178,7 +172,6 @@ public class Api {
      * <p>
      *
      * @param title della pagina
-     *
      * @return contenuto completo (json) della pagina (con i metadati mediawiki)
      */
     public static String leggePagina(String title) {
@@ -190,7 +183,6 @@ public class Api {
      * <p>
      *
      * @param pageId della pagina
-     *
      * @return contenuto completo (json) della pagina (con i metadati mediawiki)
      */
     public static String leggePagina(int pageId) {
@@ -203,7 +195,6 @@ public class Api {
      *
      * @param titlePageid (title oppure pageid)
      * @param tipoRicerca title o pageId
-     *
      * @return contenuto completo (json) della pagina (con i metadati mediawiki)
      */
     public static String leggePagina(String titlePageid, TipoRicerca tipoRicerca) {
@@ -229,7 +220,6 @@ public class Api {
      * <p>
      *
      * @param title della pagina
-     *
      * @return contenuto (solo testo) della pagina (senza i metadati mediawiki)
      */
     public static String leggeVoce(String title) {
@@ -241,7 +231,6 @@ public class Api {
      * <p>
      *
      * @param pageId della pagina
-     *
      * @return contenuto (solo testo) della pagina (senza i metadati mediawiki)
      */
     public static String leggeVoce(int pageId) {
@@ -254,7 +243,6 @@ public class Api {
      *
      * @param titlePageid (title oppure pageid)
      * @param tipoRicerca title o pageId
-     *
      * @return contenuto (solo testo) della pagina (senza i metadati mediawiki)
      */
     public static String leggeVoce(String titlePageid, TipoRicerca tipoRicerca) {
@@ -274,7 +262,6 @@ public class Api {
      *
      * @param title della pagina
      * @param tag   nome del template
-     *
      * @return contenuto del template
      */
     public static String leggeTmpl(String title, String tag) {
@@ -287,7 +274,6 @@ public class Api {
      *
      * @param pageId della pagina
      * @param tag    nome del template
-     *
      * @return contenuto del template
      */
     public static String leggeTmpl(int pageId, String tag) {
@@ -301,7 +287,6 @@ public class Api {
      * @param titlePageid (title oppure pageid)
      * @param tipoRicerca title o pageId
      * @param tag         nome del template
-     *
      * @return contenuto del template
      */
     public static String leggeTmpl(String titlePageid, TipoRicerca tipoRicerca, String tag) {
@@ -321,7 +306,6 @@ public class Api {
      * @param titlePageid (title oppure pageid)
      * @param tipoRicerca title o pageId
      * @param params      passati
-     *
      * @return contenuto del template
      */
     public static String leggeTmpl(String titlePageid, TipoRicerca tipoRicerca, Map params) {
@@ -347,7 +331,6 @@ public class Api {
      * <p>
      *
      * @param title della pagina
-     *
      * @return contenuto del template bio
      */
     public static String leggeTmplBio(String title) {
@@ -359,7 +342,6 @@ public class Api {
      * <p>
      *
      * @param pageId della pagina
-     *
      * @return contenuto del template bio
      */
     public static String leggeTmplBio(int pageId) {
@@ -372,7 +354,6 @@ public class Api {
      *
      * @param titlePageid (title oppure pageid)
      * @param tipoRicerca title o pageId
-     *
      * @return contenuto del template bio
      */
     public static String leggeTmplBio(String titlePageid, TipoRicerca tipoRicerca) {
@@ -391,7 +372,6 @@ public class Api {
      * <p>
      *
      * @param testo completo della voce
-     *
      * @return contenuto del template bio
      */
     public static String estraeTmpl(String testo, String tag) {
@@ -403,11 +383,161 @@ public class Api {
      * <p>
      *
      * @param testo completo della voce
-     *
      * @return contenuto del template bio
      */
     public static String estraeTmplBio(String testo) {
         return LibWiki.estraeTmplBioCompresi(testo);
+    }// end of method
+
+
+    /**
+     * Legge dal server wiki
+     * Registra la tavola WikiBio
+     * <p>
+     *
+     * @param title della pagina
+     */
+    public static void downloadBio(String title) {
+        Page pagina = leggePage(title);
+        downloadBio(pagina);
+    }// end of method
+
+    /**
+     * Legge dal server wiki
+     * Registra la tavola WikiBio
+     * <p>
+     *
+     * @param pageId della pagina
+     */
+    public static void downloadBio(int pageId) {
+        Page pagina = leggePage(pageId);
+        downloadBio(pagina);
+    }// end of method
+
+
+    /**
+     * Legge dal server wiki
+     * Registra la tavola  WikiBio
+     * <p>
+     *
+     * @param tmplBio template bio
+     */
+    public static void saveBio(String tmplBio) {
+        HashMap mappa;
+        WikiBio wiki;
+        String testoVoce;
+
+        if (tmplBio != null) {
+            wiki = new WikiBio();
+            wiki.setTmplBio(tmplBio);
+            wiki.save();
+            int a = 89;
+//            mappa = pagina.getMappa();
+//            wiki = (WikiBio) fixMappa(wiki, mappa);
+//            wiki.tmplBio = tmplBio;
+//            if (Pref.getBool(LibWiki.USA_FLASH_TRUE_DOWNLOAD)) {
+//                wiki.save(flush: true);
+//            } else {
+//                wiki.save(flush: false);
+//            }// fine del blocco if-else
+        }// fine del blocco if
+
+    }// end of method
+
+
+    /**
+     * Legge dal server wiki
+     * Registra la tavola  WikiBio
+     * <p>
+     *
+     * @param pagina dal server
+     */
+    public static void downloadBio(Page pagina) {
+        HashMap mappa;
+        WikiBio wiki;
+        String testoVoce;
+        String tmplBio;
+
+        testoVoce = pagina.getText();
+        tmplBio = estraeTmplBio(testoVoce);
+
+        if (tmplBio != null) {
+            wiki = new WikiBio();
+            mappa = pagina.getMappa();
+            wiki = (WikiBio) fixMappa(wiki, mappa);
+//            wiki.setTmplBio(tmplBio);
+            wiki.save();
+        }// fine del blocco if
+
+    }// end of method
+
+    /**
+     * Regola i parametri della tavola in base alla mappa letta dal server
+     * Aggiunge le date di riferimento lettura/scrittura
+     */
+    private static Wiki fixMappa(Wiki wiki, HashMap mappa) {
+        List<PagePar> lista = PagePar.getPerm();
+        String key;
+        Object value;
+
+        for (PagePar par : lista) {
+            key = par.toString();
+            value = null;
+
+            if (mappa.get(key) != null) {
+                value = mappa.get(key);
+            }// fine del blocco if
+
+            //--controllo degli interi che POSSONO esser anche zero
+            if (par.getType() == PagePar.TypeField.integerzero) {
+                if (value == null) {
+                    value = 0;
+                }// fine del blocco if
+            }// fine del blocco if
+
+            //--patch
+            if (par == PagePar.comment) {
+                if (value instanceof String) {
+                    if (((String) value).startsWith("[[WP:OA|←]]")) {
+                        value = "Nuova pagina";
+                    }// fine del blocco if
+                }// fine del blocco if
+            }// fine del blocco if
+
+            par.setWiki(wiki,value);
+        } // fine del ciclo for-each
+
+//        lista?.each {
+//            key = it
+//            value = null
+//            if (mappa["${key}"]) {
+//                value = mappa["${key}"]
+//            }// fine del blocco if
+//
+//            //--controllo degli interi che POSSONO esser anche zero
+//            if (it.type == PagePar.TypeField.integerzero) {
+//                if (!value) {
+//                    value = 0
+//                }// fine del blocco if
+//            }// fine del blocco if
+//
+//            //--patch
+//            if (it == PagePar.comment) {
+//                if (value in String) {
+//                    if (value.startsWith('[[WP:OA|←]]')) {
+//                        value = 'Nuova pagina'
+//                    }// fine del blocco if
+//                }// fine del blocco if
+//            }// fine del blocco if
+//
+//            try { // prova ad eseguire il codice
+//                wiki."${key}" = value
+//            } catch (Exception unErrore) { // intercetta l'errore
+//                log.error unErrore + ' : key= ' + key + ' value= ' + value
+//            }// fine del blocco try-catch
+//        } // fine del ciclo each
+
+        return wiki;
     }// end of method
 
 }// end of service class

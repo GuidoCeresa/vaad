@@ -25,8 +25,8 @@ public abstract class VaadTest {
     protected static String TITOLO_WEB_ERRATO = "http://www.pippozbelloz.it/";
     protected static String CONTENUTO_WEB = "http://www.danielapossenti.it/quattroprovince/";
     protected static String TAG_ERRORE = "UnknownHostException";
-    protected static String TAG_INI_PAGINA = "{\"batchcomplete\":\"\",\"query\":{\"pages\":";
-    protected static String TAG_END_PAGINA = "\"}]}}}}";
+    protected static String TAG_INI_PAGINA = "{\"batchcomplete\":true,\"query\":";
+    protected static String TAG_END_PAGINA = "\"}]}]}}";
     protected static String TAG_INI_VOCE = "{{F|militari italiani|luglio 2013}}";
     protected static String TAG_END_VOCE = "[[Categoria:Italo-libici|Conte, Nicola]]";
     protected static String TAG_INI_TMPL = "{{Videogioco\n|nomegioco";

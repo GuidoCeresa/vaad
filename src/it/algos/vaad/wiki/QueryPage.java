@@ -11,6 +11,13 @@ package it.algos.vaad.wiki;
  */
 public abstract class QueryPage extends QueryWiki {
 
+    // tag per la costruzione della stringa della request
+    protected static String TAG_INI = "https://it.wikipedia.org/w/api.php?format=json&action=query";
+    protected static String TAG_PROP = "&prop=info|revisions&rvprop=content";
+    protected static String TAG_QUERY = TAG_INI + TAG_PROP;
+    protected static String TAG_TITOLO = "&titles=";
+    protected static String TAG_PAGEID = "&pageids=";
+
     /**
      * Costruttore completo
      * Rinvia al costruttore della superclasse
@@ -27,19 +34,5 @@ public abstract class QueryPage extends QueryWiki {
         super(pageid, tipoRicerca, tipoRequest);
     }// fine del metodo costruttore
 
-    @Override
-    public boolean isValida() {
-        boolean valida = true;
-
-        if (contenuto.equals("")) {
-            valida = false;
-        }// fine del blocco if
-
-        if (contenuto.length() < 200 && contenuto.contains("missing")) {
-            valida = false;
-        }// fine del blocco if
-
-        return valida;
-    } // end of getter method
 
 }// end of class

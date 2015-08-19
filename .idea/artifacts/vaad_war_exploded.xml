@@ -8,7 +8,9 @@
           <element id="module-output" name="vaad" />
           <element id="jpa-descriptors" facet="vaad/jpa/JPA" />
         </element>
-        <element id="directory" name="lib" />
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="webbase_jar" />
+        </element>
         <element id="dir-copy" path="$PROJECT_DIR$/data" />
       </element>
       <element id="directory" name="VAADIN">

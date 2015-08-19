@@ -1,7 +1,5 @@
 package it.algos.vaad.wiki;
 
-import java.text.Format;
-
 /**
  * Created by gac on 26 giu 2015.
  * Using specific Templates (Entity, Domain, Modulo)
@@ -29,7 +27,7 @@ public abstract class Cost {
     public static String API_LOGIN = "login";
 
     /* suffisso per il formato della risposta */
-    public static String API_FORMAT = "&format=" + FORMAT.toString();
+    public static String API_FORMAT = "&format=" + FORMAT.toString() + "&formatversion=2";
 
     /* azione API delle query */
     public static String API_QUERY = API_ACTION + "query";
