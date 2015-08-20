@@ -107,9 +107,9 @@ public class @NAME@ extends BaseEntity {
 
 
     @Override
-    public Bolla clone() throws CloneNotSupportedException {
+    public @NAME@ clone() throws CloneNotSupportedException {
         try {
-            return (Bolla) BeanUtils.cloneBean(this);
+            return (@NAME@) BeanUtils.cloneBean(this);
         } catch (Exception ex) {
             throw new CloneNotSupportedException();
         }// fine del blocco try-catch

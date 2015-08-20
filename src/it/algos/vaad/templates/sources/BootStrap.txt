@@ -45,6 +45,9 @@ public class @PACK@BootStrap extends BootStrap {
         // registra il servlet context non appena è disponibile
         @PACK@App.setServletContext(svltCtx);
 
+        // Controllo, aggiunta, esecuzione di pacth e versioni (principalmente dei dati)
+        VersioneBootStrap.init(svltCtx);
+
         // Do server stuff here
 
     }// end of method

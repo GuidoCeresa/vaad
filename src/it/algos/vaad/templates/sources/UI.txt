@@ -22,6 +22,8 @@ public class @PACK@UI extends VaadAlgosUI {
     protected void addAllModuli() {
         moduloPartenza = new VersioneModulo();
         this.addModulo(moduloPartenza);
+        this.addModulo(new PrefMod());
+        this.addModulo(new LogMod());
     }// end of method
 
     /**

@@ -1,9 +1,12 @@
 <?xml version="1.0"?>
 <project name="pack" basedir="." default="newonly">
+
+    <property name="app" value="App"/>
     <property name="boot" value="BootStrap"/>
     <property name="servlet" value="Servlet"/>
     <property name="ui" value="UI"/>
-    <property name="app" value="App"/>
+    <property name="versione" value="VersioneBootStrap"/>
+
     <property name="persistence" value="persistence"/>
     <property name="web" value="web"/>
     <property name="addons" value="addons"/>
@@ -22,10 +25,13 @@
     <property name="destSufJava" value=".java"/>
     <property name="destSufXml" value=".xml"/>
     <property name="destSufScss" value=".scss"/>
+
+    <property name="srcApp" value="${srcDir}/${app}${srcSuffix}"/>
     <property name="srcBoot" value="${srcDir}/${boot}${srcSuffix}"/>
     <property name="srcServlet" value="${srcDir}/${servlet}${srcSuffix}"/>
     <property name="srcUI" value="${srcDir}/${ui}${srcSuffix}"/>
-    <property name="srcApp" value="${srcDir}/${app}${srcSuffix}"/>
+    <property name="srcVers" value="${srcDir}/${versione}${srcSuffix}"/>
+
     <property name="srcPersistence" value="${srcDir}/${persistence}${srcSuffix}"/>
     <property name="srcWeb" value="${srcDir}/${web}${srcSuffix}"/>
     <property name="srcAddons" value="${srcDir}/${addons}${srcSuffix}"/>
@@ -48,10 +54,13 @@
         <property name="destDirIt" value="${baseDest}/${lowerPack}${discesa}${lowerPack}"/>
         <property name="destDirMeta" value="${baseDest}/${lowerPack}${discesaMeta}"/>
         <property name="destDirThemses" value="${baseDest}/${lowerPack}${discesaThemes}/${theme}"/>
+
+        <property name="destApp" value="${destDirIt}/${pack}${app}${destSufJava}"/>
         <property name="destBoot" value="${destDirIt}/${pack}${boot}${destSufJava}"/>
         <property name="destServlet" value="${destDirIt}/${pack}${servlet}${destSufJava}"/>
         <property name="destUI" value="${destDirIt}/${pack}${ui}${destSufJava}"/>
-        <property name="destApp" value="${destDirIt}/${pack}${app}${destSufJava}"/>
+        <property name="destVers" value="${destDirIt}/${versione}${destSufJava}"/>
+
         <property name="destPersistence" value="${destDirMeta}/${persistence}${destSufXml}"/>
         <property name="destWeb" value="${destDir}/${discesaWeb}${web}${destSufXml}"/>
         <property name="destAddons" value="${destDirThemses}/${addons}${destSufScss}"/>
@@ -110,6 +119,10 @@
 
     <target name="crea" depends="input" description="Copia tutti i files">
         <antcall target="creaSingoloFile">
+            <param name="sourceFile" value="${srcApp}"/>
+            <param name="destFile" value="${destApp}"/>
+        </antcall>
+        <antcall target="creaSingoloFile">
             <param name="sourceFile" value="${srcBoot}"/>
             <param name="destFile" value="${destBoot}"/>
         </antcall>
@@ -122,9 +135,10 @@
             <param name="destFile" value="${destUI}"/>
         </antcall>
         <antcall target="creaSingoloFile">
-            <param name="sourceFile" value="${srcApp}"/>
-            <param name="destFile" value="${destApp}"/>
+            <param name="sourceFile" value="${srcVers}"/>
+            <param name="destFile" value="${destVers}"/>
         </antcall>
+
         <antcall target="sovrascriveSingoloFile">
             <param name="sourceFile" value="${srcPersistence}"/>
             <param name="destFile" value="${destPersistence}"/>
@@ -150,6 +164,10 @@
 
     <target name="sovrascrive" depends="input" description="Sovrascrive tutti i files">
         <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcApp}"/>
+            <param name="destFile" value="${destApp}"/>
+        </antcall>
+        <antcall target="sovrascriveSingoloFile">
             <param name="sourceFile" value="${srcBoot}"/>
             <param name="destFile" value="${destBoot}"/>
         </antcall>
@@ -162,9 +180,10 @@
             <param name="destFile" value="${destUI}"/>
         </antcall>
         <antcall target="sovrascriveSingoloFile">
-            <param name="sourceFile" value="${srcApp}"/>
-            <param name="destFile" value="${destApp}"/>
+            <param name="sourceFile" value="${srcVers}"/>
+            <param name="destFile" value="${destVers}"/>
         </antcall>
+
         <antcall target="sovrascriveSingoloFile">
             <param name="sourceFile" value="${srcPersistence}"/>
             <param name="destFile" value="${destPersistence}"/>

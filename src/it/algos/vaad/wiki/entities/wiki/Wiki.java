@@ -4,6 +4,7 @@ import it.algos.webbase.domain.versione.Versione_;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.query.AQuery;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.util.Date;
 import java.util.List;
@@ -15,9 +16,13 @@ import java.util.List;
 @Entity
 public class Wiki extends BaseEntity {
 
-    /** nomi interni dei campi (ordine non garantito) */
+    /**
+     * nomi interni dei campi (ordine non garantito)
+     */
     //--parametri wiki base
+    @Column(unique = true)
     private long pageid;
+
     private long ns;
     private String title;
 

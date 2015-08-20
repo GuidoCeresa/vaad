@@ -12,22 +12,22 @@ import java.util.Date;
  */
 @StaticMetamodel(Wiki.class)
 public class Wiki_ extends BaseEntity_ {
-    public static volatile SingularAttribute<Wiki, Integer> pageid;
+    public static volatile SingularAttribute<Wiki, Long> pageid;
     public static volatile SingularAttribute<Wiki, String> title;
-    public static volatile SingularAttribute<Wiki, Integer> ns;
+    public static volatile SingularAttribute<Wiki, Long> ns;
 
     public static volatile SingularAttribute<Wiki, String> contentmodel;
     public static volatile SingularAttribute<Wiki, String> pagelanguage;
     public static volatile SingularAttribute<Wiki, String> touched;
-    public static volatile SingularAttribute<Wiki, Integer> lastrevid;
-    public static volatile SingularAttribute<Wiki, Integer> length;
+    public static volatile SingularAttribute<Wiki, Long> lastrevid;
+    public static volatile SingularAttribute<Wiki, Long> length;
 
-    public static volatile SingularAttribute<Wiki, Integer> revid;
-    public static volatile SingularAttribute<Wiki, Integer> parentid;
+    public static volatile SingularAttribute<Wiki, Long> revid;
+    public static volatile SingularAttribute<Wiki, Long> parentid;
     public static volatile SingularAttribute<Wiki, String> user;
     public static volatile SingularAttribute<Wiki, Date> timestamp;
-    public static volatile SingularAttribute<Wiki, Integer> userid;
-    public static volatile SingularAttribute<Wiki, Integer> size;
+    public static volatile SingularAttribute<Wiki, Long> userid;
+    public static volatile SingularAttribute<Wiki, Long> size;
     public static volatile SingularAttribute<Wiki, String> comment;
     public static volatile SingularAttribute<Wiki, String> contentformat;
 }// end of entity class

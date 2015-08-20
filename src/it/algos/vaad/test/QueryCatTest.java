@@ -26,7 +26,7 @@ public class QueryCatTest {
 
 //    @Test
     public void breve() {
-        ArrayList<Integer> lista;
+        ArrayList<Long> lista;
         QueryCat categoria;
 
         categoria = new QueryCat(TITOLO_CAT_BREVE);
@@ -37,7 +37,7 @@ public class QueryCatTest {
 
 //    @Test
     public void media() {
-        ArrayList<Integer> lista;
+        ArrayList<Long> lista;
         QueryCat categoria;
 
         categoria = new QueryCat(TITOLO_CAT_MEDIA);
@@ -48,7 +48,7 @@ public class QueryCatTest {
 
     @Test
     public void lunga() {
-        ArrayList<Integer> lista;
+        ArrayList<Long> lista;
         QueryCat categoria;
         long fine;
         long durata;
@@ -66,7 +66,7 @@ public class QueryCatTest {
 
 //    @Test
     public void lunghissima() {
-        ArrayList<Integer> lista;
+        ArrayList<Long> lista;
         QueryCat categoria;
         long fine;
         long durata;

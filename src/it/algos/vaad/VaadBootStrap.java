@@ -1,5 +1,6 @@
 package it.algos.vaad;
 
+import it.algos.vaad.wiki.VersioneBootStrap;
 import it.algos.webbase.web.BootStrap;
 import it.algos.webbase.web.entity.EM;
 
@@ -44,6 +45,10 @@ public class VaadBootStrap extends BootStrap {
 
         // registra il servlet context non appena è disponibile
         VaadApp.setServletContext(svltCtx);
+
+        // Controllo, aggiunta, esecuzione di pacth e versioni (principalmente dei dati)
+        VersioneBootStrap.init(svltCtx);
+
         // Do server stuff here
 
     }// end of method

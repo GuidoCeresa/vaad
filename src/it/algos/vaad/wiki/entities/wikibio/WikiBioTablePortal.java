@@ -22,10 +22,17 @@ public class WikiBioTablePortal extends TablePortal {
     public TableToolbar createToolbar() {
         final TableToolbar toolbar = super.createToolbar();
 
-        // bottone Download...
-        MenuBar.MenuItem item = toolbar.addButton("Download...", new MenuBar.Command() {
+        // bottone Ciclo
+        toolbar.addButton("Ciclo", new MenuBar.Command() {
             public void menuSelected(MenuBar.MenuItem selectedItem) {
-                EditDialog dialog = new EditDialog("Download", "Download","title or pageid", new EditDialog.EditListener() {
+                Api.newBioCiclo();
+            }// end of method
+        });// end of anonymous class
+
+        // bottone Download...
+        toolbar.addButton("Download...", new MenuBar.Command() {
+            public void menuSelected(MenuBar.MenuItem selectedItem) {
+                EditDialog dialog = new EditDialog("Download", "Download", "title or pageid", new EditDialog.EditListener() {
                     @Override
                     public void onClose() {
                     }// end of method
@@ -41,5 +48,6 @@ public class WikiBioTablePortal extends TablePortal {
 
         return toolbar;
     }// end of method
+
 
 }// end of class

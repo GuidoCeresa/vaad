@@ -827,8 +827,8 @@ public abstract class LibWiki {
     /**
      * Crea una lista di pagine (valori pageids) dal titolo di una categoria
      */
-    public static ArrayList<Integer> creaListaCat(String title) {
-        ArrayList<Integer> lista = null;
+    public static ArrayList<Long> creaListaCat(String title) {
+        ArrayList<Long> lista = null;
         QueryCat query = new QueryCat(title);
 
         lista = query.getListaPageids();
@@ -842,18 +842,18 @@ public abstract class LibWiki {
      * @param textJSON in ingresso
      * @return lista pageid (valori Integer)
      */
-    public static ArrayList<Integer> creaListaCatJson(String textJSON) {
-        ArrayList<Integer> lista = null;
+    public static ArrayList<Long> creaListaCatJson(String textJSON) {
+        ArrayList<Long> lista = null;
         JSONObject jsonObject = null;
         Object longPageid = null;
-        int pageid = 0;
+        long pageid = 0;
 
         JSONObject allObj = (JSONObject) JSONValue.parse(textJSON);
         JSONObject queryObj = (JSONObject) allObj.get(QUERY);
         JSONArray catObj = (JSONArray) queryObj.get(CATEGORY_MEMBERS);
 
         if (catObj != null) {
-            lista = new ArrayList<>();
+            lista = new ArrayList<Long>();
             for (Object obj : catObj) {
                 if (obj instanceof JSONObject) {
                     jsonObject = (JSONObject) obj;
@@ -946,12 +946,12 @@ public abstract class LibWiki {
      * @param lista (valori Integer) in ingresso
      * @return stringa di valori
      */
-    public static String creaListaPageids(ArrayList<Integer> lista) {
+    public static String creaListaPageids(ArrayList<Long> lista) {
         String testo = VUOTA;
         String sep = "|";
 
-        for (Integer intero : lista) {
-            testo += intero;
+        for (Long lungo : lista) {
+            testo += lungo;
             testo += sep;
         } // fine del ciclo for-each
         testo = levaCoda(testo, sep);
@@ -967,7 +967,7 @@ public abstract class LibWiki {
      * @return data in uscita
      */
     public static Date convertTxtData(String dataTxt) {
-        String zero="0";
+        String zero = "0";
         String annoStr;
         String meseStr;
         String giornoStr;
@@ -1111,6 +1111,28 @@ public abstract class LibWiki {
      */
     private static Object fixValueMap(String key, Object valueIn) {
         return fixValueMap(PagePar.getPar(key), valueIn);
+    } // fine del metodo
+
+    /**
+     * Differenza tra due array
+     *
+     * @param primo   array
+     * @param secondo array
+     * @return differenza
+     */
+    public static ArrayList delta(ArrayList primo, ArrayList secondo) {
+        ArrayList differenza = null;
+
+        if (primo != null && secondo != null) {
+            differenza = new ArrayList();
+            for (Object value : primo) {
+                if (!secondo.contains(value)) {
+                    differenza.add(value);
+                }// fine del blocco if
+            } // fine del ciclo for-each
+        }// fine del blocco if
+
+        return differenza;
     } // fine del metodo
 
 

@@ -1,5 +1,6 @@
 package it.algos.vaad.wiki.entities.wikibio;
 
+import it.algos.vaad.wiki.entities.wiki.Wiki;
 import it.algos.webbase.web.entity.BaseEntity_;
 
 import javax.persistence.metamodel.SingularAttribute;
@@ -12,4 +13,6 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(WikiBio.class)
 public class WikiBio_ extends BaseEntity_ {
     public static volatile SingularAttribute<WikiBio, String> tmplBio;
+    public static volatile SingularAttribute<WikiBio, Long> sizeBio;
+
 }// end of entity class

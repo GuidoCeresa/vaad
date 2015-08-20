@@ -629,7 +629,7 @@ public class LibWikiTest extends VaadTest {
      * @return mappa standard (valori String)
      */
     public void creaListaCatJson() {
-        ArrayList<Integer> lista;
+        ArrayList<Long> lista;
         String titolo = "Eventi del 1902";
         QueryCat categoria;
         String risultato;
@@ -646,7 +646,7 @@ public class LibWikiTest extends VaadTest {
      * Crea una lista di pagine (valori pageids) dal titolo di una categoria
      */
     public void creaListaCat() {
-        ArrayList<Integer> lista;
+        ArrayList<Long> lista;
         String titolo = "Eventi del 1902";
 
         lista = LibWiki.creaListaCat(titolo);
@@ -659,7 +659,7 @@ public class LibWikiTest extends VaadTest {
      * Crea una lista di pagine (valori pageids) dal titolo di una categoria
      */
     public void creaListaCat2() {
-        ArrayList<Integer> lista;
+        ArrayList<Long> lista;
         String titolo = "Nati nel 1420";
 
         lista = LibWiki.creaListaCat(titolo);
@@ -675,12 +675,12 @@ public class LibWikiTest extends VaadTest {
      * @return stringa di valori
      */
     public void creaListaPageids() {
-        ArrayList<Integer> lista = new ArrayList<Integer>();
-        lista.add(23);
-        lista.add(45);
-        lista.add(5389);
-        lista.add(7);
-        lista.add(98);
+        ArrayList<Long> lista = new ArrayList<Long>();
+        lista.add((long)23);
+        lista.add((long)45);
+        lista.add((long)5389);
+        lista.add((long)7);
+        lista.add((long)98);
 
         previsto = "23|45|5389|7|98";
         ottenuto = LibWiki.creaListaPageids(lista);

@@ -44,7 +44,7 @@ public class QueryCat extends QueryWiki {
     private static String CONTINUE = "&cmcontinue=";
 
     // lista di pagine della categoria (namespace=0)
-    private ArrayList<Integer> listaPageids;
+    private ArrayList<Long> listaPageids;
 
     /**
      * Costruttore completo
@@ -109,7 +109,7 @@ public class QueryCat extends QueryWiki {
      */
     @Override
     protected void regolaRisultato(String risultatoRequest) {
-        ArrayList<Integer> lista;
+        ArrayList<Long> lista;
         String txtContinua;
 
         lista = LibWiki.creaListaCatJson(risultatoRequest);
@@ -122,26 +122,26 @@ public class QueryCat extends QueryWiki {
     } // fine del metodo
 
 
-    private void addLista(ArrayList<Integer> listaNew) {
-        ArrayList<Integer> lista;
+    private void addLista(ArrayList<Long> listaNew) {
+        ArrayList<Long> lista;
 
         lista = this.getListaPageids();
         if (lista == null) {
-            lista = new ArrayList<Integer>();
+            lista = new ArrayList<Long>();
         }// fine del blocco if
 
-        for (Integer pageid : listaNew) {
+        for (Long pageid : listaNew) {
             lista.add(pageid);
         } // fine del ciclo for-each
 
         this.setListaPageids(lista);
     } // fine del metodo
 
-    public ArrayList<Integer> getListaPageids() {
+    public ArrayList<Long> getListaPageids() {
         return listaPageids;
     } // fine del metodo
 
-    void setListaPageids(ArrayList<Integer> listaPageids) {
+    void setListaPageids(ArrayList<Long> listaPageids) {
         this.listaPageids = listaPageids;
     } // fine del metodo
 
