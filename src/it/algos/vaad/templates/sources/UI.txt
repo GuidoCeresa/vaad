@@ -4,6 +4,8 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import it.algos.vaad.log.LogMod;
+import it.algos.vaad.pref.PrefMod;
 import it.algos.vaad.ui.VaadAlgosUI;
 import it.algos.webbase.domain.versione.VersioneModulo;
 import it.algos.webbase.web.lib.LibPath;

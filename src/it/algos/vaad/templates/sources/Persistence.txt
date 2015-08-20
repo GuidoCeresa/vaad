@@ -12,6 +12,9 @@
 		<class>it.algos.webbase.domain.utente.Utente</class>
 		<class>it.algos.webbase.domain.utenteruolo.UtenteRuolo</class>
 		<class>it.algos.webbase.domain.versione.Versione</class>
+        <class>it.algos.vaad.pref.Pref</class>
+        <class>it.algos.vaad.log.Log</class>
+        <class>it.algos.vaad.wiki.entities.wiki.Wiki</class>
 
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 

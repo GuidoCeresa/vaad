@@ -99,13 +99,13 @@ public class Wiki extends BaseEntity {
         return totRec;
     }// end of method
 
-    public synchronized static List<Wiki> findAll() {
+    public synchronized static List<Wiki> findAllWiki() {
         return (List<Wiki>) AQuery.getList(Wiki.class);
     }// end of method
 
     @Override
     public String toString() {
-        return "";
+        return title;
     }// end of method
 
     public long getPageid() {

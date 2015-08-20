@@ -179,12 +179,12 @@
             <param name="sourceFile" value="${srcUI}"/>
             <param name="destFile" value="${destUI}"/>
         </antcall>
-        <antcall target="sovrascriveSingoloFile">
+        <antcall target="creaSingoloFile">
             <param name="sourceFile" value="${srcVers}"/>
             <param name="destFile" value="${destVers}"/>
         </antcall>
 
-        <antcall target="sovrascriveSingoloFile">
+        <antcall target="creaSingoloFile">
             <param name="sourceFile" value="${srcPersistence}"/>
             <param name="destFile" value="${destPersistence}"/>
         </antcall>
