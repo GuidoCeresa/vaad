@@ -1,7 +1,6 @@
 package it.algos.vaad;
 
 import com.vaadin.annotations.Theme;
-import it.algos.vaad.wiki.entities.wikibio.WikiBioMod;
 import it.algos.webbase.domain.versione.VersioneModulo;
 import it.algos.vaad.log.LogMod;
 import it.algos.vaad.pref.PrefMod;
@@ -25,7 +24,6 @@ public class VaadUI extends VaadAlgosUI {
 
         this.addModulo(new PrefMod());
         this.addModulo(new LogMod());
-        this.addModulo(new WikiBioMod());
         this.addModulo(moduloPartenza);
     }// end of method
 

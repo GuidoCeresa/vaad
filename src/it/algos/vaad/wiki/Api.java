@@ -2,7 +2,6 @@ package it.algos.vaad.wiki;
 
 import com.vaadin.ui.Notification;
 import it.algos.vaad.wiki.entities.wiki.Wiki;
-import it.algos.vaad.wiki.entities.wikibio.WikiBio;
 import it.algos.vaad.wiki.query.QueryReadPageid;
 import it.algos.vaad.wiki.query.QueryReadTitle;
 import it.algos.vaad.wiki.query.QueryWiki;
@@ -19,7 +18,6 @@ public class Api {
 
     // Di default suppone il template ''Bio''
     private static String TAG_BIO = "Bio";
-    private static String TAG_CAT_DEBUG = "Nati nel 1420";
 
     /**
      * Legge dal server wiki
@@ -399,219 +397,196 @@ public class Api {
     }// end of method
 
 
-    /**
-     * Legge dal server wiki
-     * Registra la tavola WikiBio
-     * <p>
-     *
-     * @param title della pagina
-     */
-    public static void downloadBio(String title) {
-        Page pagina = leggePage(title);
-        downloadBio(pagina);
-    }// end of method
-
-    /**
-     * Legge dal server wiki
-     * Registra la tavola WikiBio
-     * <p>
-     *
-     * @param pageId della pagina
-     */
-    public static void downloadBio(long pageId) {
-        Page pagina = leggePage(pageId);
-        downloadBio(pagina);
-    }// end of method
 
 
-    /**
-     * Legge dal server wiki
-     * Registra la tavola  WikiBio
-     * <p>
-     *
-     * @param tmplBio template bio
-     */
-    public static void saveBio(String tmplBio) {
-        HashMap mappa;
-        WikiBio wiki;
-        String testoVoce;
+//    /**
+//     * Legge dal server wiki
+//     * Registra la tavola  WikiBio
+//     * <p>
+//     *
+//     * @param tmplBio template bio
+//     */
+//    public static void saveBio(String tmplBio) {
+//        HashMap mappa;
+//        WikiBio wiki;
+//        String testoVoce;
+//
+//        if (tmplBio != null) {
+//            wiki = new WikiBio();
+////            wiki.setTmplBio(tmplBio);
+//            wiki.save();
+//            int a = 89;
+////            mappa = pagina.getMappa();
+////            wiki = (WikiBio) fixMappa(wiki, mappa);
+////            wiki.tmplBio = tmplBio;
+////            if (Pref.getBool(LibWiki.USA_FLASH_TRUE_DOWNLOAD)) {
+////                wiki.save(flush: true);
+////            } else {
+////                wiki.save(flush: false);
+////            }// fine del blocco if-else
+//        }// fine del blocco if
+//
+//    }// end of method
 
-        if (tmplBio != null) {
-            wiki = new WikiBio();
-//            wiki.setTmplBio(tmplBio);
-            wiki.save();
-            int a = 89;
+
+//    /**
+//     * Legge dal server wiki
+//     * Registra la tavola  WikiBio
+//     * <p>
+//     *
+//     * @param pagina dal server
+//     */
+//    public static void downloadBio(Page pagina) {
+//        HashMap mappa;
+//        WikiBio wiki;
+//        String testoVoce;
+//        String tmplBio;
+//
+//        testoVoce = pagina.getText();
+//        tmplBio = estraeTmplBio(testoVoce);
+//
+//        if (tmplBio != null) {
+//            wiki = new WikiBio();
 //            mappa = pagina.getMappa();
 //            wiki = (WikiBio) fixMappa(wiki, mappa);
-//            wiki.tmplBio = tmplBio;
-//            if (Pref.getBool(LibWiki.USA_FLASH_TRUE_DOWNLOAD)) {
-//                wiki.save(flush: true);
-//            } else {
-//                wiki.save(flush: false);
-//            }// fine del blocco if-else
-        }// fine del blocco if
-
-    }// end of method
-
-
-    /**
-     * Legge dal server wiki
-     * Registra la tavola  WikiBio
-     * <p>
-     *
-     * @param pagina dal server
-     */
-    public static void downloadBio(Page pagina) {
-        HashMap mappa;
-        WikiBio wiki;
-        String testoVoce;
-        String tmplBio;
-
-        testoVoce = pagina.getText();
-        tmplBio = estraeTmplBio(testoVoce);
-
-        if (tmplBio != null) {
-            wiki = new WikiBio();
-            mappa = pagina.getMappa();
-            wiki = (WikiBio) fixMappa(wiki, mappa);
-            wiki.setTmplBio(tmplBio);
-            wiki.setSizeBio((long) tmplBio.length());
-
-            try { // prova ad eseguire il codice
-                wiki.save();
-            } catch (Exception unErrore) { // intercetta l'errore
-                (new Notification("ATTENZIONE", "La pagina " + pagina.getTitle() + " non è stata registrata", Notification.TYPE_WARNING_MESSAGE, true)).show(com.vaadin.server.Page.getCurrent());
-            }// fine del blocco try-catch
-        }// fine del blocco if
-
-    }// end of method
-
-    /**
-     * Regola i parametri della tavola in base alla mappa letta dal server
-     * Aggiunge le date di riferimento lettura/scrittura
-     */
-    private static Wiki fixMappa(Wiki wiki, HashMap mappa) {
-        List<PagePar> lista = PagePar.getPerm();
-        String key;
-        Object value;
-
-        for (PagePar par : lista) {
-            key = par.toString();
-            value = null;
-
-            if (mappa.get(key) != null) {
-                value = mappa.get(key);
-            }// fine del blocco if
-
-            //--controllo dei LONG che POSSONO esser anche zero
-            if (par.getType() == PagePar.TypeField.longzero) {
-                if (value == null) {
-                    value = 0;
-                }// fine del blocco if
-            }// fine del blocco if
-
-            //--patch
-            if (par == PagePar.comment) {
-                if (value instanceof String) {
-                    if (((String) value).startsWith("[[WP:OA|←]]")) {
-                        value = "Nuova pagina";
-                    }// fine del blocco if
-                }// fine del blocco if
-            }// fine del blocco if
-
-            par.setWiki(wiki, value);
-        } // fine del ciclo for-each
-
-//        lista?.each {
-//            key = it
-//            value = null
-//            if (mappa["${key}"]) {
-//                value = mappa["${key}"]
+//            wiki.setTmplBio(tmplBio);
+//            wiki.setSizeBio((long) tmplBio.length());
+//
+//            try { // prova ad eseguire il codice
+//                wiki.save();
+//            } catch (Exception unErrore) { // intercetta l'errore
+//                (new Notification("ATTENZIONE", "La pagina " + pagina.getTitle() + " non è stata registrata", Notification.TYPE_WARNING_MESSAGE, true)).show(com.vaadin.server.Page.getCurrent());
+//            }// fine del blocco try-catch
+//        }// fine del blocco if
+//
+//    }// end of method
+//
+//    /**
+//     * Regola i parametri della tavola in base alla mappa letta dal server
+//     * Aggiunge le date di riferimento lettura/scrittura
+//     */
+//    private static Wiki fixMappa(Wiki wiki, HashMap mappa) {
+//        List<PagePar> lista = PagePar.getPerm();
+//        String key;
+//        Object value;
+//
+//        for (PagePar par : lista) {
+//            key = par.toString();
+//            value = null;
+//
+//            if (mappa.get(key) != null) {
+//                value = mappa.get(key);
 //            }// fine del blocco if
 //
-//            //--controllo degli interi che POSSONO esser anche zero
-//            if (it.type == PagePar.TypeField.longzero) {
-//                if (!value) {
-//                    value = 0
+//            //--controllo dei LONG che POSSONO esser anche zero
+//            if (par.getType() == PagePar.TypeField.longzero) {
+//                if (value == null) {
+//                    value = 0;
 //                }// fine del blocco if
 //            }// fine del blocco if
 //
 //            //--patch
-//            if (it == PagePar.comment) {
-//                if (value in String) {
-//                    if (value.startsWith('[[WP:OA|←]]')) {
-//                        value = 'Nuova pagina'
+//            if (par == PagePar.comment) {
+//                if (value instanceof String) {
+//                    if (((String) value).startsWith("[[WP:OA|←]]")) {
+//                        value = "Nuova pagina";
 //                    }// fine del blocco if
 //                }// fine del blocco if
 //            }// fine del blocco if
 //
-//            try { // prova ad eseguire il codice
-//                wiki."${key}" = value
-//            } catch (Exception unErrore) { // intercetta l'errore
-//                log.error unErrore + ' : key= ' + key + ' value= ' + value
-//            }// fine del blocco try-catch
-//        } // fine del ciclo each
-
-        return wiki;
-    }// end of method
-
-    /**
-     * Esegue un ciclo di controllo e creazione di nuovi records
-     * Controlla il flag USA_LIMITE_DOWNLOAD
-     * Usa il numero massimo (MAX_DOWNLOAD) di voci da scaricare ad ogni ciclo (se USA_LIMITE_DOWNLOAD=true)
-     * Legge la categoria BioBot
-     * Legge le voci WikiBio esistenti
-     * Trova la differenza
-     * Scarica MAX_DOWNLOAD voci dal server e crea MAX_DOWNLOAD nuovi records di WikiBio
-     */
-    public static void newBioCiclo() {
-        int numPagine = 0;
-        int numRecords = 0;
-        int totRecords = 0;
-        String tagtNew = "\nNuovi records - ";
-        String textCat;
-        String textNew;
-        ArrayList<Long> listaTotaleCategoria;
-        ArrayList<Long> listaEsistentiDataBase;
-        ArrayList<Long> listaMancanti;
-
-//        listaTotaleCategoria = LibWiki.creaListaCat(TAG_BIO);
-        listaTotaleCategoria = LibWiki.creaListaCat(TAG_CAT_DEBUG); //@@todo PROVVISORIO
-
-        listaEsistentiDataBase = WikiBio.findAllPageid();
-        listaMancanti = LibWiki.delta(listaTotaleCategoria, listaEsistentiDataBase);
-
-        if (listaMancanti != null && listaMancanti.size() > 0) {
-            for (Long pageid : listaMancanti) {
-                downloadBio(pageid);
-            } // fine del ciclo for-each
-            numRecords = listaMancanti.size();
-        }// fine del blocco if
-
-        numRecords = 16;
-//        numPagine = listaTotaleCategoria.size()
-//        numPagine = LibTesto.formatNum(numPagine)
-//        totRecords = WikiBio.count
-//        totRecords = LibTesto.formatNum(totRecords)
-//        listaMancanti = listaParziale(listaMancanti)
+//            par.setWiki(wiki, value);
+//        } // fine del ciclo for-each
 //
-//        if (Pref.getBool(LibWiki.SEND_MAIL_INFO) || Pref.getBool(LibWiki.LOG_INFO)) {
-//            textCat = "Lette le ${numPagine} pagine della categoria in " + LibTime.getTimeDiffMin(inizio, intermedio)
-//            textNew = " Aggiunti ${numRecords} records per un totale di ${totRecords} in " + LibTime.getTimeDiff(intermedio)
+////        lista?.each {
+////            key = it
+////            value = null
+////            if (mappa["${key}"]) {
+////                value = mappa["${key}"]
+////            }// fine del blocco if
+////
+////            //--controllo degli interi che POSSONO esser anche zero
+////            if (it.type == PagePar.TypeField.longzero) {
+////                if (!value) {
+////                    value = 0
+////                }// fine del blocco if
+////            }// fine del blocco if
+////
+////            //--patch
+////            if (it == PagePar.comment) {
+////                if (value in String) {
+////                    if (value.startsWith('[[WP:OA|←]]')) {
+////                        value = 'Nuova pagina'
+////                    }// fine del blocco if
+////                }// fine del blocco if
+////            }// fine del blocco if
+////
+////            try { // prova ad eseguire il codice
+////                wiki."${key}" = value
+////            } catch (Exception unErrore) { // intercetta l'errore
+////                log.error unErrore + ' : key= ' + key + ' value= ' + value
+////            }// fine del blocco try-catch
+////        } // fine del ciclo each
 //
-//            if (Pref.getBool(LibWiki.SEND_MAIL_INFO) && mailService) {
-//                mailService.sendMail {
-//                    to 'guidoceresa@me.com'
-//                    subject 'Wikiapi - Ciclo newBio'
-//                    body tagCat + textCat + tagtNew + textNew
-//                }// fine della closure
-//            }// fine del blocco if
+//        return wiki;
+//    }// end of method
 //
-//            if (Pref.getBool(LibWiki.LOG_INFO) && logoService) {
-//                logoService.setInfo(null, Evento.findByNome(LibWiki.NEW_BIO), 'gac', '', textCat + textNew)
-//            }// fine del blocco if
+//    /**
+//     * Esegue un ciclo di controllo e creazione di nuovi records
+//     * Controlla il flag USA_LIMITE_DOWNLOAD
+//     * Usa il numero massimo (MAX_DOWNLOAD) di voci da scaricare ad ogni ciclo (se USA_LIMITE_DOWNLOAD=true)
+//     * Legge la categoria BioBot
+//     * Legge le voci WikiBio esistenti
+//     * Trova la differenza
+//     * Scarica MAX_DOWNLOAD voci dal server e crea MAX_DOWNLOAD nuovi records di WikiBio
+//     */
+//    public static void newBioCiclo() {
+//        int numPagine = 0;
+//        int numRecords = 0;
+//        int totRecords = 0;
+//        String tagtNew = "\nNuovi records - ";
+//        String textCat;
+//        String textNew;
+//        ArrayList<Long> listaTotaleCategoria;
+//        ArrayList<Long> listaEsistentiDataBase;
+//        ArrayList<Long> listaMancanti;
+//
+////        listaTotaleCategoria = LibWiki.creaListaCat(TAG_BIO);
+//        listaTotaleCategoria = LibWiki.creaListaCat(TAG_CAT_DEBUG); //@@todo PROVVISORIO
+//
+////        listaEsistentiDataBase = WikiBio.findAllPageid();
+//        listaMancanti = LibWiki.delta(listaTotaleCategoria, listaEsistentiDataBase);
+//
+//        if (listaMancanti != null && listaMancanti.size() > 0) {
+//            for (Long pageid : listaMancanti) {
+//                downloadBio(pageid);
+//            } // fine del ciclo for-each
+//            numRecords = listaMancanti.size();
 //        }// fine del blocco if
-
-    }// end of method
+//
+//        numRecords = 16;
+////        numPagine = listaTotaleCategoria.size()
+////        numPagine = LibTesto.formatNum(numPagine)
+////        totRecords = WikiBio.count
+////        totRecords = LibTesto.formatNum(totRecords)
+////        listaMancanti = listaParziale(listaMancanti)
+////
+////        if (Pref.getBool(LibWiki.SEND_MAIL_INFO) || Pref.getBool(LibWiki.LOG_INFO)) {
+////            textCat = "Lette le ${numPagine} pagine della categoria in " + LibTime.getTimeDiffMin(inizio, intermedio)
+////            textNew = " Aggiunti ${numRecords} records per un totale di ${totRecords} in " + LibTime.getTimeDiff(intermedio)
+////
+////            if (Pref.getBool(LibWiki.SEND_MAIL_INFO) && mailService) {
+////                mailService.sendMail {
+////                    to 'guidoceresa@me.com'
+////                    subject 'Wikiapi - Ciclo newBio'
+////                    body tagCat + textCat + tagtNew + textNew
+////                }// fine della closure
+////            }// fine del blocco if
+////
+////            if (Pref.getBool(LibWiki.LOG_INFO) && logoService) {
+////                logoService.setInfo(null, Evento.findByNome(LibWiki.NEW_BIO), 'gac', '', textCat + textNew)
+////            }// fine del blocco if
+////        }// fine del blocco if
+//
+//    }// end of method
 
 }// end of service class
