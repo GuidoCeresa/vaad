@@ -6,6 +6,7 @@ import it.algos.vaad.wiki.query.QueryReadPageid;
 import it.algos.vaad.wiki.query.QueryReadTitle;
 import it.algos.vaad.wiki.query.QueryWiki;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -435,7 +436,7 @@ public class Api {
 
         if (tmplBio != null) {
             wiki = new WikiBio();
-            wiki.setTmplBio(tmplBio);
+//            wiki.setTmplBio(tmplBio);
             wiki.save();
             int a = 89;
 //            mappa = pagina.getMappa();
@@ -471,7 +472,7 @@ public class Api {
             wiki = new WikiBio();
             mappa = pagina.getMappa();
             wiki = (WikiBio) fixMappa(wiki, mappa);
-//            wiki.setTmplBio(tmplBio);
+            wiki.setTmplBio(tmplBio);
             wiki.save();
         }// fine del blocco if
 

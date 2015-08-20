@@ -967,6 +967,7 @@ public abstract class LibWiki {
      * @return data in uscita
      */
     public static Date convertTxtData(String dataTxt) {
+        String zero="0";
         String annoStr;
         String meseStr;
         String giornoStr;
@@ -981,18 +982,60 @@ public abstract class LibWiki {
         int secondo = 0;
 
         annoStr = dataTxt.substring(0, 4);
-        meseStr = dataTxt.substring(5, 7);
-        giornoStr = dataTxt.substring(8, 10);
-        oraStr = dataTxt.substring(11, 13);
-        minutoStr = dataTxt.substring(14, 16);
-        secondoStr = dataTxt.substring(17, 19);
+        if (dataTxt.substring(5, 6).equals(zero)) {
+            meseStr = dataTxt.substring(6, 7);
+        } else {
+            meseStr = dataTxt.substring(5, 7);
+        }// fine del blocco if-else
 
-        anno = Integer.decode(annoStr);
-        mese = Integer.decode(meseStr);
-        giorno = Integer.decode(giornoStr);
-        ora = Integer.decode(oraStr);
-        minuto = Integer.decode(minutoStr);
-        secondo = Integer.decode(secondoStr);
+        if (dataTxt.substring(8, 9).equals(zero)) {
+            giornoStr = dataTxt.substring(9, 10);
+        } else {
+            giornoStr = dataTxt.substring(8, 10);
+        }// fine del blocco if-else
+
+        if (dataTxt.substring(11, 12).equals(zero)) {
+            oraStr = dataTxt.substring(12, 13);
+        } else {
+            oraStr = dataTxt.substring(11, 13);
+        }// fine del blocco if-else
+
+        if (dataTxt.substring(14, 15).equals(zero)) {
+            minutoStr = dataTxt.substring(15, 16);
+        } else {
+            minutoStr = dataTxt.substring(14, 16);
+        }// fine del blocco if-else
+
+        if (dataTxt.substring(17, 18).equals(zero)) {
+            secondoStr = dataTxt.substring(18, 19);
+        } else {
+            secondoStr = dataTxt.substring(17, 19);
+        }// fine del blocco if-else
+
+        try { // prova ad eseguire il codice
+            anno = Integer.decode(annoStr);
+        } catch (Exception unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch    anno = Integer.decode(annoStr);
+        try { // prova ad eseguire il codice
+            mese = Integer.decode(meseStr);
+        } catch (Exception unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch    anno = Integer.decode(annoStr);
+        try { // prova ad eseguire il codice
+            giorno = Integer.decode(giornoStr);
+        } catch (Exception unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch    anno = Integer.decode(annoStr);
+        try { // prova ad eseguire il codice
+            ora = Integer.decode(oraStr);
+        } catch (Exception unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch
+        try { // prova ad eseguire il codice
+            minuto = Integer.decode(minutoStr);
+        } catch (Exception unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch    anno = Integer.decode(annoStr);
+        try { // prova ad eseguire il codice
+            secondo = Integer.decode(secondoStr);
+        } catch (Exception unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch    anno = Integer.decode(annoStr);
 
         //--patch
         anno = anno - 1900;

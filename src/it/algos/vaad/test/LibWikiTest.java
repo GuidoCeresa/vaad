@@ -6,7 +6,10 @@ import it.algos.vaad.wiki.query.QueryCat;
 import it.algos.vaad.wiki.query.QueryReadTitle;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -561,6 +564,24 @@ public class LibWikiTest extends VaadTest {
 
         sorgente = "2015-06-30T10:18:05Z";
         dataPrevista = new Date(115, 5, 30, 10, 18, 5);
+        dataOttenuta = LibWiki.convertTxtData(sorgente);
+        assertEquals(dataOttenuta, dataPrevista);
+    }// end of single test
+
+    @Test
+    /**
+     * Converte il valore stringa della data in una data
+     *
+     * @param dataTxt in ingresso
+     * @return data in uscita
+     */
+    public void convertTxtData2() {
+        String sorgente;
+        Date dataPrevista;
+        Date dataOttenuta;
+
+        sorgente = "2015-05-26T09:01:17Z";
+        dataPrevista = new Date(115, 4, 26, 9, 1, 17);
         dataOttenuta = LibWiki.convertTxtData(sorgente);
         assertEquals(dataOttenuta, dataPrevista);
     }// end of single test
