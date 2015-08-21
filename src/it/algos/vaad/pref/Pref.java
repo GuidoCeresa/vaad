@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Vector;
 
 @Entity
 public class Pref extends BaseEntity {
@@ -71,8 +72,60 @@ public class Pref extends BaseEntity {
     }// end of method
 
     public synchronized static ArrayList<Pref> findAll() {
-        return (ArrayList<Pref>) AQuery.getList(Pref.class);
+        ArrayList<Pref> lista;
+        Vector vettore = (Vector) AQuery.getList(Pref.class);
+        lista = new ArrayList<Pref>(vettore);
+        return lista;
+
     }// end of method
+
+    public static Pref findByCode(String code) {
+        ArrayList<Pref> lista = findAll();
+
+        for (Pref pref : lista) {
+            if (pref.getCode().equals(code)) {
+                return pref;
+            }// fine del blocco if
+        } // fine del ciclo for-each
+
+        return null;
+    } // end of method
+
+    public static Boolean getBool(String code) {
+        return findByCode(code).getBool();
+    } // end of method
+
+    public static Boolean getBool(String code, boolean suggerito) {
+        Pref pref = findByCode(code);
+
+        if (pref != null && pref.type == TypePref.booleano) {
+            return pref.getBool();
+        } else {
+            return suggerito;
+        }// fine del blocco if-else
+    } // end of method
+
+    public static Integer getInt(String code) {
+        return findByCode(code).getInt();
+    } // end of method
+
+    public static Integer getInt(String code, int suggerito) {
+        Pref pref = findByCode(code);
+
+        if (pref != null && pref.type == TypePref.intero) {
+            return pref.getInt();
+        } else {
+            return suggerito;
+        }// fine del blocco if-else
+    } // end of method
+
+    public Integer getInt() {
+        if (type == TypePref.intero) {
+            return intero;
+        } else {
+            return null;
+        }// fine del blocco if-else
+    } // end of method
 
     public int getOrdine() {
         return ordine;
@@ -130,14 +183,6 @@ public class Pref extends BaseEntity {
         this.stringa = stringa;
     }
 
-    public Boolean getBool() {
-        return bool;
-    }
-
-    public void setBool(Boolean bool) {
-        this.bool = bool;
-    }
-
     public Integer getIntero() {
         return intero;
     }
@@ -192,6 +237,18 @@ public class Pref extends BaseEntity {
 
     public void setTesto(String testo) {
         this.testo = testo;
+    }
+
+    public Boolean getBool() {
+        if (type == TypePref.booleano) {
+            return bool;
+        } else {
+            return null;
+        }// fine del blocco if-else
+    } // end of method
+
+    public void setBool(Boolean bool) {
+        this.bool = bool;
     }
 
     @Override
