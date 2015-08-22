@@ -1,5 +1,3 @@
-package it.algos.vaad.test;
-
 import it.algos.vaad.wiki.Api;
 import it.algos.vaad.wiki.TipoRicerca;
 import org.junit.Test;

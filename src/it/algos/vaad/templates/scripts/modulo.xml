@@ -42,13 +42,15 @@
         <delete file="${destModulo}" quiet="false"/>
     </target>
 
-    <target name="deleteSingoloFile" depends="input" description="Cancella il singolo file passato come parametro">
+    <target name="deleteSingoloFile" if="sovrascriveflag" depends="input" description="Cancella il singolo file passato come parametro">
         <delete file="${destFile}" quiet="false"/>
 
         <echo message="destFile=${destFile}"/>
     </target>
 
     <target name="creaSingoloFile" description="Copia il singolo file passato come parametro">
+        <!--<exec command="touch &#45;&#45;nocreate ${destFile}"/>-->
+        <!--<touch file="${destFile}"/>-->
         <copy file="${sourceFile}" tofile="${destFile}" overwrite="false">
             <filterset>
                 <filter token="LOWERPROGETTO" value="${lowerProgetto}"/>
@@ -114,34 +116,48 @@
     </scriptdef>
 
 
-    <target name="minimonewonly"  description="Ciclo completo">
+    <target name="minimonewonly" description="Ciclo completo">
         <property name="srcModuloTag" value="ModMin"/>
         <property name="srcModulo" value="${srcDir}/${srcModuloTag}${srcSuffix}"/>
-        <antcall target="crea">
-        </antcall>
+        <antcall target="crea"></antcall>
     </target>
 
-    <target name="allnewonly"  description="Ciclo completo">
+    <target name="allnewonly" description="Ciclo completo">
         <property name="srcModuloTag" value="ModMax"/>
         <property name="srcModulo" value="${srcDir}/${srcModuloTag}${srcSuffix}"/>
-        <antcall target="crea">
-        </antcall>
+        <antcall target="crea"></antcall>
     </target>
 
 
-    <target name="minimosovrascrive"  description="Ciclo completo">
+    <target name="minimosovrascrive" description="Ciclo completo">
+        <property name="sovrascriveflag" value="true"/>
         <property name="srcModuloTag" value="ModMin"/>
         <property name="srcModulo" value="${srcDir}/${srcModuloTag}${srcSuffix}"/>
-        <antcall target="sovrascrive">
-        </antcall>
+        <antcall target="sovrascrive"></antcall>
     </target>
 
-    <target name="allsovrascrive"  description="Ciclo completo">
+    <target name="allsovrascrive" description="Ciclo completo">
+        <property name="sovrascriveflag" value="true"/>
         <property name="srcModuloTag" value="ModMax"/>
         <property name="srcModulo" value="${srcDir}/${srcModuloTag}${srcSuffix}"/>
-        <antcall target="sovrascrive">
-        </antcall>
+        <antcall target="sovrascrive"></antcall>
     </target>
+
+
+    <target name="testminimomassimo" if="massimoflag" description="Esegue il test">
+        <echo message="massimo"/>
+    </target>
+
+
+    <target name="testminimo">
+        <antcall target="testminimomassimo"></antcall>
+    </target>
+
+    <target name="testmassimo">
+        <property name="massimoflag" value=""/>
+        <antcall target="testminimomassimo"></antcall>
+    </target>
+
 
 
 </project>

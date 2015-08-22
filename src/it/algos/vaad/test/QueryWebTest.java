@@ -1,5 +1,3 @@
-package it.algos.vaad.test;
-
 import it.algos.vaad.wiki.query.QueryWeb;
 import org.junit.Test;
 

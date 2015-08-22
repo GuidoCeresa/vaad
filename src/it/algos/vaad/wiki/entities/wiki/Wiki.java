@@ -1,12 +1,18 @@
 package it.algos.vaad.wiki.entities.wiki;
 
+import it.algos.vaad.wiki.Api;
+import it.algos.vaad.wiki.LibWiki;
+import it.algos.vaad.wiki.Page;
 import it.algos.webbase.domain.versione.Versione_;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.query.AQuery;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import java.util.Date;
+import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -19,11 +25,15 @@ public class Wiki extends BaseEntity {
     /**
      * nomi interni dei campi (ordine non garantito)
      */
+
     //--parametri wiki base
     @Column(unique = true)
+    @NotNull
     private long pageid;
 
     private long ns;
+
+    @NotEmpty
     private String title;
 
     //--parametri wiki info
@@ -38,15 +48,43 @@ public class Wiki extends BaseEntity {
     private String user;
     private boolean anon;
     private long userid;
-    private Date timestamp;
+    private Timestamp timestamp;
     private long size;
     private String comment;
     private String contentformat;
     private String contentmodel;
 
+
+    //--tempo di DOWNLOAD
+    //--uso il formato Timestamp, per confrontarla col campo timestamp
+    //--molto meglio che siano esattamente dello stesso tipo
+    //--ultima lettura della voce effettuata dal programma Botbio
+    //--momento in cui il record BioWiki è stato modificato in allineamento alla voce sul server wiki
+    private Timestamp ultimalettura;
+
+//    //--tempo di UPLOAD
+//    //--uso il formato Timestamp, per confrontarla col campo timestamp
+//    //--molto meglio che siano esattamente dello stesso tipo
+//    //--momento in cui la voce sul server wiki è stata modificata con il WrapBio costruito dal programma
+//    private Timestamp ultimaScrittura;
+//
+//    //--ridondante, costruito con il timestamp esatto della pagina sul server wiki
+//    //--serve per visualizzare la data in forma ''breve'' più leggibile,
+//    //--mentre rimane il valore esatto del campo originario timestamp
+//    private Date modificaWiki;
+//
+//    //--ridondante, costruito con il ultimaLettura esatto della pagina
+//    //--serve per visualizzare la data in forma ''breve'' più leggibile,
+//    //--mentre rimane il valore esatto del campo originario timestamp
+//    private Date letturaWiki;
+//
+//    //serve per le voci che sono state modificate sul server wiki rispetto alla versione sul database
+//    //si basa sul parametro lastrevid
+//    //per sicurezza è false (quindi all'inizio controllo tutto)
+//    private boolean allineata = false;
+
     //--forse
 //    private String starttimestamp;
-//    private String testo; //contenuto completo della pagina
 
 
     public Wiki() {
@@ -73,7 +111,7 @@ public class Wiki extends BaseEntity {
     /**
      * Recupera una istanza di Versione usando la query specifica
      *
-     * @return istanza di Versione, null se non trovata
+     * @return istanza di Wiki, null se non trovata
      */
     public static Wiki find(String titolo) {
         Wiki instance = null;
@@ -101,6 +139,31 @@ public class Wiki extends BaseEntity {
 
     public synchronized static List<Wiki> findAllWiki() {
         return (List<Wiki>) AQuery.getList(Wiki.class);
+    }// end of method
+
+    /**
+     * Crea una istanza di wiki dal titolo della voce
+     * Registra l'istanza
+     *
+     * @param titolo della voce sul server wiki
+     * @return istanza di Wiki, null se non trovata
+     */
+    public static Wiki save(String titolo) {
+        Wiki wiki = null;
+        HashMap mappa = null;
+        Page pagina = Api.leggePage(titolo);
+
+        if (pagina != null) {
+            mappa = pagina.getMappa();
+        }// fine del blocco if
+
+        if (mappa != null) {
+            wiki = new Wiki();
+            wiki = LibWiki.fixMappa(wiki, mappa);
+            wiki.save();
+        }// fine del blocco if
+
+        return wiki;
     }// end of method
 
     @Override
@@ -180,11 +243,11 @@ public class Wiki extends BaseEntity {
         this.userid = userid;
     }
 
-    public Date getTimestamp() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -226,5 +289,13 @@ public class Wiki extends BaseEntity {
 
     public void setAnon(boolean anon) {
         this.anon = anon;
+    }
+
+    public Timestamp getUltimaLettura() {
+        return ultimalettura;
+    }
+
+    public void setUltimaLettura(Timestamp ultimalettura) {
+        this.ultimalettura = ultimalettura;
     }
 }// end of entity class

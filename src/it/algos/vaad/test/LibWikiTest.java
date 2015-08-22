@@ -1,5 +1,3 @@
-package it.algos.vaad.test;
-
 import it.algos.vaad.wiki.LibWiki;
 import it.algos.vaad.wiki.PagePar;
 import it.algos.vaad.wiki.query.QueryCat;

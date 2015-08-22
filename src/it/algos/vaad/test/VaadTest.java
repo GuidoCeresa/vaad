@@ -1,5 +1,3 @@
-package it.algos.vaad.test;
-
 import it.algos.vaad.wiki.Page;
 import it.algos.vaad.wiki.PagePar;
 

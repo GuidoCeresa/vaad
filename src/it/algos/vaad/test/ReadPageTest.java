@@ -1,5 +1,3 @@
-package it.algos.vaad.test;
-
 import it.algos.vaad.wiki.query.Query;
 import it.algos.vaad.wiki.query.QueryReadPageid;
 import it.algos.vaad.wiki.query.QueryReadTitle;

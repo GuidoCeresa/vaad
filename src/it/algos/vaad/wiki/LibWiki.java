@@ -5,12 +5,15 @@ package it.algos.vaad.wiki;
  * .
  */
 
+import com.vaadin.ui.Notification;
+import it.algos.vaad.wiki.entities.wiki.Wiki;
 import it.algos.vaad.wiki.query.QueryCat;
 import it.algos.webbase.web.lib.LibText;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,7 +24,8 @@ import java.util.regex.Pattern;
 public abstract class LibWiki {
 
     //--preferenza
-    public static final String USA_CRONO_BIO = "usaCroonoBio";
+    public static final String RUN_DAEMON_BIO_AT_STARTUP = "runDaemonBioStartup";
+    public static final String USA_CRONO_BIO = "usaCronoBio";
     public static final String USA_LIMITE_DOWNLOAD = "usaLimiteDownload";
     public static final String MAX_DOWNLOAD = "maxDownload";
     public static final String NUM_RECORDS_INDEX_BIO = "numRecordsIndexBio";
@@ -960,6 +964,17 @@ public abstract class LibWiki {
     } // fine del metodo
 
     /**
+     * Converte il valore stringa del timestamp in un timestamp
+     * Formato: 2015-06-30T10:18:05Z
+     *
+     * @param timestampText in ingresso
+     * @return data in uscita
+     */
+    public static Timestamp convertTxtTime(String timestampText) {
+        return new Timestamp(convertTxtData(timestampText).getTime());
+    } // fine del metodo
+
+    /**
      * Converte il valore stringa della data in una data
      * Formato: 2015-06-30T10:18:05Z
      *
@@ -1099,6 +1114,16 @@ public abstract class LibWiki {
             }// fine del blocco if
         }// fine del blocco if
 
+        if (typo == PagePar.TypeField.timestamp) {
+            if (valueIn instanceof String) {
+                try { // prova ad eseguire il codice
+                    valueOut = convertTxtTime((String) valueIn);
+                } catch (Exception unErrore) { // intercetta l'errore
+                    valueOut = DATA_NULLA;
+                }// fine del blocco try-catch
+            }// fine del blocco if
+        }// fine del blocco if
+
         return valueOut;
     } // fine del metodo
 
@@ -1134,6 +1159,93 @@ public abstract class LibWiki {
 
         return differenza;
     } // fine del metodo
+
+    /**
+     * Regola i parametri della tavola in base alla mappa letta dal server
+     * Aggiunge le date di riferimento lettura/scrittura
+     */
+    public static Wiki fixMappa(Wiki wiki, HashMap mappa) {
+        List<PagePar> lista = PagePar.getPerm();
+        String key;
+        Object value;
+
+        for (PagePar par : lista) {
+            key = par.toString();
+            value = null;
+
+            if (mappa.get(key) != null) {
+                value = mappa.get(key);
+            }// fine del blocco if
+
+            //--controllo dei LONG che POSSONO esser anche zero
+            if (par.getType() == PagePar.TypeField.longzero) {
+                if (value == null) {
+                    value = 0;
+                }// fine del blocco if
+            }// fine del blocco if
+
+            //--patch
+            if (par == PagePar.comment) {
+                if (value instanceof String) {
+                    if (((String) value).startsWith("[[WP:OA|←]]")) {
+                        value = "Nuova pagina";
+                    }// fine del blocco if
+                }// fine del blocco if
+            }// fine del blocco if
+
+            par.setWiki(wiki, value);
+        } // fine del ciclo for-each
+
+        return wiki;
+    }// end of method
+
+
+    /**
+     * Legge dal server wiki
+     * Registra la tavola WikiBio
+     * <p>
+     *
+     * @param title della pagina
+     */
+    public static void download(String title) {
+        Page pagina = Api.leggePage(title);
+        download(pagina);
+    }// end of method
+
+    /**
+     * Legge dal server wiki
+     * Registra la tavola  WikiBio
+     * <p>
+     *
+     * @param pagina dal server
+     */
+    public static void download(Page pagina) {
+        HashMap mappa;
+        Wiki wiki;
+        String testoVoce;
+        String tmplBio;
+
+        testoVoce = pagina.getText();
+        tmplBio = Api.estraeTmplBio(testoVoce);
+
+        if (tmplBio != null) {
+            wiki = new Wiki();
+            mappa = pagina.getMappa();
+            wiki = fixMappa(wiki, mappa);
+            wiki.setTimestamp(new Timestamp(new Date().getTime()));
+            Object alfa = wiki.getPageid();
+            Object beta = wiki.getNs();
+            int ret = 78;
+            wiki.setNs(23L);
+
+            try { // prova ad eseguire il codice
+                wiki.save();
+            } catch (Exception unErrore) { // intercetta l'errore
+                (new Notification("ATTENZIONE", "La pagina " + pagina.getTitle() + " non è stata registrata", Notification.TYPE_WARNING_MESSAGE, true)).show(com.vaadin.server.Page.getCurrent());
+            }// fine del blocco try-catch
+        }// fine del blocco if
+        int a = 78;
+    }// end of method
 
 
 } // fine della classe astratta

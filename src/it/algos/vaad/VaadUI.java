@@ -1,6 +1,7 @@
 package it.algos.vaad;
 
 import com.vaadin.annotations.Theme;
+import it.algos.vaad.wiki.LibWiki;
 import it.algos.webbase.domain.versione.VersioneModulo;
 import it.algos.vaad.log.LogMod;
 import it.algos.vaad.pref.PrefMod;
@@ -34,6 +35,7 @@ public class VaadUI extends VaadAlgosUI {
     @Override
     protected String startModulo() {
 //        return LogMod.MENU_ADDRESS;
+        LibWiki.download("Nicola Conte (ufficiale)");
         return LibPath.getClassName(moduloPartenza);
     }// end of method
 

@@ -2,6 +2,7 @@ package it.algos.vaad.wiki;
 
 import it.algos.vaad.wiki.entities.wiki.Wiki;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 public enum PagePar {
@@ -111,11 +112,11 @@ public enum PagePar {
             return wiki;
         }// end of method
     },
-    timestamp(true, true, false, false, TypePar.letturascrittura, TypeField.date) {
+    timestamp(true, true, false, false, TypePar.letturascrittura, TypeField.timestamp) {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
-            if (value instanceof Date) {
-                wiki.setTimestamp((Date) value);
+            if (value instanceof Timestamp) {
+                wiki.setTimestamp((Timestamp) value);
             }// fine del blocco if
             return wiki;
         }// end of method
@@ -161,7 +162,16 @@ public enum PagePar {
 
     //--parametri altri
     missing(false, false, false, false, TypePar.provvisorio, TypeField.string),
-    revisions(false, false, false, false, TypePar.provvisorio, TypeField.string);
+    revisions(false, false, false, false, TypePar.provvisorio, TypeField.string),
+    ultimalettura(true, false, false, false, TypePar.sololettura, TypeField.timestamp) {
+        @Override
+        public Wiki setWiki(Wiki wiki, Object value) {
+            if (value instanceof Timestamp) {
+                wiki.setTimestamp((Timestamp) value);
+            }// fine del blocco if
+            return wiki;
+        }// end of method
+    };
 
     private boolean read;
     private boolean permanente;
@@ -438,7 +448,7 @@ public enum PagePar {
      * Enumeration di tipologie dei campi
      */
     public static enum TypeField {
-        string, longzero, longnotzero, date, booleano
+        string, longzero, longnotzero, date, timestamp, booleano
     }// fine della Enumeration interna
 
 } // fine della Enumeration

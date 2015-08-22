@@ -1,5 +1,3 @@
-package it.algos.vaad.test;
-
 import it.algos.vaad.wiki.PagePar;
 import org.junit.Before;
 import org.junit.Test;
