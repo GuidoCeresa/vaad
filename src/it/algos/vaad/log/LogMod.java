@@ -46,7 +46,7 @@ public class LogMod extends AlgosModulePop {
 
     /**
      * Crea i campi visibili
-     * <p/>
+     * <p>
      * Come default spazzola tutti i campi della Entity <br>
      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
      * Non garantiscel'ordine con cui vengono presentati i campi nella scheda <br>
@@ -56,7 +56,7 @@ public class LogMod extends AlgosModulePop {
      */
     @Override
     protected Attribute<?, ?>[] creaFieldsAll() {
-        return new Attribute[]{Log_.code, Log_.descrizione, Log_.data};
+        return new Attribute[]{Log_.livello, Log_.code, Log_.descrizione, Log_.time};
     }// end of method/*
 
 }// end of class

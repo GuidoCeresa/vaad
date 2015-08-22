@@ -22,10 +22,6 @@ public class Log extends BaseEntity {
     private String descrizione;
     @NotNull
     private Timestamp time;
-//	Evento evento
-//	String utente
-//	String ruolo
-//	String ip
 
 
     public Log() {
@@ -92,17 +88,17 @@ public class Log extends BaseEntity {
     }// end of method
 
     //--registra un avviso
-    private static void setInfo(String code, String descrizione) {
+    public static void setInfo(String code, String descrizione) {
         setBase(Livello.info, code, descrizione);
     }// fine del metodo
 
     //--registra un avviso
-    private static void setWarn(String code, String descrizione) {
+    public static void setWarn(String code, String descrizione) {
         setBase(Livello.warn, code, descrizione);
     }// fine del metodo
 
     //--registra un avviso
-    private static void setError(String code, String descrizione) {
+    public static void setError(String code, String descrizione) {
         setBase(Livello.error, code, descrizione);
     }// fine del metodo
 
