@@ -45,9 +45,9 @@ public class WikiTest extends VaadTest {
 
     @Test
     public void wikiSaveTitolo() {
-        Wiki wikiOttenuta;
-        wikiOttenuta = Wiki.save(TITOLO);
-        assertNotNull(wikiOttenuta);
+//        Wiki wikiOttenuta;
+//        wikiOttenuta = Wiki.save(TITOLO);
+//        assertNotNull(wikiOttenuta);
     }// end of single test
 
     @Test

@@ -154,7 +154,7 @@ public class Wiki extends BaseEntity {
         Page pagina = Api.leggePage(titolo);
 
         if (pagina != null) {
-            mappa = pagina.getMappa();
+            mappa = pagina.getMappaDB();
         }// fine del blocco if
 
         if (mappa != null) {

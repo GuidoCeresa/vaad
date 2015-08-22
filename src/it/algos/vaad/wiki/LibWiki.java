@@ -1112,6 +1112,9 @@ public abstract class LibWiki {
                     valueOut = DATA_NULLA;
                 }// fine del blocco try-catch
             }// fine del blocco if
+            if (valueIn instanceof Date) {
+                valueOut = valueIn;
+            }// fine del blocco if
         }// fine del blocco if
 
         if (typo == PagePar.TypeField.timestamp) {
@@ -1121,6 +1124,9 @@ public abstract class LibWiki {
                 } catch (Exception unErrore) { // intercetta l'errore
                     valueOut = DATA_NULLA;
                 }// fine del blocco try-catch
+            }// fine del blocco if
+            if (valueIn instanceof Timestamp) {
+                valueOut = valueIn;
             }// fine del blocco if
         }// fine del blocco if
 
@@ -1165,7 +1171,7 @@ public abstract class LibWiki {
      * Aggiunge le date di riferimento lettura/scrittura
      */
     public static Wiki fixMappa(Wiki wiki, HashMap mappa) {
-        List<PagePar> lista = PagePar.getPerm();
+        List<PagePar> lista = PagePar.getDB();
         String key;
         Object value;
 
@@ -1230,21 +1236,24 @@ public abstract class LibWiki {
 
         if (tmplBio != null) {
             wiki = new Wiki();
-            mappa = pagina.getMappa();
+            mappa = pagina.getMappaDB();
             wiki = fixMappa(wiki, mappa);
-            wiki.setTimestamp(new Timestamp(new Date().getTime()));
-            Object alfa = wiki.getPageid();
-            Object beta = wiki.getNs();
-            int ret = 78;
-            wiki.setNs(23L);
 
             try { // prova ad eseguire il codice
                 wiki.save();
             } catch (Exception unErrore) { // intercetta l'errore
-                (new Notification("ATTENZIONE", "La pagina " + pagina.getTitle() + " non è stata registrata", Notification.TYPE_WARNING_MESSAGE, true)).show(com.vaadin.server.Page.getCurrent());
+                //@todo inserire log e logger
+//                (new Notification("ATTENZIONE", "La pagina " + pagina.getTitle() + " non è stata registrata", Notification.TYPE_WARNING_MESSAGE, true)).show(com.vaadin.server.Page.getCurrent());
             }// fine del blocco try-catch
         }// fine del blocco if
-        int a = 78;
+    }// end of method
+
+
+    /**
+     * Restituisce un Timestamp attuale
+     */
+    public static Timestamp getTime() {
+        return new Timestamp(new Date().getTime());
     }// end of method
 
 

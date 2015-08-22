@@ -1,3 +1,4 @@
+import it.algos.vaad.wiki.LibWiki;
 import it.algos.vaad.wiki.PagePar;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +29,7 @@ public class PageParTest extends VaadTest {
         //--parametri wiki info
         add(PagePar.pagelanguage, "linguaggio");
         add(PagePar.csrftoken, "token");
-        add(PagePar.starttimestamp, new Date());
+        add(PagePar.starttimestamp, LibWiki.getTime());
 
         //--parametri wiki revisions
         add(PagePar.revid, 2435L);
@@ -37,7 +38,7 @@ public class PageParTest extends VaadTest {
         add(PagePar.user, "utente");
         add(PagePar.anon, false);
         add(PagePar.userid, 8765L);
-        add(PagePar.timestamp, new Date());
+        add(PagePar.timestamp, LibWiki.getTime());
         add(PagePar.size, 8239L);
         add(PagePar.comment, "commento");
         add(PagePar.contentformat, "formato");
@@ -47,6 +48,7 @@ public class PageParTest extends VaadTest {
         //--parametri altri controlli
         add(PagePar.missing, "missing");
         add(PagePar.revisions, "revisions");
+        add(PagePar.ultimalettura, LibWiki.getTime());
 
     }// end of setup method
 
@@ -61,7 +63,7 @@ public class PageParTest extends VaadTest {
      * @return collezione
      */
     public void getAll() {
-        numPrevisto = 21;
+        numPrevisto = 22;
         listaOttenuta = PagePar.getAll();
         assertNotNull(listaOttenuta);
         numOttenuto = listaOttenuta.size();
@@ -158,7 +160,7 @@ public class PageParTest extends VaadTest {
      */
     public void getPerm() {
         numPrevisto = 16;
-        listaOttenuta = PagePar.getPerm();
+        listaOttenuta = PagePar.getDB();
         assertNotNull(listaOttenuta);
         numOttenuto = listaOttenuta.size();
         assertEquals(numOttenuto, numPrevisto);

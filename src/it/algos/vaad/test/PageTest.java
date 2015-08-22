@@ -23,12 +23,15 @@ public class PageTest extends VaadTest {
         page = new Page(contenuto);
         assertNotNull(page);
 
-        mappaTxt = page.getMappaTxt();
+        mappaTxt = page.getMappaReadTxt();
         assertNotNull(mappaTxt);
-        LibWikiTest.isMappaStringheValidaRead(mappaTxt);
+        LibWikiTest.isMappaReadTxtValida(mappaTxt);
 
-        mappaObj = page.getMappa();
-        LibWikiTest.isMappaValoriValidaRead(mappaObj);
+        mappaObj = page.getMappaReadObj();
+        LibWikiTest.isMappaReadObjValida(mappaObj);
+
+        mappaDB = page.getMappaDB();
+        LibWikiTest.isMappaDBValida(mappaDB);
 
         previsto = TITOLO;
         ottenuto = page.getTitle();

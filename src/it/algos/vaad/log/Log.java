@@ -1,34 +1,43 @@
 package it.algos.vaad.log;
 
+import it.algos.vaad.wiki.LibWiki;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.query.AQuery;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 
 @Entity
 public class Log extends BaseEntity {
 
+    @NotNull
+    private Livello livello;
     @NotEmpty
     private String code;
+    @NotEmpty
     private String descrizione;
-    private Date data;
+    @NotNull
+    private Timestamp time;
 //	Evento evento
 //	String utente
 //	String ruolo
-//	Livello livello
 //	String ip
 
+
     public Log() {
-        this("");
+        super();
     }// end of constructor
 
-    public Log(String code) {
+    public Log(Livello livello, String code, String descrizione, Timestamp time) {
         super();
+        this.setLivello(livello);
         this.setCode(code);
+        this.setDescrizione(descrizione);
+        this.setTime(time);
     }// end of constructor
 
     /**
@@ -82,6 +91,33 @@ public class Log extends BaseEntity {
         return (ArrayList<Log>) AQuery.getList(Log.class);
     }// end of method
 
+    //--registra un avviso
+    private static void setInfo(String code, String descrizione) {
+        setBase(Livello.info, code, descrizione);
+    }// fine del metodo
+
+    //--registra un avviso
+    private static void setWarn(String code, String descrizione) {
+        setBase(Livello.warn, code, descrizione);
+    }// fine del metodo
+
+    //--registra un avviso
+    private static void setError(String code, String descrizione) {
+        setBase(Livello.error, code, descrizione);
+    }// fine del metodo
+
+    //--registra un evento generico
+    private static void setBase(Livello livello, String code, String descrizione) {
+        Log logo = new Log(livello, code, descrizione, LibWiki.getTime());
+        logo.save();
+    }// fine del metodo statico
+
+    //--registra un evento generico
+    private static void setBase(Livello livello, String code, String descrizione, Timestamp time) {
+        Log logo = new Log(livello, code, descrizione, time);
+        logo.save();
+    }// fine del metodo statico
+
     @Override
     public String toString() {
         return code;
@@ -103,12 +139,20 @@ public class Log extends BaseEntity {
         this.descrizione = descrizione;
     }
 
-    public Date getData() {
-        return data;
+    public Timestamp getTime() {
+        return time;
     }
 
-    public void setData(Date data) {
-        this.data = data;
+    public void setTime(Timestamp time) {
+        this.time = time;
+    }
+
+    public Livello getLivello() {
+        return livello;
+    }
+
+    public void setLivello(Livello livello) {
+        this.livello = livello;
     }
 
     @Override

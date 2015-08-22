@@ -4,6 +4,7 @@ import it.algos.vaad.wiki.query.QueryCat;
 import it.algos.vaad.wiki.query.QueryReadTitle;
 import org.junit.Test;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,14 +25,14 @@ public class LibWikiTest extends VaadTest {
     private static String SPAZIO_SINGOLO_PIU_ESTERNI = " Abc def ghi lmn ";
 
     /**
-     * Controllo di validità della mappa di stringhe
+     * Controllo di validità della mappa di stringhe lette dal server
      */
-    public static void isMappaStringheValidaRead(Map mappa) {
+    public static void isMappaReadTxtValida(Map mappa) {
         String key;
         Object value;
 
         assertNotNull("'Mappa non esistente", mappa);
-        assertTrue("Mappa di lunghezza errata", mappa.size() == 17);
+        assertTrue("Mappa di lunghezza errata", mappa.size() == PARAMETRI_LETTI_DAL_SERVER);
 
         for (PagePar par : PagePar.getRead()) {
             key = par.toString();
@@ -41,16 +42,31 @@ public class LibWikiTest extends VaadTest {
     }// end of method
 
     /**
-     * Controllo di validità della mappa di stringhe
+     * Controllo di validità della mappa di oggetti letti dal server
      */
-    public static void isMappaValoriValidaRead(Map mappa) {
+    public static void isMappaReadObjValida(Map mappa) {
         String key;
         Object value;
 
         assertNotNull("'Mappa non esistente", mappa);
-        assertTrue("Mappa di lunghezza errata", mappa.size() == 17);
+        assertTrue("Mappa di lunghezza errata", mappa.size() == PARAMETRI_LETTI_DAL_SERVER);
 
         for (PagePar par : PagePar.getRead()) {
+            isCampoTypoValido(mappa, par);
+        } // fine del ciclo for-each
+    }// end of method
+
+    /**
+     * Controllo di validità della mappa di oggetti da rendere permanenti nel database
+     */
+    public static void isMappaDBValida(Map mappa) {
+        String key;
+        Object value;
+
+        assertNotNull("'Mappa non esistente", mappa);
+        assertTrue("Mappa di lunghezza errata", mappa.size() == PARAMETRI_PER_DATABASE);
+
+        for (PagePar par : PagePar.getDB()) {
             isCampoTypoValido(mappa, par);
         } // fine del ciclo for-each
     }// end of method
@@ -81,6 +97,10 @@ public class LibWikiTest extends VaadTest {
 
         if (type == PagePar.TypeField.date) {
             assertTrue("Il campo " + key + " non è una data valida", value instanceof Date);
+        }// fine del blocco if
+
+        if (type == PagePar.TypeField.timestamp) {
+            assertTrue("Il campo " + key + " non è un timestamp valido", value instanceof Timestamp);
         }// fine del blocco if
 
         if (type == PagePar.TypeField.booleano) {
@@ -597,7 +617,7 @@ public class LibWikiTest extends VaadTest {
 
         mappa = LibWiki.creaMappa(textPagina);
         assertNotNull(mappa);
-        isMappaStringheValidaRead(mappa);
+        isMappaReadTxtValida(mappa);
     }// end of single test
 
     @Test
@@ -613,10 +633,10 @@ public class LibWikiTest extends VaadTest {
 
         String textPagina = new QueryReadTitle(TITOLO).getContenuto();
         mappaString = LibWiki.creaMappa(textPagina);
-        isMappaStringheValidaRead(mappaString);
+        isMappaReadTxtValida(mappaString);
 
         mappaConvertita = LibWiki.converteMappa(mappaString);
-        isMappaValoriValidaRead(mappaConvertita);
+        isMappaReadObjValida(mappaConvertita);
     }// end of single test
 
     @Test
@@ -674,11 +694,11 @@ public class LibWikiTest extends VaadTest {
      */
     public void creaListaPageids() {
         ArrayList<Long> lista = new ArrayList<Long>();
-        lista.add((long)23);
-        lista.add((long)45);
-        lista.add((long)5389);
-        lista.add((long)7);
-        lista.add((long)98);
+        lista.add((long) 23);
+        lista.add((long) 45);
+        lista.add((long) 5389);
+        lista.add((long) 7);
+        lista.add((long) 98);
 
         previsto = "23|45|5389|7|98";
         ottenuto = LibWiki.creaListaPageids(lista);

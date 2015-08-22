@@ -8,7 +8,7 @@ import java.util.*;
 public enum PagePar {
 
     //--parametro di controllo
-    batchcomplete(true, true, false, false, TypePar.letturascrittura, TypeField.booleano) {
+    batchcomplete(true, false, false, false, TypePar.letturascrittura, TypeField.booleano) {
     },
 
 
@@ -163,26 +163,26 @@ public enum PagePar {
     //--parametri altri
     missing(false, false, false, false, TypePar.provvisorio, TypeField.string),
     revisions(false, false, false, false, TypePar.provvisorio, TypeField.string),
-    ultimalettura(true, false, false, false, TypePar.sololettura, TypeField.timestamp) {
+    ultimalettura(false, true, false, false, TypePar.sololettura, TypeField.timestamp) {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
             if (value instanceof Timestamp) {
-                wiki.setTimestamp((Timestamp) value);
+                wiki.setUltimaLettura((Timestamp) value);
             }// fine del blocco if
             return wiki;
         }// end of method
     };
 
     private boolean read;
-    private boolean permanente;
+    private boolean database;
     private boolean obbligatorioDatabase;
     private boolean info;
     private TypePar typePar;
     private TypeField typeField;
 
-    PagePar(boolean read, boolean permanente, boolean obbligatorioDatabase, boolean info, TypePar typePar, TypeField typeField) {
+    PagePar(boolean read, boolean database, boolean obbligatorioDatabase, boolean info, TypePar typePar, TypeField typeField) {
         this.read = read;
-        this.permanente = permanente;
+        this.database = database;
         this.obbligatorioDatabase = obbligatorioDatabase;
         this.info = info;
         this.typePar = typePar;
@@ -290,11 +290,11 @@ public enum PagePar {
      *
      * @return collezione
      */
-    public static List<PagePar> getPerm() {
+    public static List<PagePar> getDB() {
         List<PagePar> lista = new ArrayList<PagePar>();
 
         for (PagePar par : values()) {
-            if (par.permanente) {
+            if (par.database) {
                 lista.add(par);
             }// fine del blocco if
         } // fine del ciclo for-each
@@ -411,6 +411,12 @@ public enum PagePar {
             }// fine del blocco if
         }// fine del blocco if
 
+        if (type == TypeField.timestamp) {
+            if (value != null && value instanceof Timestamp) {
+                status = true;
+            }// fine del blocco if
+        }// fine del blocco if
+
         if (type == TypeField.booleano) {
             if (value != null && value instanceof Boolean) {
                 status = true;
@@ -418,6 +424,10 @@ public enum PagePar {
         }// fine del blocco if
 
         return status;
+    }// end of method
+
+    public static boolean isDatabase(String key) {
+        return getPar(key).database;
     }// end of method
 
     /**

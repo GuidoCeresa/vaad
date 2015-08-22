@@ -2,7 +2,6 @@ import it.algos.vaad.wiki.Page;
 import it.algos.vaad.wiki.PagePar;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -10,6 +9,11 @@ import java.util.List;
  * .
  */
 public abstract class VaadTest {
+
+    // alcuni valori da soddisfare
+    protected static int PARAMETRI_LETTI_DAL_SERVER = 17;
+    protected static int PARAMETRI_PER_DATABASE = 16;
+
 
     // alcuni valori di prova
     protected static String TITOLO = "Nicola Conte (ufficiale)";
@@ -50,6 +54,7 @@ public abstract class VaadTest {
     protected String tag = "";
     protected HashMap mappaTxt;
     protected HashMap mappaObj;
+    protected HashMap mappaDB;
     protected String contenuto;
     protected Page page = null;
     protected Page pagePrevista = null;
