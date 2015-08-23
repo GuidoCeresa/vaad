@@ -5,7 +5,8 @@ import it.algos.vaad.ui.AlgosModulePop;
 import javax.persistence.metamodel.Attribute;
 
 /**
- * Gestione minima del modulo
+ * Gestione (minimale) del modulo
+ * Passa alla superclasse il nome e la classe specifica
  */
 @SuppressWarnings("serial")
 public class @NAME@Mod extends AlgosModulePop {

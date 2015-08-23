@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="modulo" basedir="." default="minimonewonly">
+<project name="modulo" basedir="." default="minimocrea">
 
     <property name="srcDomainTag" value="Domain"/>
     <property name="srcEntityTag" value="Entity"/>
@@ -11,29 +11,38 @@
     <property name="destModuloTag" value="Mod"/>
 
     <property name="risalita" value="/../../../../../../.."/>
+    <property name="preClasse" value="&lt;class&gt;"/>
+    <property name="postClasse" value="&lt;/class&gt;"/>
+    <property name="pathClasse" value="it.algos."/>
     <property name="discesa" value="/src/it/algos/"/>
+    <property name="discesaMeta" value="/src/META-INF/"/>
 
     <property name="baseSrc" value="${basedir}/.."/>
     <property name="srcDir" value="${baseSrc}/sources"/>
     <property name="srcSuffix" value=".txt"/>
     <property name="destSuffix" value=".java"/>
+    <property name="destSufXml" value=".xml"/>
     <property name="srcDomain" value="${srcDir}/${srcDomainTag}${srcSuffix}"/>
     <property name="srcEntity" value="${srcDir}/${srcEntityTag}${srcSuffix}"/>
 
     <property name="baseDest" value="${basedir}${risalita}"/>
+    <property name="tagLastPer" value="${preClasse}it.algos.vaad.wiki.entities.wiki.Wiki${postClasse}"/>
 
 
     <target name="input" description="Acquisizione del nome del progetto e del modulo da creare">
         <input addproperty="progetto" message="Nome (maiuscolo) del progetto di riferimento:" defaultvalue="Prova"/>
-        <input addproperty="pack" message="Nome (maiuscolo) del nuovo package:" defaultvalue="Bolla"/>
+        <input addproperty="modulo" message="Nome (maiuscolo) del nuovo modulo:" defaultvalue="Bolla"/>
         <lower string="${progetto}" to="lowerProgetto"/>
-        <lower string="${pack}" to="lowerPack"/>
+        <lower string="${modulo}" to="lowerModulo"/>
 
-        <property name="destDir" value="${baseDest}/${lowerProgetto}${discesa}${lowerProgetto}/${lowerPack}"/>
-        <property name="destDomain" value="${destDir}/${pack}${destDomainTag}${destSuffix}"/>
-        <property name="destEntity" value="${destDir}/${pack}${destEntityTag}${destSuffix}"/>
-        <property name="destModulo" value="${destDir}/${pack}${destModuloTag}${destSuffix}"/>
-        <property name="destPersistence" value="${destDir}/${persistenceTag}${destSufXml}"/>
+        <property name="destDir" value="${baseDest}/${lowerProgetto}${discesa}${lowerProgetto}/${lowerModulo}"/>
+        <property name="destDirMeta" value="${baseDest}/${lowerProgetto}${discesaMeta}"/>
+
+        <property name="destDomain" value="${destDir}/${modulo}${destDomainTag}${destSuffix}"/>
+        <property name="destEntity" value="${destDir}/${modulo}${destEntityTag}${destSuffix}"/>
+        <property name="destModulo" value="${destDir}/${modulo}${destModuloTag}${destSuffix}"/>
+        <property name="destPersistence" value="${destDirMeta}/${persistenceTag}${destSufXml}"/>
+        <property name="tagEntity" value="${pathClasse}${lowerProgetto}.${lowerModulo}.${modulo}"/>
     </target>
 
     <target name="clean" depends="input" description="Cancella il file">
@@ -49,13 +58,11 @@
     </target>
 
     <target name="creaSingoloFile" description="Copia il singolo file passato come parametro">
-        <!--<exec command="touch &#45;&#45;nocreate ${destFile}"/>-->
-        <!--<touch file="${destFile}"/>-->
         <copy file="${sourceFile}" tofile="${destFile}" overwrite="false">
             <filterset>
                 <filter token="LOWERPROGETTO" value="${lowerProgetto}"/>
-                <filter token="LOWERNAME" value="${lowerPack}"/>
-                <filter token="NAME" value="${pack}"/>
+                <filter token="LOWERNAME" value="${lowerModulo}"/>
+                <filter token="NAME" value="${modulo}"/>
             </filterset>
         </copy>
 
@@ -77,7 +84,7 @@
         <echo message="destFile=${destFile}"/>
     </target>
 
-    <target name="crea" depends="clean" description="Copia il file">
+    <target name="crea"  depends="input" description="Copia il file">
         <antcall target="creaSingoloFile">
             <param name="sourceFile" value="${srcDomain}"/>
             <param name="destFile" value="${destDomain}"/>
@@ -90,6 +97,7 @@
             <param name="sourceFile" value="${srcModulo}"/>
             <param name="destFile" value="${destModulo}"/>
         </antcall>
+        <antcall target="modificapersistence"></antcall>
     </target>
 
     <target name="sovrascrive" depends="clean" description="Copia il file">
@@ -116,13 +124,13 @@
     </scriptdef>
 
 
-    <target name="minimonewonly" description="Ciclo completo">
+    <target name="minimocrea" description="Ciclo completo">
         <property name="srcModuloTag" value="ModMin"/>
         <property name="srcModulo" value="${srcDir}/${srcModuloTag}${srcSuffix}"/>
         <antcall target="crea"></antcall>
     </target>
 
-    <target name="allnewonly" description="Ciclo completo">
+    <target name="allcrea" description="Ciclo completo">
         <property name="srcModuloTag" value="ModMax"/>
         <property name="srcModulo" value="${srcDir}/${srcModuloTag}${srcSuffix}"/>
         <antcall target="crea"></antcall>
@@ -158,6 +166,13 @@
         <antcall target="testminimomassimo"></antcall>
     </target>
 
+    <target name="modificapersistence" depends="input">
+        <replace file="${destPersistence}" token="${tagLastPer}" value="${tagLastPer}&#10;&#009;&#009;${preClasse}${tagEntity}${postClasse}">
+        </replace>
+    </target>
 
+    <target name="testper">
+        <antcall target="modificapersistence"></antcall>
+    </target>
 
 </project>

@@ -33,13 +33,14 @@ public class @NAME@ extends BaseEntity {
 	public @NAME@(String nome) {
 		super();
 		this.setNome(nome);
-	}// end of constructor
+	}// end of general constructor
 
-	/**
-	 * Recupera una istanza di @NAME@ usando la query specifica
-	 *
-	 * @return istanza di @NAME@, null se non trovata
-	 */
+    /**
+     * Recupera una istanza di Bolla usando la query standard della Primary Key
+     *
+     * @param id valore della Primary Key
+     * @return istanza di Bolla, null se non trovata
+     */
 	public static @NAME@ find(long id) {
 		@NAME@ instance = null;
 		BaseEntity entity = AQuery.queryById(@NAME@.class, id);
@@ -53,12 +54,13 @@ public class @NAME@ extends BaseEntity {
 		return instance;
 	}// end of method
 
-	/**
-	 * Recupera una istanza di @NAME@ usando la query specifica
-	 *
-	 * @return istanza di @NAME@, null se non trovata
-	 */
-	public static @NAME@ find(String nome) {
+    /**
+     * Recupera una istanza di Bolla usando la query di una property specifica
+     *
+     * @param nome valore della property Nome
+     * @return istanza di Bolla, null se non trovata
+     */
+	public static @NAME@ findNome(String nome) {
 		@NAME@ instance = null;
 		BaseEntity entity = AQuery.queryOne(@NAME@.class, @NAME@_.nome, nome);
 
@@ -71,6 +73,11 @@ public class @NAME@ extends BaseEntity {
 		return instance;
 	}// end of method
 
+    /**
+     * Recupera il valore del numero totale di records della Domain Class
+     *
+     * @return numero totale di records della tavola
+     */
     public synchronized static int count() {
         int totRec = 0;
         long totTmp = AQuery.getCount(@NAME@.class);
@@ -82,6 +89,12 @@ public class @NAME@ extends BaseEntity {
         return totRec;
     }// end of method
 
+    /**
+     * Recupera una lista (array) di tutti i records della Domain Class
+     *
+     * @return lista di tutte le istanze di @NAME@
+     */
+    @SuppressWarnings("unchecked")
     public synchronized static ArrayList<@NAME@> findAll() {
         return (ArrayList<@NAME@>) AQuery.getList(@NAME@.class);
     }// end of method
@@ -106,7 +119,15 @@ public class @NAME@ extends BaseEntity {
     }// end of setter method
 
 
+    /**
+     * Clone di questa istanza
+     * Una DIVERSA istanza (indirizzo di memoria) con gi STESSI valori (property)
+     * È obbligatoria invocare questo metodo all'interno di un codice try/catch
+     *
+     * @return nuova istanza di @NAME@ con gli stessi valori dei parametri di questa istanza
+     */
     @Override
+    @SuppressWarnings("all")
     public @NAME@ clone() throws CloneNotSupportedException {
         try {
             return (@NAME@) BeanUtils.cloneBean(this);

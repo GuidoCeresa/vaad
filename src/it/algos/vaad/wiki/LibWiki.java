@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 public abstract class LibWiki {
 
     //--preferenza
+    public static final String DEBUG = "debug";
     public static final String RUN_DAEMON_BIO_AT_STARTUP = "runDaemonBioStartup";
     public static final String USA_CRONO_BIO = "usaCronoBio";
     public static final String USA_LIMITE_DOWNLOAD = "usaLimiteDownload";
