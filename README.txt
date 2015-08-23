@@ -34,14 +34,33 @@
 11. È stato creato il package minimo:
     - creata (sotto src) la directory base del progetto -> it.algos.nomeProgetto
     - creato il file (sotto src) META-INF.persistence.xml: parametri di regolazione del database. Elenco di Entity
+    - creato il file ivy.xml per le dependencies (modificabile)
+    - creato il file ivysettings.xml per le location dove recuperare le dependencies (modificabile)
     - creata la classe xxxApp: repository di costanti generali del programma
     - creata la classe xxxBootStrap: prima classe in esecuzione del programma.
     - creata la classe xxxServlet: punto di partenza della sessione nel server.
     - creata la classe xxxUI: punto di partenza quando si accede dal browser
-    - sostituisce il file web.WEB-INF.web.xml
+    - sostituito il file web.WEB-INF.web.xml
+    - sostituito il file web.index.jsp (che non viene utilizzato)
     - senza necessità di ulteriori interventi, selezionando Run il programma funziona con già installi i 3 moduli ereditati
         dal plugin Vaad: Versione, Preferenze e Logo
 
-12. Aprire il plugin Vaad e lanciare (in Ant) lo script templates.script.modulo:
+12. In Project Settings -> Modules
+    - cliccare sul simbolo + per creare un nuovo modulo
+    - selezionare un framework di tipo iviIDEA
+    - nel dialogo che si apre a destra selezionare in alto la posizione del file ivy.xml appena creato
+    - cliccare nel box 'use module specific ivy settings' e selezionare la posizione del file ivysettings.xml appena creato
+
+13. Aprire il plugin Vaad e lanciare (in Ant) lo script templates.script.modulo:
     - nel primo dialogo, inserire (obbligatorio) il nome (Maiuscolo) del progetto di riferimento
     - nel secondo dialogo, inserire (obbligatorio) il nome (Maiuscolo) del nuovo package da creare
+
+14. È stato creato il primo modulo (del tipo più ridotto possibile):
+    - creata (sotto src.it.algos.nomeProgetto) la cartella/directory del modulo
+    - creata la classe (domain) nomeModulo
+    - creata la classe (entity) nomeModulo_
+    - creata la classe (module) nomeModuloMod
+    - modificato il file persistence.xml aggiungendo il nome della Domain class appena creata
+    - modificato il metodo addAllModuli della classe nomeProgettoUI (punto di partenza per il browser)
+        aggiungendo il nome del modulo appena creato
+    - senza necessità di ulteriori interventi, selezionando Run il programma funziona con installato e funzionante il nuovo modulo

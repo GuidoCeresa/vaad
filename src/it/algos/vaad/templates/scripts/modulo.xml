@@ -3,8 +3,8 @@
 
     <property name="srcDomainTag" value="Domain"/>
     <property name="srcEntityTag" value="Entity"/>
-    <!--<property name="srcModuloTag" value="Modulo"/>-->
     <property name="persistenceTag" value="persistence"/>
+    <property name="uiTag" value="UI"/>
 
     <property name="destDomainTag" value=""/>
     <property name="destEntityTag" value="_"/>
@@ -27,6 +27,7 @@
 
     <property name="baseDest" value="${basedir}${risalita}"/>
     <property name="tagLastPer" value="${preClasse}it.algos.vaad.wiki.entities.wiki.Wiki${postClasse}"/>
+    <property name="tagLastMod" value="this.addModulo(new LogMod());"/>
 
 
     <target name="input" description="Acquisizione del nome del progetto e del modulo da creare">
@@ -37,12 +38,15 @@
 
         <property name="destDir" value="${baseDest}/${lowerProgetto}${discesa}${lowerProgetto}/${lowerModulo}"/>
         <property name="destDirMeta" value="${baseDest}/${lowerProgetto}${discesaMeta}"/>
+        <property name="destDirBase" value="${baseDest}/${lowerProgetto}${discesa}${lowerProgetto}"/>
 
         <property name="destDomain" value="${destDir}/${modulo}${destDomainTag}${destSuffix}"/>
         <property name="destEntity" value="${destDir}/${modulo}${destEntityTag}${destSuffix}"/>
         <property name="destModulo" value="${destDir}/${modulo}${destModuloTag}${destSuffix}"/>
         <property name="destPersistence" value="${destDirMeta}/${persistenceTag}${destSufXml}"/>
+        <property name="destUI" value="${destDirBase}/${progetto}${uiTag}${destSuffix}"/>
         <property name="tagEntity" value="${pathClasse}${lowerProgetto}.${lowerModulo}.${modulo}"/>
+        <property name="tagUI" value="this.addModulo(new ${modulo}Mod());"/>
     </target>
 
     <target name="clean" depends="input" description="Cancella il file">
@@ -98,6 +102,7 @@
             <param name="destFile" value="${destModulo}"/>
         </antcall>
         <antcall target="modificapersistence"></antcall>
+        <antcall target="modificamoduli"></antcall>
     </target>
 
     <target name="sovrascrive" depends="clean" description="Copia il file">
@@ -168,6 +173,11 @@
 
     <target name="modificapersistence" depends="input">
         <replace file="${destPersistence}" token="${tagLastPer}" value="${tagLastPer}&#10;&#009;&#009;${preClasse}${tagEntity}${postClasse}">
+        </replace>
+    </target>
+
+    <target name="modificamoduli" depends="input">
+        <replace file="${destUI}" token="${tagLastMod}" value="${tagLastMod}&#10;&#009;&#009;${tagUI}">
         </replace>
     </target>
 

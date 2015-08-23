@@ -9,6 +9,9 @@
 
     <property name="persistence" value="persistence"/>
     <property name="web" value="web"/>
+    <property name="index" value="index"/>
+    <property name="ivy" value="ivy"/>
+    <property name="ivyset" value="ivysettings"/>
     <property name="addons" value="addons"/>
     <property name="theme" value="algos"/>
     <property name="styles" value="styles"/>
@@ -16,13 +19,15 @@
     <property name="risalita" value="/../../../../../../.."/>
     <property name="discesa" value="/src/it/algos/"/>
     <property name="discesaMeta" value="/src/META-INF/"/>
-    <property name="discesaWeb" value="/web/WEB-INF/"/>
+    <property name="discesaWeb" value="/web/"/>
+    <property name="discesaWebInf" value="/web/WEB-INF/"/>
     <property name="discesaThemes" value="/vaadin/themes/"/>
 
     <property name="baseSrc" value="${basedir}/.."/>
     <property name="srcDir" value="${baseSrc}/sources"/>
     <property name="srcSuffix" value=".txt"/>
     <property name="destSufJava" value=".java"/>
+    <property name="destSufJsp" value=".jsp"/>
     <property name="destSufXml" value=".xml"/>
     <property name="destSufScss" value=".scss"/>
 
@@ -34,6 +39,9 @@
 
     <property name="srcPersistence" value="${srcDir}/${persistence}${srcSuffix}"/>
     <property name="srcWeb" value="${srcDir}/${web}${srcSuffix}"/>
+    <property name="srcIndex" value="${srcDir}/${index}${srcSuffix}"/>
+    <property name="srcIvy" value="${srcDir}/${ivy}${srcSuffix}"/>
+    <property name="srcIvySet" value="${srcDir}/${ivyset}${srcSuffix}"/>
     <property name="srcAddons" value="${srcDir}/${addons}${srcSuffix}"/>
     <property name="srcTheme" value="${srcDir}/${theme}${srcSuffix}"/>
     <property name="srcStyles" value="${srcDir}/${styles}${srcSuffix}"/>
@@ -62,7 +70,10 @@
         <property name="destVers" value="${destDirIt}/${versione}${destSufJava}"/>
 
         <property name="destPersistence" value="${destDirMeta}/${persistence}${destSufXml}"/>
-        <property name="destWeb" value="${destDir}/${discesaWeb}${web}${destSufXml}"/>
+        <property name="destWeb" value="${destDir}/${discesaWebInf}${web}${destSufXml}"/>
+        <property name="destIndex" value="${destDir}/${discesaWeb}${index}${destSufJsp}"/>
+        <property name="destIvy" value="${destDir}/${ivy}${destSufXml}"/>
+        <property name="destIvySet" value="${destDir}/${ivyset}${destSufXml}"/>
         <property name="destAddons" value="${destDirThemses}/${addons}${destSufScss}"/>
         <property name="destTheme" value="${destDirThemses}/${theme}${destSufScss}"/>
         <property name="destStyles" value="${destDirThemses}/${styles}${destSufScss}"/>
@@ -147,6 +158,18 @@
             <param name="sourceFile" value="${srcWeb}"/>
             <param name="destFile" value="${destWeb}"/>
         </antcall>
+        <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcIndex}"/>
+            <param name="destFile" value="${destIndex}"/>
+        </antcall>
+        <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcIvy}"/>
+            <param name="destFile" value="${destIvy}"/>
+        </antcall>
+        <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcIvySet}"/>
+            <param name="destFile" value="${destIvySet}"/>
+        </antcall>
 
         <antcall target="creaSingoloFile">
             <param name="sourceFile" value="${srcAddons}"/>
@@ -191,6 +214,18 @@
         <antcall target="sovrascriveSingoloFile">
             <param name="sourceFile" value="${srcWeb}"/>
             <param name="destFile" value="${destWeb}"/>
+        </antcall>
+        <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcIndex}"/>
+            <param name="destFile" value="${destIndex}"/>
+        </antcall>
+        <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcIvy}"/>
+            <param name="destFile" value="${destIvy}"/>
+        </antcall>
+        <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcIvySet}"/>
+            <param name="destFile" value="${destIvySet}"/>
         </antcall>
 
         <antcall target="sovrascriveSingoloFile">
