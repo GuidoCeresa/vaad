@@ -19,7 +19,7 @@
     - è stata creata una configurazione col server Tomcat;
     - è stato creato (vuoto) il file web.WEB-INF.web.xml, che verrà successivamente sovrascritto
     - è stato creato il file web.index.jsp, dove si può inserire quello che appare a video
-    - senza necessità di ulteriori interventi, selezionando Run il programma funziona
+    - senza necessità di ulteriori interventi, selezionando Run l'applicazione funziona
 
 9. In Project Settings -> Libraries
     - aggiungere New Project Library (tipo java), selezionando ~/Documents/IdeaProjects/vaad/out/artifacts/vaad_jar
@@ -42,7 +42,7 @@
     - creata la classe xxxUI: punto di partenza quando si accede dal browser
     - sostituito il file web.WEB-INF.web.xml
     - sostituito il file web.index.jsp (che non viene utilizzato)
-    - senza necessità di ulteriori interventi, selezionando Run il programma funziona con già installi i 3 moduli ereditati
+    - senza necessità di ulteriori interventi, selezionando Run l'applicazione funziona con già installi i 3 moduli ereditati
         dal plugin Vaad: Versione, Preferenze e Logo
 
 12. In Project Settings -> Modules
@@ -63,4 +63,13 @@
     - modificato il file persistence.xml aggiungendo il nome della Domain class appena creata
     - modificato il metodo addAllModuli della classe nomeProgettoUI (punto di partenza per il browser)
         aggiungendo il nome del modulo appena creato
-    - senza necessità di ulteriori interventi, selezionando Run il programma funziona con installato e funzionante il nuovo modulo
+    - senza necessità di ulteriori interventi, selezionando Run l'applicazione funziona con installato e funzionante il nuovo modulo
+
+15. L'applicazione funziona usando il theme 'valo' (standard). Per utilizzare il theme ''algos' (già caricato):
+    - aprire la classe xxxUI e modificare le righe 14/15 per sostituire il theme valo con algos
+    - in Project Settings -> Artifatcs a destra nel tab Output Layout cliccare sul simbolo + (Add Copy of)
+    - selezionare Directory Content e individuare il path della cartella 'vaadin' del progetto appena creato
+    - il file vaadin.themes.algos.algos.scss è liberamente modificabile per personalizzare l'applicazopne
+    - il file vaadin.themes.algos.algos.scss potrebbe presentare un errore in @import "../valo/valo.scss";
+        È un BUG di IDEA che NON influenza la compilazione ed il corretto funzionamento dell'applicazione
+    - senza necessità di ulteriori interventi, selezionando Run l'applicazione funziona con installato e funzionante il theme algos

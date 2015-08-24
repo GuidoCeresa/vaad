@@ -12,6 +12,7 @@ import it.algos.webbase.web.lib.LibPath;
 import it.algos.webbase.web.module.ModulePop;
 
 @Theme("valo")
+//@Theme("algos")
 public class @PACK@UI extends VaadAlgosUI {
 
     private ModulePop moduloPartenza;
