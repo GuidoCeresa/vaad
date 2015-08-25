@@ -226,7 +226,89 @@ public class LibArray {
         } catch (Exception unErrore) { // intercetta l'errore
         }// fine del blocco try-catch
         objList = fromObj(objArray);
+
         return objList;
     } // fine del metodo
+
+
+    /**
+     * Aggiunge un elemento alla lista solo se non già esistente
+     *
+     * @param lista    che viene modificata
+     * @param elemento da inserire, se manca
+     * @return vero se l'elemento è stato aggiunto
+     */
+    @SuppressWarnings("all")
+    public static boolean add(List lista, Object elemento) {
+        boolean aggiunto = false;
+
+        if (!lista.contains(elemento)) {
+            aggiunto = lista.add(elemento);
+        }// fine del blocco if
+
+        return aggiunto;
+    } // fine del metodo
+
+    /**
+     * Somma due array (liste) e restituisce una lista disordinata
+     * <p>
+     * Almeno uno dei due array in ingresso deve essere non nullo
+     * Normalmente si usa di meno la somma disordinata
+     * <p>
+     * Se entrambi i parametri sono nulli, restituisce un nullo
+     * Se uno dei parametri è nullo, restituisce l'altro
+     * La lista di valori in uscita è unica (quindi la dimensione può essere minore dalla somma delle due)
+     *
+     * @param arrayPrimo   - prima lista
+     * @param arraySecondo - seconda lista
+     * @return arraySomma disordinata
+     */
+    public static List sommaDisordinata(List arrayPrimo, List arraySecondo) {
+        List arraySomma = null;
+
+        if (arrayPrimo != null || arraySecondo != null) {
+            arraySomma = new ArrayList();
+        }// fine del blocco if
+
+        if (arrayPrimo != null) {
+            for (Object ogg : arrayPrimo) {
+                add(arraySomma, ogg);
+            } // fine del ciclo for-each
+        }// fine del blocco if
+
+        if (arraySecondo != null) {
+            for (Object ogg : arraySecondo) {
+                add(arraySomma, ogg);
+            } // fine del ciclo for-each
+        }// fine del blocco if
+
+        return arraySomma;
+    } // fine del metodo
+
+
+    /**
+     * Somma due array (liste) e restituisce una lista ordinata
+     * <p>
+     * Almeno uno dei due array in ingresso deve essere non nullo
+     * Normalmente si usa di più la somma ordinata
+     * <p>
+     * Se entrambi i parametri sono nulli, restituisce un nullo
+     * Se uno dei parametri è nullo, restituisce l'altro
+     * La lista di valori in uscita è unica (quindi la dimensione può essere minore dalla somma delle due)
+     *
+     * @param arrayPrimo   - prima lista
+     * @param arraySecondo - seconda lista
+     * @return arraySomma ordinata
+     */
+    public static List somma(List arrayPrimo, List arraySecondo) {
+        List arraySomma = sommaDisordinata(arrayPrimo, arraySecondo);
+
+        if (arraySomma != null) {
+            arraySomma = sort(arraySomma);
+        }// fine del blocco if
+
+        return arraySomma;
+    } // fine del metodo
+
 
 }// end of static class

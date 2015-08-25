@@ -252,7 +252,7 @@ public class LibArrayTest {
 
         ottenuto = LibArray.valoriUnici(ottenuto);
         assertTrue(ottenuto instanceof ArrayList);
-        assertEquals(ottenuto.size(), 3);
+        assertEquals(ottenuto.size(), SIZE_UNICI);
         assertEquals(ottenuto.get(0), primoTxt);
         assertEquals(ottenuto.get(1), secondo);
         assertEquals(ottenuto.get(2), terzo);
@@ -274,7 +274,7 @@ public class LibArrayTest {
 
         ottenuto = LibArray.valoriUnici(ottenuto);
         assertTrue(ottenuto instanceof ArrayList);
-        assertEquals(ottenuto.size(), 3);
+        assertEquals(ottenuto.size(), SIZE_UNICI);
         assertEquals(ottenuto.get(0), primoInt);
         assertEquals(ottenuto.get(1), due);
         assertEquals(ottenuto.get(2), tre);
@@ -317,7 +317,7 @@ public class LibArrayTest {
     public void valoriUnici2() {
         ottenuto = LibArray.valoriUnici(valoriDoppiTxt);
         assertTrue(ottenuto instanceof ArrayList);
-        assertEquals(ottenuto.size(), 3);
+        assertEquals(ottenuto.size(), SIZE_UNICI);
         assertEquals(ottenuto.get(0), primoTxt);
         assertEquals(ottenuto.get(1), secondo);
         assertEquals(ottenuto.get(2), terzo);
@@ -331,7 +331,7 @@ public class LibArrayTest {
 
         ottenuto = LibArray.valoriUnici(valoriDoppiNum);
         assertNotNull(ottenuto);
-        assertEquals(ottenuto.size(), 3);
+        assertEquals(ottenuto.size(), SIZE_UNICI);
         assertEquals(ottenuto.get(0), primoInt);
         assertEquals(ottenuto.get(1), due);
         assertEquals(ottenuto.get(2), tre);
@@ -345,7 +345,7 @@ public class LibArrayTest {
 
         ottenuto = LibArray.valoriUnici(valoriDoppiLong);
         assertNotNull(ottenuto);
-        assertEquals(ottenuto.size(), 3);
+        assertEquals(ottenuto.size(), SIZE_UNICI);
         assertEquals(ottenuto.get(0), (long) primoInt);
         assertEquals(ottenuto.get(1), (long) due);
         assertEquals(ottenuto.get(2), (long) tre);
@@ -356,7 +356,106 @@ public class LibArrayTest {
         for (Object obj : ottenuto) {
             System.out.println(++k + ") " + obj + " (" + obj.getClass().getSimpleName() + ")");
         } // fine del ciclo for-each
+    } // fine del test
 
+    @Test
+    /**
+     * Aggiunge un elemento alla lista solo se non già esistente
+     *
+     * @param lista
+     * @param elemento
+     * @return vero se l'elemento è stato aggiunto
+     */
+    public void add() {
+        ottenuto = LibArray.fromString(stringArray);
+        assertEquals(ottenuto.size(), SIZE);
+
+        LibArray.add(ottenuto, primoTxt);
+        assertEquals(ottenuto.size(), SIZE);
+
+        LibArray.add(ottenuto, secondo);
+        assertEquals(ottenuto.size(), NEW_SIZE);
+    } // fine del test
+
+
+    @Test
+    /**
+     * Somma due array (liste) e restituisce una lista disordinata
+     * <p>
+     * Almeno uno dei due array in ingresso deve essere non nullo
+     * Normalmente si usa di meno la somma disordinata
+     * <p>
+     * Se entrambi i parametri sono nulli, restituisce un nullo
+     * Se uno dei parametri è nullo, restituisce l'altro
+     * La lista di valori in uscita è unica (quindi la dimensione può essere minore dalla somma delle due)
+     *
+     * @param arrayPrimo   - prima lista
+     * @param arraySecondo - seconda lista
+     * @return arraySomma disordinata
+     */
+    public void sommaDisordinata() {
+        int size = 9;
+        List<String> arrayPrimo = LibArray.fromString(stringArray);
+        List<String> arraySecondo = LibArray.fromString(valoriDoppiTxt);
+
+        ottenuto = LibArray.sommaDisordinata(null, null);
+        assertNull(ottenuto);
+
+        ottenuto = LibArray.sommaDisordinata(null, arraySecondo);
+        assertEquals(ottenuto.size(), SIZE_UNICI);
+
+        ottenuto = LibArray.sommaDisordinata(arrayPrimo, null);
+        assertEquals(ottenuto.size(), SIZE);
+
+        ottenuto = LibArray.sommaDisordinata(arrayPrimo, arraySecondo);
+        assertEquals(ottenuto.size(), size);
+
+        System.out.println("");
+        System.out.println("Somma");
+        k = 0;
+        for (Object obj : ottenuto) {
+            System.out.println(++k + ") " + obj);
+        } // fine del ciclo for-each
+    } // fine del test
+
+    @Test
+    /**
+     * Somma due array (liste) e restituisce una lista ordinata
+     * <p>
+     * Almeno uno dei due array in ingresso deve essere non nullo
+     * Normalmente si usa di più la somma ordinata
+     * <p>
+     * Se entrambi i parametri sono nulli, restituisce un nullo
+     * Se uno dei parametri è nullo, restituisce l'altro
+     * La lista di valori in uscita è unica (quindi la dimensione può essere minore dalla somma delle due)
+     *
+     * @param arrayPrimo   - prima lista
+     * @param arraySecondo - seconda lista
+     * @return arraySomma ordinata
+     */
+    public void somma() {
+        int size = 9;
+        List<String> arrayPrimo = LibArray.fromString(stringArray);
+        List<String> arraySecondo = LibArray.fromString(valoriDoppiTxt);
+
+        ottenuto = LibArray.somma(null, null);
+        assertNull(ottenuto);
+
+        ottenuto = LibArray.somma(null, arraySecondo);
+        assertEquals(ottenuto.size(), SIZE_UNICI);
+
+        ottenuto = LibArray.somma(arrayPrimo, null);
+        assertEquals(ottenuto.size(), SIZE);
+
+        ottenuto = LibArray.somma(arrayPrimo, arraySecondo);
+        assertEquals(ottenuto.size(), size);
+
+        System.out.println("");
+        System.out.println("Somma ordinata");
+        k = 0;
+        for (Object obj : ottenuto) {
+            System.out.println(++k + ") " + obj);
+        } // fine del ciclo for-each
     } // fine del test
 
 
