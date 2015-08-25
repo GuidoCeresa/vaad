@@ -2,10 +2,10 @@ import it.algos.vaad.lib.LibArray;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Created by Gac on 24 ago 2015.
@@ -15,45 +15,38 @@ public class LibArrayTest {
 
     private static int SIZE = 7;
     private static int NEW_SIZE = 8;
-    private String primo = "alfa";
-    private String secondo = "beta";
-    private String terzo = "gamma";
-    private String[] stringArray = {"ab", "aB", "c", "0", "2", "1Ad", "a10"};
-    private int[] intArray = {17, 25, 4, 816, 0, -1, 99};
-    private long[] longArray = {17L, 25L, 4L, 816L, 0L, -1L, 99L};
-    private Object[] objArray = {17L, "testo", 43, "stringa", 122, -1, 99};
-    private int uno = 8;
+    private static int SIZE_UNICI = 3;
+    private int primoInt = 8;
     private int due = 15;
     private int tre = 27;
-
-    private ArrayList valoriDoppiTxt;
-    private ArrayList valoriDoppiNum;
+    private Object primoObj = 17L;
+    private long primoLungo = 27L;
+    private String primoTxt = "alfa";
+    private String secondo = "beta";
+    private String terzo = "gamma";
+    @SuppressWarnings("all")
+    private String altraStringa = "valore";
+    private String[] stringArray = {primoTxt, "aB", "c", "0", "2", "1Ad", "a10"};
+    private int[] intArray = {primoInt, 25, 4, 816, 0, -1, 99};
+    private long[] longArray = {primoLungo, 25L, 4L, 816L, 0L, -1L, 99L};
+    @SuppressWarnings("all")
+    private Object[] objArray = {primoObj, "testo", 43, "stringa", 122L, -1L, 99};
+    @SuppressWarnings("all")
+    private int altroNumero = 457;
+    @SuppressWarnings("all")
+    private long altroLungo = 457L;
+    @SuppressWarnings("all")
+    private String[] valoriDoppiTxt = {terzo, primoTxt, secondo, secondo, primoTxt, terzo, secondo};
+    @SuppressWarnings("all")
+    private int[] valoriDoppiNum = {due, tre, primoInt, due, primoInt, due, primoInt};
+    @SuppressWarnings("all")
+    private long[] valoriDoppiLong = {primoLungo, primoInt, due, primoInt, due, primoInt};
+    @SuppressWarnings("all")
+    private Object[] valoriDoppiObj = {primoTxt, primoLungo, primoTxt, primoInt, primoInt, primoTxt};
 
     private List ottenuto;
+    private int k = 0;
 
-    // Setup logic here
-    void setUp() {
-        valoriDoppiTxt = new ArrayList();
-        valoriDoppiTxt.add(terzo);
-        valoriDoppiTxt.add(primo);
-        valoriDoppiTxt.add(secondo);
-        valoriDoppiTxt.add(secondo);
-        valoriDoppiTxt.add(primo);
-        valoriDoppiTxt.add(terzo);
-        valoriDoppiTxt.add(secondo);
-        valoriDoppiTxt.add(primo);
-        valoriDoppiTxt.add(primo);
-
-        valoriDoppiNum = new ArrayList();
-        valoriDoppiNum.add(due);
-        valoriDoppiNum.add(tre);
-        valoriDoppiNum.add(uno);
-        valoriDoppiNum.add(due);
-        valoriDoppiNum.add(uno);
-        valoriDoppiNum.add(due);
-        valoriDoppiNum.add(uno);
-        valoriDoppiNum.add(uno);
-    } // fine del metodo iniziale
 
     @Test
     /**
@@ -63,15 +56,16 @@ public class LibArrayTest {
      * @return the corresponding casted ArrayList
      */
     public void fromString() {
-        List<String> lista;
+        List<String> ottenuto;
 
-        lista = LibArray.fromString(stringArray);
-        assertNotNull(lista);
-        assertEquals(lista.size(), SIZE);
+        ottenuto = LibArray.fromString(stringArray);
+        assertNotNull(ottenuto);
+        assertEquals(ottenuto.size(), SIZE);
+        assertTrue(ottenuto.get(0).equals(primoTxt));
 
-        lista.add("");
+        ottenuto.add(altraStringa);
         assertEquals(stringArray.length, SIZE); // per essere sicuri che non venga modificata la matrice originaria
-        assertEquals(lista.size(), NEW_SIZE);
+        assertEquals(ottenuto.size(), NEW_SIZE);
     } // end of single test
 
 
@@ -83,15 +77,16 @@ public class LibArrayTest {
      * @return the corresponding casted ArrayList
      */
     public void fromInt() {
-        List<Integer> lista;
+        List<Integer> ottenuto;
 
-        lista = LibArray.fromInt(intArray);
-        assertNotNull(lista);
-        assertEquals(lista.size(), SIZE);
+        ottenuto = LibArray.fromInt(intArray);
+        assertNotNull(ottenuto);
+        assertEquals(ottenuto.size(), SIZE);
+        assertTrue(ottenuto.get(0) == primoInt);
 
-        lista.add(999);
+        ottenuto.add(altroNumero);
         assertEquals(intArray.length, SIZE); // per essere sicuri che non venga modificata la matrice originaria
-        assertEquals(lista.size(), NEW_SIZE);
+        assertEquals(ottenuto.size(), NEW_SIZE);
     } // end of single test
 
 
@@ -103,15 +98,16 @@ public class LibArrayTest {
      * @return the corresponding casted ArrayList
      */
     public void fromLong() {
-        List<Long> lista;
+        List<Long> ottenuto;
 
-        lista = LibArray.fromLong(longArray);
-        assertNotNull(lista);
-        assertEquals(lista.size(), SIZE);
+        ottenuto = LibArray.fromLong(longArray);
+        assertNotNull(ottenuto);
+        assertEquals(ottenuto.size(), SIZE);
+        assertTrue(ottenuto.get(0) == primoLungo);
 
-        lista.add(999L);
+        ottenuto.add(altroLungo);
         assertEquals(longArray.length, SIZE); // per essere sicuri che non venga modificata la matrice originaria
-        assertEquals(lista.size(), NEW_SIZE);
+        assertEquals(ottenuto.size(), NEW_SIZE);
     } // end of single test
 
 
@@ -123,84 +119,246 @@ public class LibArrayTest {
      * @return the corresponding casted ArrayList
      */
     public void fromObj() {
-        List<Long> lista;
+        List<Object> ottenuto;
 
-        lista = LibArray.fromLong(longArray);
-        assertNotNull(lista);
-        assertEquals(lista.size(), SIZE);
+        ottenuto = LibArray.fromObj(objArray);
+        assertNotNull(ottenuto);
+        assertEquals(ottenuto.size(), SIZE);
+        assertTrue(ottenuto.get(0) == primoObj);
 
-        lista.add(999L);
-        assertEquals(longArray.length, SIZE); // per essere sicuri che non venga modificata la matrice originaria
-        assertEquals(lista.size(), NEW_SIZE);
+        ottenuto.add(new Date());
+        assertEquals(objArray.length, SIZE); // per essere sicuri che non venga modificata la matrice originaria
+        assertEquals(ottenuto.size(), NEW_SIZE);
     } // end of single test
 
 
     @Test
     /**
-     * Estrae i valori unici da un array con (eventuali) valori doppi
+     * Estrae i valori unici da un lista con (eventuali) valori doppi
      *
-     * @param valoriDoppi in ingresso
-     *
-     * @return valoriUnici NON ordinati, null se valoriDoppi è null
+     * @param listaValoriDoppi in ingresso
+     * @return valoriUnici NON ordinati, null se listaValoriDoppi è null
      */
     public void valoriUniciDisordinati() {
-        setUp();
+        ottenuto = LibArray.fromString(valoriDoppiTxt);
+        System.out.println("");
+        System.out.println("Lista valori di testo doppi");
+        k = 0;
+        for (Object obj : ottenuto) {
+            System.out.println(++k + ") " + obj);
+        } // fine del ciclo for-each
 
-//        ottenuto = LibArray.valoriUniciDisordinati(valoriDoppiTxt);
-//        assertTrue(ottenuto instanceof ArrayList);
-//        assertEquals(ottenuto.size(), 3);
-//        assertEquals(ottenuto.get(0), terzo);
-//        assertEquals(ottenuto.get(1), primo);
-//        assertEquals(ottenuto.get(2), secondo);
-//
-//        ottenuto = LibArray.valoriUniciDisordinati(valoriDoppiNum);
-//        assertTrue(ottenuto instanceof ArrayList);
-//        assertEquals(ottenuto.size(), 3);
-//        assertEquals(ottenuto.get(0), due);
-//        assertEquals(ottenuto.get(1), tre);
-//        assertEquals(ottenuto.get(2), uno);
-//
-//        ottenuto = LibArray.valoriUniciDisordinati(null);
-//        assertNull(ottenuto);
-//
-//        ottenuto = LibArray.valoriUniciDisordinati(primo);
-//        assertNull(ottenuto);
+        ottenuto = LibArray.valoriUniciDisordinati(ottenuto);
+        assertTrue(ottenuto instanceof ArrayList);
+        assertEquals(ottenuto.size(), SIZE_UNICI);
+        assertEquals(ottenuto.get(0), terzo);
+        assertEquals(ottenuto.get(1), primoTxt);
+        assertEquals(ottenuto.get(2), secondo);
+
+        System.out.println("");
+        System.out.println("Lista valori unici disordinati - stringa");
+        k = 0;
+        for (Object obj : ottenuto) {
+            System.out.println(++k + ") " + obj);
+        } // fine del ciclo for-each
+
+        ottenuto = LibArray.fromInt(valoriDoppiNum);
+        System.out.println("");
+        System.out.println("Lista valori di interi doppi");
+        k = 0;
+        for (Object obj : ottenuto) {
+            System.out.println(++k + ") " + obj);
+        } // fine del ciclo for-each
+
+        ottenuto = LibArray.valoriUniciDisordinati(ottenuto);
+        assertTrue(ottenuto instanceof ArrayList);
+        assertEquals(ottenuto.size(), SIZE_UNICI);
+        assertEquals(ottenuto.get(0), due);
+        assertEquals(ottenuto.get(1), tre);
+        assertEquals(ottenuto.get(2), primoInt);
+
+        System.out.println("");
+        System.out.println("Lista valori unici disordinati - intero");
+        k = 0;
+        for (Object obj : ottenuto) {
+            System.out.println(++k + ") " + obj);
+        } // fine del ciclo for-each
+
+        ottenuto = LibArray.fromObj(valoriDoppiObj);
+        System.out.println("");
+        System.out.println("Lista valori di oggetti");
+        k = 0;
+        for (Object obj : ottenuto) {
+            System.out.println(++k + ") " + obj + " (" + obj.getClass().getSimpleName() + ")");
+        } // fine del ciclo for-each
+
+        ottenuto = LibArray.valoriUniciDisordinati(ottenuto);
+        assertTrue(ottenuto instanceof ArrayList);
+        assertEquals(ottenuto.size(), SIZE_UNICI);
+        assertEquals(ottenuto.get(0), primoTxt);
+        assertEquals(ottenuto.get(1), primoLungo);
+        assertEquals(ottenuto.get(2), primoInt);
+
+        System.out.println("");
+        System.out.println("Lista valori unici disordinati - oggetti");
+        k = 0;
+        for (Object obj : ottenuto) {
+            System.out.println(++k + ") " + obj + " (" + obj.getClass().getSimpleName() + ")");
+        } // fine del ciclo for-each
     } // fine del test
 
     @Test
     /**
-     * Estrae i valori unici da un array con (eventuali) valori doppi
+     * Estrae i valori unici da un matrice (objArray) con (eventuali) valori doppi
+     *
+     * @param objArray in ingresso
+     * @return valoriUnici NON ordinati, null se objArray è null
+     */
+    public void valoriUniciDisordinati2() {
+        ottenuto = LibArray.valoriUniciDisordinati(valoriDoppiTxt);
+        assertTrue(ottenuto instanceof ArrayList);
+        assertEquals(ottenuto.size(), SIZE_UNICI);
+        assertEquals(ottenuto.get(0), terzo);
+        assertEquals(ottenuto.get(1), primoTxt);
+        assertEquals(ottenuto.get(2), secondo);
+
+        ottenuto = LibArray.valoriUniciDisordinati(valoriDoppiObj);
+        assertTrue(ottenuto instanceof ArrayList);
+        assertEquals(ottenuto.size(), SIZE_UNICI);
+        assertEquals(ottenuto.get(0), primoTxt);
+        assertEquals(ottenuto.get(1), primoLungo);
+        assertEquals(ottenuto.get(2), primoInt);
+    } // fine del test
+
+    @Test
+    /**
+     * Estrae i valori unici da un lista con (eventuali) valori doppi
      * Ordina l'array secondo la classe utilizzata:
      * alfabetico per le stringhe
      * numerico per i numeri
+     * L'ordinamento funziona SOLO se la lista è omogenea (oggetti della stessa classe)
      *
-     * @param valoriDoppi in ingresso
-     *
-     * @return valoriUnici ordinati, null se valoriDoppi è null
+     * @param listaValoriDoppi in ingresso
+     * @return valoriUnici ORDINATI, null se listaValoriDoppi è null
      */
     public void valoriUnici() {
-//        setUp();
-//
-//        ottenuto = LibArray.valoriUnici(valoriDoppiTxt);
-//        assertTrue(ottenuto instanceof ArrayList);
-//        assertEquals(ottenuto.size(), 3);
-//        assertEquals(ottenuto.get(0), primo);
-//        assertEquals(ottenuto.get(1), secondo);
-//        assertEquals(ottenuto.get(2), terzo);
-//
-//        ottenuto = LibArray.valoriUnici(valoriDoppiNum);
-//        assertTrue(ottenuto instanceof ArrayList);
-//        assertEquals(ottenuto.size(), 3);
-//        assertEquals(ottenuto.get(0), uno);
-//        assertEquals(ottenuto.get(1), due);
-//        assertEquals(ottenuto.get(2), tre);
-//
-//        ottenuto = LibArray.valoriUnici(null);
-//        assertNull(ottenuto);
-//
-//        ottenuto = LibArray.valoriUnici(primo);
-//        assertNull(ottenuto);
+        ottenuto = LibArray.fromString(valoriDoppiTxt);
+        System.out.println("");
+        System.out.println("Lista valori di testo doppi");
+        k = 0;
+        for (Object obj : ottenuto) {
+            System.out.println(++k + ") " + obj);
+        } // fine del ciclo for-each
+
+        ottenuto = LibArray.valoriUnici(ottenuto);
+        assertTrue(ottenuto instanceof ArrayList);
+        assertEquals(ottenuto.size(), 3);
+        assertEquals(ottenuto.get(0), primoTxt);
+        assertEquals(ottenuto.get(1), secondo);
+        assertEquals(ottenuto.get(2), terzo);
+
+        System.out.println("");
+        System.out.println("Lista valori unici ORDINATI - stringa");
+        k = 0;
+        for (Object obj : ottenuto) {
+            System.out.println(++k + ") " + obj);
+        } // fine del ciclo for-each
+
+        ottenuto = LibArray.fromInt(valoriDoppiNum);
+        System.out.println("");
+        System.out.println("Lista valori di interi doppi");
+        k = 0;
+        for (Object obj : ottenuto) {
+            System.out.println(++k + ") " + obj);
+        } // fine del ciclo for-each
+
+        ottenuto = LibArray.valoriUnici(ottenuto);
+        assertTrue(ottenuto instanceof ArrayList);
+        assertEquals(ottenuto.size(), 3);
+        assertEquals(ottenuto.get(0), primoInt);
+        assertEquals(ottenuto.get(1), due);
+        assertEquals(ottenuto.get(2), tre);
+
+        System.out.println("");
+        System.out.println("Lista valori unici ORDINATI - intero");
+        k = 0;
+        for (Object obj : ottenuto) {
+            System.out.println(++k + ") " + obj);
+        } // fine del ciclo for-each
+
+        ottenuto = LibArray.fromObj(valoriDoppiObj);
+        System.out.println("");
+        System.out.println("Lista valori di oggetti doppi");
+        k = 0;
+        for (Object obj : ottenuto) {
+            System.out.println(++k + ") " + obj);
+        } // fine del ciclo for-each
+
+        ottenuto = LibArray.valoriUnici(ottenuto);
+        assertTrue(ottenuto instanceof ArrayList);
+        assertEquals(ottenuto.size(), 3);
+        assertEquals(ottenuto.get(0), primoTxt);
+        assertEquals(ottenuto.get(1), primoLungo);
+        assertEquals(ottenuto.get(2), primoInt);
     } // fine del test
+
+
+    @Test
+    /**
+     * Estrae i valori unici da un matrice (objArray) con (eventuali) valori doppi
+     * Ordina l'array secondo la classe utilizzata:
+     * alfabetico per le stringhe
+     * numerico per i numeri
+     * L'ordinamento funziona SOLO se la lista è omogenea (oggetti della stessa classe)
+     *
+     * @param objArray in ingresso
+     * @return valoriUnici ORDINATI, null se listaValoriDoppi è null
+     */
+    public void valoriUnici2() {
+        ottenuto = LibArray.valoriUnici(valoriDoppiTxt);
+        assertTrue(ottenuto instanceof ArrayList);
+        assertEquals(ottenuto.size(), 3);
+        assertEquals(ottenuto.get(0), primoTxt);
+        assertEquals(ottenuto.get(1), secondo);
+        assertEquals(ottenuto.get(2), terzo);
+
+        System.out.println("");
+        System.out.println("Matrice unici ORDINATI - stringa");
+        k = 0;
+        for (Object obj : ottenuto) {
+            System.out.println(++k + ") " + obj + " (" + obj.getClass().getSimpleName() + ")");
+        } // fine del ciclo for-each
+
+        ottenuto = LibArray.valoriUnici(valoriDoppiNum);
+        assertNotNull(ottenuto);
+        assertEquals(ottenuto.size(), 3);
+        assertEquals(ottenuto.get(0), primoInt);
+        assertEquals(ottenuto.get(1), due);
+        assertEquals(ottenuto.get(2), tre);
+
+        System.out.println("");
+        System.out.println("Matrice unici ORDINATI - intero");
+        k = 0;
+        for (Object obj : ottenuto) {
+            System.out.println(++k + ") " + obj + " (" + obj.getClass().getSimpleName() + ")");
+        } // fine del ciclo for-each
+
+        ottenuto = LibArray.valoriUnici(valoriDoppiLong);
+        assertNotNull(ottenuto);
+        assertEquals(ottenuto.size(), 3);
+        assertEquals(ottenuto.get(0), (long) primoInt);
+        assertEquals(ottenuto.get(1), (long) due);
+        assertEquals(ottenuto.get(2), (long) tre);
+
+        System.out.println("");
+        System.out.println("Matrice unici ORDINATI - lungo");
+        k = 0;
+        for (Object obj : ottenuto) {
+            System.out.println(++k + ") " + obj + " (" + obj.getClass().getSimpleName() + ")");
+        } // fine del ciclo for-each
+
+    } // fine del test
+
 
 //    /**
 //     * Somma due array (liste)

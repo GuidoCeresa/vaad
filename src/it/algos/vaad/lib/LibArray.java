@@ -84,6 +84,7 @@ public class LibArray {
         return longList;
     } // end of static method
 
+
     /**
      * Convert a objArray to ArrayList
      *
@@ -102,87 +103,130 @@ public class LibArray {
 
 
     /**
-     * Estrae i valori unici da un array con (eventuali) valori doppi
+     * Estrae i valori unici da un lista con (eventuali) valori doppi
      *
-     * @param valoriDoppi in ingresso
-     * @return valoriUnici NON ordinati, null se valoriDoppi è null
+     * @param listaValoriDoppi in ingresso
+     * @return valoriUnici NON ordinati, null se listaValoriDoppi è null
      */
-    public static List valoriUniciDisordinati(Object valoriDoppi) {
-        return valoriUniciBase(valoriDoppi, false);
+    public static List valoriUniciDisordinati(List listaValoriDoppi) {
+        return valoriUniciBase(listaValoriDoppi, false);
     } // fine del metodo
 
+
     /**
-     * Estrae i valori unici da un array con (eventuali) valori doppi
+     * Estrae i valori unici da un matrice (objArray) con (eventuali) valori doppi
+     *
+     * @param objArray in ingresso
+     * @return valoriUnici NON ordinati, null se objArray è null
+     */
+    public static List valoriUniciDisordinati(Object[] objArray) {
+        return valoriUniciDisordinati(fromObj(objArray));
+    } // fine del metodo
+
+
+    /**
+     * Estrae i valori unici da un lista con (eventuali) valori doppi
      * Ordina l'array secondo la classe utilizzata:
      * alfabetico per le stringhe
      * numerico per i numeri
+     * L'ordinamento funziona SOLO se la lista è omogenea (oggetti della stessa classe)
      *
-     * @param valoriDoppi in ingresso
-     * @return valoriUnici ordinati, null se valoriDoppi è null
+     * @param listaValoriDoppi in ingresso
+     * @return valoriUnici ORDINATI, null se listaValoriDoppi è null
      */
-    public static List valoriUnici(Object valoriDoppi) {
-        return valoriUniciBase(valoriDoppi, true);
+    public static List valoriUnici(List listaValoriDoppi) {
+        return valoriUniciBase(listaValoriDoppi, true);
     } // fine del metodo
 
 
     /**
-     * Estrae i valori unici da un array con (eventuali) valori doppi
+     * Estrae i valori unici da un matrice (objArray) con (eventuali) valori doppi
+     * Ordina l'array secondo la classe utilizzata:
+     * alfabetico per le stringhe
+     * numerico per i numeri
+     * L'ordinamento funziona SOLO se la lista è omogenea (oggetti della stessa classe)
+     *
+     * @param objArray in ingresso
+     * @return valoriUnici ORDINATI, null se listaValoriDoppi è null
+     */
+    public static List valoriUnici(Object[] objArray) {
+        return valoriUnici(fromObj(objArray));
+    } // fine del metodo
+
+    /**
+     * Estrae i valori unici da un matrice (objArray) con (eventuali) valori doppi
+     * Ordina l'array secondo la classe utilizzata:
+     * alfabetico per le stringhe
+     * numerico per i numeri
+     * L'ordinamento funziona SOLO se la lista è omogenea (oggetti della stessa classe)
+     *
+     * @param intArray in ingresso
+     * @return valoriUnici ORDINATI, null se listaValoriDoppi è null
+     */
+    public static List valoriUnici(int[] intArray) {
+        return valoriUnici(fromInt(intArray));
+    } // fine del metodo
+
+    /**
+     * Estrae i valori unici da un matrice (objArray) con (eventuali) valori doppi
+     * Ordina l'array secondo la classe utilizzata:
+     * alfabetico per le stringhe
+     * numerico per i numeri
+     * L'ordinamento funziona SOLO se la lista è omogenea (oggetti della stessa classe)
+     *
+     * @param longArray in ingresso
+     * @return valoriUnici ORDINATI, null se listaValoriDoppi è null
+     */
+    public static List valoriUnici(long[] longArray) {
+        return valoriUnici(fromLong(longArray));
+    } // fine del metodo
+
+
+    /**
+     * Estrae i valori unici da un lista con (eventuali) valori doppi
      * Eventualmente (tag booleano) ordina l'array secondo la classe utilizzata:
      * alfabetico per le stringhe
      * numerico per i numeri
      *
-     * @param valoriDoppi in ingresso
-     * @param ordina      tag per forzare l'ordinamento
-     * @return valoriUnici disordinati oppure ordinati, null se valoriDoppi è null
+     * @param listaValoriDoppi in ingresso
+     * @param ordina           tag per forzare l'ordinamento
+     * @return valoriUnici disordinati oppure ordinati, null se listaValoriDoppi è null
      */
-    private static List valoriUniciBase(Object valoriDoppi, boolean ordina) {
-        ArrayList valoriUniciOrdinati = null;
-        ArrayList valoriUniciNonOrdinati = null;
+    @SuppressWarnings("all")
+    private static List valoriUniciBase(List listaValoriDoppi, boolean ordina) {
+        ArrayList listaValoriUniciNonOrdinati = null;
         Set set;
 
-        if (valoriDoppi != null && valoriDoppi instanceof ArrayList) {
-            set = new LinkedHashSet((ArrayList) valoriDoppi);
-            if (set != null) {
-                valoriUniciNonOrdinati = new ArrayList(set);
-            }// fine del blocco if
+        if (listaValoriDoppi != null) {
+            set = new LinkedHashSet((List) listaValoriDoppi);
+            listaValoriUniciNonOrdinati = new ArrayList(set);
             if (ordina) {
-                valoriUniciOrdinati = sort(valoriUniciNonOrdinati);
-            }// fine del blocco if
+                return sort(listaValoriUniciNonOrdinati);
+            } else {
+                return listaValoriUniciNonOrdinati;
+            }// fine del blocco if-else
         }// fine del blocco if
 
-        return valoriUniciOrdinati;
+        return null;
     } // fine del metodo
 
     /**
      * Ordina la lista
+     * L'ordinamento funziona SOLO se la lista è omogenea (oggetti della stessa classe)
      *
      * @param listaDisordinata in ingresso
-     * @return lista ordinata ordinata, null se listaDisordinata è null
+     * @return lista ordinata, null se listaDisordinata è null
      */
-    public static ArrayList sort(ArrayList listaDisordinata) {
-        ArrayList listaOrdinata = (ArrayList) listaDisordinata.clone();
-//        Set set;
-//        Comparator comp = new Comparator() {
-//            @Override
-//            public int compare(Object o1, Object o2) {
-//                return 0;
-//            }
-//        };
-        String[] alfa = (String[]) listaOrdinata.toArray();
-        Arrays.sort(alfa);
+    public static List sort(List listaDisordinata) {
+        List<Object> objList;
+        Object[] objArray = listaDisordinata.toArray();
 
-        return listaDisordinata;
+        try { // prova ad eseguire il codice
+            Arrays.sort(objArray);
+        } catch (Exception unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch
+        objList = fromObj(objArray);
+        return objList;
     } // fine del metodo
 
-    public static ArrayList<Integer> asList(final int[] is) {
-        return new ArrayList<Integer>() {
-            public Integer get(int i) {
-                return is[i];
-            }
-
-            public int size() {
-                return is.length;
-            }
-        };
-    }
 }// end of static class
