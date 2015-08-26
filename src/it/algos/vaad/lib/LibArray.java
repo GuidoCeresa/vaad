@@ -40,7 +40,7 @@ import java.util.*;
  * in array we insert elements using the assignment operator.
  * Multi-dimensional :  Array can be multi dimensional , while ArrayList is always single dimensional.
  */
-public class LibArray {
+public abstract class LibArray {
 
     /**
      * Convert a stringArray to ArrayList

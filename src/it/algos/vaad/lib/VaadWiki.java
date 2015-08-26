@@ -36,4 +36,5 @@ public abstract class VaadWiki {
         return 0;
     }// end of static method
 
+
 }// end of static class
