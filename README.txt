@@ -1,4 +1,4 @@
-1. IDEA, creazione di un nuovo progetto che usa Vaadin col plugin Vaad
+1. IDEA, creazione di un nuovo progetto che usa Vaadin col plugin Webbase
 
 2. File -> New -> Project...
 
@@ -19,14 +19,19 @@
     - è stata creata una configurazione col server Tomcat;
     - è stato creato (vuoto) il file web.WEB-INF.web.xml, che verrà successivamente sovrascritto
     - è stato creato il file web.index.jsp, dove si può inserire quello che appare a video
-    - senza necessità di ulteriori interventi, selezionando Run l'applicazione funziona
+    - senza necessità di ulteriori interventi, selezionando Run l'applicazione funziona (anche se il browser rimane bianco)
+    - scrivendo nel file web.index.jsp (head o body) il risultato viene visualizzato
+    - successivamente il file web.index.jsp non verrà più utilizzato
 
 9. In Project Settings -> Libraries
-    - aggiungere New Project Library (tipo java), selezionando ~/Documents/IdeaProjects/vaad/out/artifacts/vaad_jar
+    - aggiungere New Project Library (tipo java), selezionando ~/Documents/IdeaProjects/webbase/out/artifacts/webbase_jar
     - selezionando la CARTELLA, a destra apparirà il path per i Classes
     - se in Project Setting appare in basso a sinistra la scritte Problems, cliccare su Fix e selezionare Add webbase_jar to the artifact
+    - aggiungere New Project Library (tipo java), selezionando ~/Documents/IdeaProjects/vaad/out/artifacts/vaad_jar
+    - selezionando la CARTELLA, a destra apparirà il path per i Classes
+    - se in Project Setting appare in basso a sinistra la scritte Problems, cliccare su Fix e selezionare Add vaad_jar to the artifact
 
-10. Aprire il plugin Vaad e lanciare (in Ant) lo script templates.script.pack:
+10. Aprire il plugin Webbase e lanciare (in Ant) lo script templates.script.progetto:
     - nel primo dialogo, inserire (obbligatorio) il nome (Maiuscolo) del nuovo progetto
     - nel secondo dialogo, inserire (facoltativo, default 'MySqlUnit') il parametro di collegamento persistence-entity
     - nel terzo dialogo, inserire (facoltativo, default 'test') il nome del database mysql
@@ -43,19 +48,21 @@
     - sostituito il file web.WEB-INF.web.xml
     - sostituito il file web.index.jsp (che non viene utilizzato)
     - senza necessità di ulteriori interventi, selezionando Run l'applicazione funziona con già installi i 3 moduli ereditati
-        dal plugin Vaad: Versione, Preferenze e Logo
+        dal plugin Webbase: Versione, Preferenze e Logo
 
-12. In Project Settings -> Modules
+12. In Project Settings -> Artifatcs in <outpu root> deve esserci webbase_war_exploded (come Project Library) per visualizzare le icone
+
+13. In Project Settings -> Modules
     - cliccare sul simbolo + per creare un nuovo modulo
     - selezionare un framework di tipo iviIDEA
     - nel dialogo che si apre a destra selezionare in alto la posizione del file ivy.xml appena creato
     - cliccare nel box 'use module specific ivy settings' e selezionare la posizione del file ivysettings.xml appena creato
 
-13. Aprire il plugin Vaad e lanciare (in Ant) lo script templates.script.modulo:
+14. Aprire il plugin Webbase e lanciare (in Ant) lo script templates.script.modulo:
     - nel primo dialogo, inserire (obbligatorio) il nome (Maiuscolo) del progetto di riferimento
-    - nel secondo dialogo, inserire (obbligatorio) il nome (Maiuscolo) del nuovo package da creare
+    - nel secondo dialogo, inserire (obbligatorio) il nome (Maiuscolo) del nuovo modulo da creare
 
-14. È stato creato il primo modulo (del tipo più ridotto possibile):
+15. È stato creato il primo modulo (del tipo più ridotto possibile):
     - creata (sotto src.it.algos.nomeProgetto) la cartella/directory del modulo
     - creata la classe (domain) nomeModulo
     - creata la classe (entity) nomeModulo_
@@ -65,11 +72,29 @@
         aggiungendo il nome del modulo appena creato
     - senza necessità di ulteriori interventi, selezionando Run l'applicazione funziona con installato e funzionante il nuovo modulo
 
-15. L'applicazione funziona usando il theme 'valo' (standard). Per utilizzare il theme ''algos' (già caricato):
+16. L'applicazione funziona usando il theme 'valo' (standard). Per utilizzare il theme ''algos' (già caricato):
     - aprire la classe xxxUI e modificare le righe 14/15 per sostituire il theme valo con algos
-    - in Project Settings -> Artifatcs a destra nel tab Output Layout cliccare sul simbolo + (Add Copy of)
-    - selezionare Directory Content e individuare il path della cartella 'vaadin' del progetto appena creato
+    - in Project Settings -> Artifatcs selezionare l'artifact web:xxx exploded
+    - a destra nel tab Output Layout selezionare l'icona della directory (a sinistra) e crearne una nuova directory
+        dal titolo (obbligatorio) VAADIN
+    - selezionare la directory appena creata e col tasto destro selezionare Add Copy of -> Directory Content
+    - individuare il path della cartella 'vaadin' del progetto appena creato
     - il file vaadin.themes.algos.algos.scss è liberamente modificabile per personalizzare l'applicazopne
     - il file vaadin.themes.algos.algos.scss potrebbe presentare un errore in @import "../valo/valo.scss";
         È un BUG di IDEA che NON influenza la compilazione ed il corretto funzionamento dell'applicazione
     - senza necessità di ulteriori interventi, selezionando Run l'applicazione funziona con installato e funzionante il theme algos
+
+17. Per il deploy, usare Ant
+    - creare una nuova configurazione TomcatLocal (oltre a quella già creata da IDEA)
+    - nel Deployment Tab, cliccare + External Sorces... e selezionare la directory web del nuovo progetto
+    - in Project Settings -> Artifacts selezionare l'artifact web:xxx exploded
+    - a destra nel tab Output Layout selezionare l'icona + (o il tasto destro) e selezionare Directory Content
+    - individuare il path della cartella 'web' nel progetto appena creato
+    - 'web' directory content deve essere a livello di root
+    - selezionare la cartella WEB-INF, tasto destro -> Add Copy of File
+    - individuare il path del file 'web.xml' nel progetto appena creato
+    - in alto a destra ->Type modificare in Web Application: Archive (per creare il war)
+    - in basso premere il bottone Create Manifest...
+    - individuare il path della directory META-INF nel progetto (src.it.algos.xxx) appena creato
+    - nel menu Build -> Generate Ant Build scegliere il nome dello scrpt e confermare le opzioni
+    - nelle views di destra della IDE, aprire Ant Build ed aggiungere il nuovo script

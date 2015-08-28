@@ -10,7 +10,7 @@
     <property name="destEntityTag" value="_"/>
     <property name="destModuloTag" value="Mod"/>
 
-    <property name="risalita" value="/../../../../../../.."/>
+    <property name="risalita" value="/../../.."/>
     <property name="preClasse" value="&lt;class&gt;"/>
     <property name="postClasse" value="&lt;/class&gt;"/>
     <property name="pathClasse" value="it.algos."/>
@@ -28,6 +28,7 @@
     <property name="baseDest" value="${basedir}${risalita}"/>
     <property name="tagLastPer" value="${preClasse}it.algos.vaad.wiki.entities.wiki.Wiki${postClasse}"/>
     <property name="tagLastMod" value="this.addModulo(new LogMod());"/>
+    <property name="tagLastModImport" value="import com.vaadin.annotations.Theme;"/>
 
 
     <target name="input" description="Acquisizione del nome del progetto e del modulo da creare">
@@ -45,8 +46,10 @@
         <property name="destModulo" value="${destDir}/${modulo}${destModuloTag}${destSuffix}"/>
         <property name="destPersistence" value="${destDirMeta}/${persistenceTag}${destSufXml}"/>
         <property name="destUI" value="${destDirBase}/${progetto}${uiTag}${destSuffix}"/>
-        <property name="tagEntity" value="${pathClasse}${lowerProgetto}.${lowerModulo}.${modulo}"/>
+        <property name="destMod" value="${pathClasse}${lowerProgetto}.${lowerModulo}.${modulo}"/>
+        <property name="tagEntity" value="${destMod}"/>
         <property name="tagUI" value="this.addModulo(new ${modulo}Mod());"/>
+        <property name="tagUIImport" value="import ${destMod}Mod;"/>
     </target>
 
     <target name="clean" depends="input" description="Cancella il file">
@@ -177,8 +180,8 @@
     </target>
 
     <target name="modificamoduli" depends="input">
-        <replace file="${destUI}" token="${tagLastMod}" value="${tagLastMod}&#10;&#009;&#009;${tagUI}">
-        </replace>
+        <replace file="${destUI}" token="${tagLastMod}" value="${tagLastMod}&#10;&#009;&#009;${tagUI}"></replace>
+        <replace file="${destUI}" token="${tagLastModImport}" value="${tagLastModImport}&#10;${tagUIImport}"></replace>
     </target>
 
     <target name="testper">

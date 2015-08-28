@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="pack" basedir="." default="newonly">
+<project name="progetto" basedir="." default="newonly">
 
     <property name="app" value="App"/>
     <property name="boot" value="BootStrap"/>
@@ -16,7 +16,7 @@
     <property name="theme" value="algos"/>
     <property name="styles" value="styles"/>
 
-    <property name="risalita" value="/../../../../../../.."/>
+    <property name="risalita" value="/../../.."/>
     <property name="discesa" value="/src/it/algos/"/>
     <property name="discesaMeta" value="/src/META-INF/"/>
     <property name="discesaWeb" value="/web/"/>
@@ -49,11 +49,11 @@
     <property name="baseDest" value="${basedir}${risalita}"/>
 
     <target name="input" description="Acquisizione del nome del progetto in cui creare le nuove classi">
-        <input addproperty="pack" message="Nome (maiuscolo) del nuovo progetto:" defaultvalue="Prova"/>
+        <input addproperty="progetto" message="Nome (maiuscolo) del nuovo progetto:" defaultvalue="Prova"/>
         <input addproperty="sqlUnit" message="Unit per legare persistence ed entity:" defaultvalue="MySqlUnit"/>
         <input addproperty="dataBase" message="Nome (minuscolo) del database mysql:" defaultvalue="test"/>
         <!--<input addproperty="modulo" message="Nome (maiuscolo) del primo modulo:" defaultvalue="Bolla"/>-->
-        <lower string="${pack}" to="lowerPack"/>
+        <lower string="${progetto}" to="lowerPack"/>
         <lower string="${sqlUnit}" to="lowerSqlUnit"/>
         <lower string="${dataBase}" to="lowerDataBase"/>
         <lower string="${modulo}" to="lowerModulo"/>
@@ -63,10 +63,10 @@
         <property name="destDirMeta" value="${baseDest}/${lowerPack}${discesaMeta}"/>
         <property name="destDirThemses" value="${baseDest}/${lowerPack}${discesaThemes}/${theme}"/>
 
-        <property name="destApp" value="${destDirIt}/${pack}${app}${destSufJava}"/>
-        <property name="destBoot" value="${destDirIt}/${pack}${boot}${destSufJava}"/>
-        <property name="destServlet" value="${destDirIt}/${pack}${servlet}${destSufJava}"/>
-        <property name="destUI" value="${destDirIt}/${pack}${ui}${destSufJava}"/>
+        <property name="destApp" value="${destDirIt}/${progetto}${app}${destSufJava}"/>
+        <property name="destBoot" value="${destDirIt}/${progetto}${boot}${destSufJava}"/>
+        <property name="destServlet" value="${destDirIt}/${progetto}${servlet}${destSufJava}"/>
+        <property name="destUI" value="${destDirIt}/${progetto}${ui}${destSufJava}"/>
         <property name="destVers" value="${destDirIt}/${versione}${destSufJava}"/>
 
         <property name="destPersistence" value="${destDirMeta}/${persistence}${destSufXml}"/>
@@ -103,7 +103,7 @@
     <target name="creaSingoloFile" description="Copia il singolo file passato come parametro">
         <copy file="${sourceFile}" tofile="${destFile}" overwrite="false">
             <filterset>
-                <filter token="PACK" value="${pack}"/>
+                <filter token="PACK" value="${progetto}"/>
                 <filter token="LOWERPACK" value="${lowerPack}"/>
                 <filter token="SQLUNIT" value="${lowerSqlUnit}"/>
                 <filter token="DATABASE" value="${lowerDataBase}"/>
@@ -262,7 +262,7 @@
 
         <echo message=""/>
 
-        <echo message="pack: ${pack}"/>
+        <echo message="pack: ${progetto}"/>
         <echo message="lowerPack: ${lowerPack}"/>
         <echo message="sqlUnit: ${sqlUnit}"/>
         <echo message="dataBase: ${dataBase}"/>
@@ -272,7 +272,7 @@
         <echo message="destServlet: ${destServlet}"/>
         <echo message="destUI: ${destUI}"/>
         <echo message="destPersistence: ${destPersistence}"/>
-        <echo message="pack: ${pack}"/>
+        <echo message="pack: ${progetto}"/>
     </target>
 
     <target name="debug" depends="messaggi" description="Controllo parametri">
