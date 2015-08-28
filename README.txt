@@ -98,3 +98,8 @@
     - individuare il path della directory META-INF nel progetto (src.it.algos.xxx) appena creato
     - nel menu Build -> Generate Ant Build scegliere il nome dello scrpt e confermare le opzioni
     - nelle views di destra della IDE, aprire Ant Build ed aggiungere il nuovo script
+    - senza necessità di ulteriori interventi, ogni volta che si lancia lo script l'applicazione viene
+        compilata, viene creato il war e installato nel server locale
+
+18. Per il deploy remoto, modificare lo script appena creato aggiungendo
+    - <copy file="${localPath}/xxx.war" tofile="${serverPath}/xxx.war"/>
