@@ -9,8 +9,8 @@ import it.algos.vaad.ui.VaadAlgosUI;
 import it.algos.webbase.web.lib.LibPath;
 import it.algos.webbase.web.module.ModulePop;
 
-@Theme("valo")
-//@Theme("algos")
+//@Theme("valo")
+@Theme("algos")
 public class VaadUI extends VaadAlgosUI {
 
     private ModulePop moduloPartenza;

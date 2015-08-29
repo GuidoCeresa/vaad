@@ -96,7 +96,7 @@
     - in alto a destra ->Type modificare in Web Application: Archive (per creare il war)
     - in basso premere il bottone Create Manifest...
     - individuare il path della directory META-INF nel progetto (src.it.algos.xxx) appena creato
-    - nel menu Build -> Generate Ant Build scegliere il nome dello scrpt e confermare le opzioni
+    - nel menu Build -> Generate Ant Build confermare le opzioni
     - nelle views di destra della IDE, aprire Ant Build ed aggiungere il nuovo script
     - senza necessità di ulteriori interventi, ogni volta che si lancia lo script l'applicazione viene
         compilata, viene creato il war e installato nel server locale

@@ -15,16 +15,18 @@
     <property name="addons" value="addons"/>
     <property name="theme" value="algos"/>
     <property name="styles" value="styles"/>
+    <property name="img" value="img"/>
 
     <property name="risalita" value="/../../.."/>
     <property name="discesa" value="/src/it/algos/"/>
     <property name="discesaMeta" value="/src/META-INF/"/>
     <property name="discesaWeb" value="/web/"/>
     <property name="discesaWebInf" value="/web/WEB-INF/"/>
-    <property name="discesaThemes" value="/vaadin/themes/"/>
+    <property name="discesaThemes" value="/vaadin/themes/${theme}"/>
 
-    <property name="baseSrc" value="${basedir}/.."/>
-    <property name="srcDir" value="${baseSrc}/sources"/>
+    <property name="baseSources" value="${basedir}/.."/>
+    <property name="baseVaadProject" value="${basedir}/../.."/>
+    <property name="srcDir" value="${baseSources}/sources"/>
     <property name="srcSuffix" value=".txt"/>
     <property name="destSufJava" value=".java"/>
     <property name="destSufJsp" value=".jsp"/>
@@ -45,6 +47,7 @@
     <property name="srcAddons" value="${srcDir}/${addons}${srcSuffix}"/>
     <property name="srcTheme" value="${srcDir}/${theme}${srcSuffix}"/>
     <property name="srcStyles" value="${srcDir}/${styles}${srcSuffix}"/>
+    <property name="srcImg" value="${baseVaadProject}${discesaThemes}/${img}"/>
 
     <property name="baseDest" value="${basedir}${risalita}"/>
 
@@ -61,7 +64,7 @@
         <property name="destDir" value="${baseDest}/${lowerPack}"/>
         <property name="destDirIt" value="${baseDest}/${lowerPack}${discesa}${lowerPack}"/>
         <property name="destDirMeta" value="${baseDest}/${lowerPack}${discesaMeta}"/>
-        <property name="destDirThemses" value="${baseDest}/${lowerPack}${discesaThemes}/${theme}"/>
+        <property name="destDirThemses" value="${baseDest}/${lowerPack}${discesaThemes}"/>
 
         <property name="destApp" value="${destDirIt}/${progetto}${app}${destSufJava}"/>
         <property name="destBoot" value="${destDirIt}/${progetto}${boot}${destSufJava}"/>
@@ -77,6 +80,7 @@
         <property name="destAddons" value="${destDirThemses}/${addons}${destSufScss}"/>
         <property name="destTheme" value="${destDirThemses}/${theme}${destSufScss}"/>
         <property name="destStyles" value="${destDirThemses}/${styles}${destSufScss}"/>
+        <property name="destImg" value="${destDirThemses}/${img}"/>
 
         <!--<antcall target="creaPrimoModulo">-->
         <!--</antcall>-->
@@ -112,6 +116,14 @@
 
         <echo message="sourceFile=${sourceFile}"/>
         <echo message="destFile=${destFile}"/>
+    </target>
+
+    <target name="creaDirectory" description="Copia la directory passata come parametro">
+        <copydir src="${srcDirectory}" dest="${destDirectory}" forceoverwrite="false">
+        </copydir>
+
+        <echo message="srcDirectory=${srcDirectory}"/>
+        <echo message="destDirectory=${destDirectory}"/>
     </target>
 
     <target name="sovrascriveSingoloFile" description="Sovrascrive il singolo file passato come parametro">
@@ -183,6 +195,10 @@
             <param name="sourceFile" value="${srcStyles}"/>
             <param name="destFile" value="${destStyles}"/>
         </antcall>
+        <antcall target="creaDirectory">
+            <param name="srcDirectory" value="${srcImg}"/>
+            <param name="destDirectory" value="${destImg}"/>
+        </antcall>
     </target>
 
     <target name="sovrascrive" depends="input" description="Sovrascrive tutti i files">
@@ -239,6 +255,10 @@
         <antcall target="sovrascriveSingoloFile">
             <param name="sourceFile" value="${srcStyles}"/>
             <param name="destFile" value="${destStyles}"/>
+        </antcall>
+        <antcall target="creaDirectory">
+            <param name="srcDirectory" value="${srcImg}"/>
+            <param name="destDirectory" value="${destImg}"/>
         </antcall>
     </target>
 
