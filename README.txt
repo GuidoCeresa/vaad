@@ -45,6 +45,7 @@
     - creata la classe xxxBootStrap: prima classe in esecuzione del programma.
     - creata la classe xxxServlet: punto di partenza della sessione nel server.
     - creata la classe xxxUI: punto di partenza quando si accede dal browser
+    - creata la directory vaadin.themes.algos, con anche le icone (theme non ancora funzionante)
     - sostituito il file web.WEB-INF.web.xml
     - sostituito il file web.index.jsp (che non viene utilizzato)
     - senza necessità di ulteriori interventi, selezionando Run l'applicazione funziona con già installi i 3 moduli ereditati

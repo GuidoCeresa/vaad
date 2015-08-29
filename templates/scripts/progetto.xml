@@ -81,9 +81,6 @@
         <property name="destTheme" value="${destDirThemses}/${theme}${destSufScss}"/>
         <property name="destStyles" value="${destDirThemses}/${styles}${destSufScss}"/>
         <property name="destImg" value="${destDirThemses}/${img}"/>
-
-        <!--<antcall target="creaPrimoModulo">-->
-        <!--</antcall>-->
     </target>
 
     <!--<target name="creaPrimoModulo" description="Creazione del primo modulo">-->
