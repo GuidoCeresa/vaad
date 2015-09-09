@@ -33,7 +33,7 @@ public abstract class VaadAlgosUI extends AlgosUI {
     /**
      * Mostra la UI
      */
-    private void startUI() {
+    protected void startUI() {
 
         // crea la UI di base, un VerticalLayout
         VerticalLayout vLayout = new VerticalLayout();
@@ -147,8 +147,8 @@ public abstract class VaadAlgosUI extends AlgosUI {
         UI ui = this.getUI();
         String address = "";
 
-        if (modulo instanceof AlgosModulePop) {
-            address = ((AlgosModulePop) modulo).getMenuAddress();
+        if (modulo instanceof ModulePop) {
+            address = ((ModulePop) modulo).getMenuAddress();
         } else {
             address = LibPath.getClassName(modulo.getEntityClass());
         }// fine del blocco if-else

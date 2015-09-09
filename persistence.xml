@@ -9,11 +9,8 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
         <class>it.algos.webbase.web.entity.BaseEntity</class>
-        <class>it.algos.vaad.pref.Pref</class>
-        <class>it.algos.vaad.log.Log</class>
-        <class>it.algos.webbase.domain.versione.Versione</class>
+        <class>it.algos.webbase.domain.vers.Versione</class>
         <class>it.algos.vaad.wiki.entities.wiki.Wiki</class>
-        <class>it.algos.vaad.wiki.entities.wikibio.WikiBio</class>
 
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 

@@ -3,7 +3,7 @@ package it.algos.vaad.wiki.entities.wiki;
 import it.algos.vaad.wiki.Api;
 import it.algos.vaad.wiki.LibWiki;
 import it.algos.vaad.wiki.Page;
-import it.algos.webbase.domain.versione.Versione_;
+import it.algos.webbase.domain.vers.Versione_;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.query.AQuery;
 import org.hibernate.validator.constraints.NotEmpty;

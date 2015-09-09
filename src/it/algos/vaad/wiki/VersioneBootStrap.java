@@ -1,6 +1,7 @@
 package it.algos.vaad.wiki;
 
-import it.algos.webbase.domain.versione.LibVers;
+
+import it.algos.webbase.web.lib.LibVers;
 
 import javax.servlet.ServletContext;
 

@@ -188,4 +188,31 @@
         <antcall target="modificapersistence"></antcall>
     </target>
 
+    <target name="messaggi" depends="input" description="Messaggi coi parametri">
+        <echo message="basedir: ${basedir}"/>
+        <echo message="baseSrc: ${baseSrc}"/>
+        <echo message="srcDir: ${srcDir}"/>
+        <echo message="baseDest: ${baseDest}"/>
+
+        <echo message=""/>
+
+        <echo message="progetto: ${progetto}"/>
+        <echo message="lowerProgetto: ${lowerProgetto}"/>
+        <echo message="modulo: ${modulo}"/>
+        <echo message="lowerModulo: ${lowerModulo}"/>
+        <echo message="destDir: ${destDir}"/>
+        <echo message="destDirBase: ${destDirBase}"/>
+        <echo message="destDirMeta: ${destDirMeta}"/>
+
+        <echo message=""/>
+
+        <echo message="destUI: ${destUI}"/>
+        <echo message="destPersistence: ${destPersistence}"/>
+        <echo message="destDomain: ${destDomain}"/>
+    </target>
+
+    <target name="debug" depends="messaggi" description="Controllo parametri">
+        <antcall target="input"></antcall>
+    </target>
+
 </project>
