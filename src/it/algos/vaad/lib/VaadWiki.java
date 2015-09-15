@@ -1,10 +1,18 @@
 package it.algos.vaad.lib;
 
+import it.algos.webbase.web.lib.LibText;
+
+import java.util.ArrayList;
+
 /**
  * Created by gac on 04 ago 2015.
  * .
  */
 public abstract class VaadWiki {
+
+    private static final String TAG_INI = "[[";
+    private static final String TAG_END = "]]";
+
     /**
      * Tries to convert an Object in int.
      *
@@ -36,5 +44,129 @@ public abstract class VaadWiki {
         return 0;
     }// end of static method
 
+    /**
+     * Estrae da un testo una serie di occorrenze comprese tra due estremi
+     * Estremi compresi
+     *
+     * @param testo  da analizzare
+     * @param tagIni iniziale
+     * @param tagEnd finale
+     * @return la lista di valori
+     */
+    public static ArrayList<String> estrae(String testo, String tagIni, String tagEnd) {
+        ArrayList<String> lista = null;
+        int posIni = 0;
+        int posEnd = 0;
+        String parte;
+
+        if (testo != null && testo.contains(tagIni) && testo.contains(tagEnd)) {
+            lista = new ArrayList<String>();
+            do {
+                posIni = testo.indexOf(tagIni, posIni);
+                posEnd = testo.indexOf(tagEnd, posIni + tagIni.length());
+                parte = testo.substring(posIni, posEnd + tagEnd.length());
+                lista.add(parte);
+                posIni = testo.indexOf(tagIni, posEnd);
+            } while (posIni > -1); // fine del blocco do
+        }// fine del blocco if
+
+        return lista;
+    }// end of static method
+
+    /**
+     * Estrae da un testo una serie di occorrenze comprese tra due estremi
+     * Estremi esclusi
+     *
+     * @param testo  da analizzare
+     * @param tagIni iniziale
+     * @param tagEnd finale
+     * @return la lista di valori
+     */
+    public static ArrayList<String> estraeEsclusi(String testo, String tagIni, String tagEnd) {
+        ArrayList<String> listaEsclusi = null;
+        ArrayList<String> listaCompresi = estrae(testo, tagIni, tagEnd);
+
+        if (listaCompresi != null) {
+            listaEsclusi = new ArrayList<String>();
+            for (String stringa : listaCompresi) {
+                stringa = LibText.levaTesta(stringa, tagIni);
+                stringa = LibText.levaCoda(stringa, tagEnd);
+                listaEsclusi.add(stringa);
+            } // fine del ciclo for-each
+        }// fine del blocco if
+
+        return listaEsclusi;
+    }// end of static method
+
+    /**
+     * Estrae da una stringa la parte del link (dopo il pipe)
+     * Prevede che la stringa inizi e finisca con le doppie quadre
+     * Prevede che la stringa contenga il tag pipe
+     *
+     * @param stringa di testo da analizzare
+     * @return stringa con solo il link
+     */
+    public static String estraeSingoloLink(String stringa) {
+        String link = "";
+        String tagPipe = "|";
+
+        if (stringa != null) {
+            link = stringa.trim();
+        }// fine del blocco if
+
+        if (link.startsWith(TAG_INI) && link.endsWith(TAG_END)) {
+            if (link.contains(tagPipe)) {
+                link = link.substring(link.indexOf(tagPipe) + 1, link.length() - 2);
+            } else {
+                link = LibText.levaTesta(link, TAG_INI);
+                link = LibText.levaCoda(link, TAG_END);
+            }// fine del blocco if-else
+        }// fine del blocco if
+
+        return link;
+    }// end of static method
+
+    /**
+     * Estrae da un testo una serie di occorrenze comprese tra due estremi
+     * Estremi esclusi
+     *
+     * @param testo da analizzare
+     * @return la lista di valori
+     */
+    public static ArrayList<String> estraeLink(String testo) {
+        ArrayList<String> lista = null;
+        ArrayList<String> listaGrezza = estrae(testo, TAG_INI, TAG_END);
+
+        if (listaGrezza != null) {
+            lista = new ArrayList<String>();
+            for (String stringa : listaGrezza) {
+                stringa = estraeSingoloLink(stringa);
+                lista.add(stringa);
+            } // fine del ciclo for-each
+        }// fine del blocco if
+
+        return lista;
+    }// end of static method
+
+    /**
+     * Sostituisce tutte le occorrenze di doppie quadre con il link visibile
+     *
+     * @param testoIn da elaborare
+     * @return testo con i soli link visibili e senza doppie qaudre
+     */
+    public static String sostituisceLink(String testoIn) {
+        String testoOut = testoIn;
+        ArrayList<String> listaGrezza = estrae(testoIn, TAG_INI, TAG_END);
+        String newStringa;
+
+        if (listaGrezza != null) {
+            for (String oldStringa : listaGrezza) {
+                newStringa = estraeSingoloLink(oldStringa);
+                testoOut = LibText.sostituisce(testoOut, oldStringa, newStringa);
+            } // fine del ciclo for-each
+        }// fine del blocco if
+
+        return testoOut;
+    }// end of static method
 
 }// end of static class
