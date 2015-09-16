@@ -291,11 +291,13 @@ public class Wiki extends BaseEntity {
         this.anon = anon;
     }
 
-    public Timestamp getUltimaLettura() {
+
+    public Timestamp getUltimalettura() {
         return ultimalettura;
     }
 
-    public void setUltimaLettura(Timestamp ultimalettura) {
+    public void setUltimalettura(Timestamp ultimalettura) {
         this.ultimalettura = ultimalettura;
     }
+
 }// end of entity class

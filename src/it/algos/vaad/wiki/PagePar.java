@@ -167,7 +167,7 @@ public enum PagePar {
         @Override
         public Wiki setWiki(Wiki wiki, Object value) {
             if (value instanceof Timestamp) {
-                wiki.setUltimaLettura((Timestamp) value);
+                wiki.setUltimalettura((Timestamp) value);
             }// fine del blocco if
             return wiki;
         }// end of method
