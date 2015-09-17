@@ -670,7 +670,7 @@ public class LibWikiTest extends VaadTest {
         lista = LibWiki.creaListaCat(titolo);
         assertNotNull(lista);
         assertTrue(lista.size() == 2);
-    }// end of method
+    }// end of single test
 
     @Test
     /**
@@ -683,7 +683,7 @@ public class LibWikiTest extends VaadTest {
         lista = LibWiki.creaListaCat(titolo);
         assertNotNull(lista);
         assertTrue(lista.size() == 34);
-    }// end of method
+    }// end of single test
 
     @Test
     /**
@@ -703,6 +703,198 @@ public class LibWikiTest extends VaadTest {
         previsto = "23|45|5389|7|98";
         ottenuto = LibWiki.creaListaPageids(lista);
         assertEquals(ottenuto, previsto);
+    }// end of single test
+
+
+    @Test
+    /**
+     * Elimina (eventuali) doppie graffe in testa e coda della stringa.
+     * Funziona solo se le graffe sono esattamente in TESTA ed in CODA alla stringa
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param stringaIn in ingresso
+     * @return stringa con doppie graffe eliminate
+     */
+    public void testSetNoGraffe() {
+        String testoUno = "{{In questo testo la trovo}}";
+        String testoDue = " In questo testo la trovo}}";
+        String testoTre = "{In questo testo la trovo }}";
+        previsto = "In questo testo la trovo";
+
+        ottenuto = LibWiki.setNoGraffe(testoUno);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setNoGraffe(testoDue);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setNoGraffe(testoTre);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setNoGraffe(previsto);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setNoGraffe(VUOTA);
+        assertEquals(ottenuto, VUOTA);
+    }// end of single test
+
+
+    @Test
+    /**
+     * Elimina (eventuali) doppie quadre in testa e coda della stringa.
+     * Funziona solo se le quadre sono esattamente in TESTA ed in CODA alla stringa
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param stringaIn in ingresso
+     * @return stringa con doppie quadre eliminate
+     */
+    public void testSetNoQuadre() {
+        String testoUno = "[[In questo testo la trovo]]";
+        String testoDue = " In questo testo la trovo]]";
+        String testoTre = "[In questo testo la trovo ]]";
+        String testoQuattro = "[In questo testo la trovo]";
+        previsto = "In questo testo la trovo";
+
+        ottenuto = LibWiki.setNoQuadre(testoUno);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setNoQuadre(testoDue);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setNoQuadre(testoTre);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setNoQuadre(testoQuattro);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setNoQuadre(previsto);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setNoQuadre(VUOTA);
+        assertEquals(ottenuto, VUOTA);
+    }// end of single test
+
+
+    @Test
+    /**
+     * Elimina (eventuali) tripli apici (grassetto) in testa e coda della stringa.
+     * Funziona solo se gli apici sono esattamente in TESTA ed in CODA alla stringa
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param stringaIn in ingresso
+     * @return stringa con tripli apici eliminati
+     */
+    public void testSetNoBold() {
+        String testoUno = "'''In questo testo la trovo'''";
+        String testoDue = "  In questo testo la trovo'''";
+        String testoTre = "'''In questo testo la trovo '''";
+        previsto = "In questo testo la trovo";
+
+        ottenuto = LibWiki.setNoBold(testoUno);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setNoBold(testoDue);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setNoBold(testoTre);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setNoBold(previsto);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setNoBold(VUOTA);
+        assertEquals(ottenuto, VUOTA);
+    }// end of single test
+
+    @Test
+    /**
+     * Aggiunge doppie graffe in testa e coda alla stringa.
+     * Aggiunge SOLO se gia non esistono (ne doppie, ne singole)
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     * Elimina eventuali graffe già presenti, per evitare di metterle doppi
+     *
+     * @param stringaIn in ingresso
+     * @return stringa con doppie graffe aggiunte
+     */
+    public void testSetGraffe() {
+        String testoUno = " In questo testo la trovo";
+        String testoDue = "{In questo testo la trovo} ";
+        previsto = "{{In questo testo la trovo}}";
+
+        ottenuto = LibWiki.setGraffe(testoUno);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setGraffe(testoDue);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setGraffe(previsto);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setGraffe(VUOTA);
+        assertEquals(ottenuto, VUOTA);
+    }// end of single test
+
+
+    @Test
+    /**
+     * Aggiunge doppie quadre in testa e coda alla stringa.
+     * Aggiunge SOLO se gia non esistono (ne doppie, ne singole)
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     * Elimina eventuali quadre già presenti, per evitare di metterle doppi
+     *
+     * @param stringaIn in ingresso
+     * @return stringa con doppie quadre aggiunte
+     */
+    public void testSetQuadre() {
+        String testoUno = " In questo testo la trovo";
+        String testoDue = "[In questo testo la trovo] ";
+        previsto = "[[In questo testo la trovo]]";
+
+        ottenuto = LibWiki.setQuadre(testoUno);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setQuadre(testoDue);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setQuadre(previsto);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setQuadre(VUOTA);
+        assertEquals(ottenuto, VUOTA);
+    }// end of single test
+
+
+    @Test
+    /**
+     * Aggiunge tripli apici (grassetto) in testa ed in coda della stringa.
+     * Aggiunge SOLO se gia non esistono
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     * Elimina eventuali apici già presenti, per evitare di metterli doppi
+     *
+     * @param stringaIn in ingresso
+     * @return stringa con tripli apici aggiunte
+     */
+    public void testSetBold() {
+        String testoUno = "'''In questo testo la trovo'''";
+        String testoDue = "  In questo testo la trovo'''";
+        previsto = "'''In questo testo la trovo'''";
+
+        ottenuto = LibWiki.setBold(testoUno);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setBold(testoDue);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setBold(previsto);
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = LibWiki.setBold(VUOTA);
+        assertEquals(ottenuto, VUOTA);
     }// end of single test
 
 }// end of testing class

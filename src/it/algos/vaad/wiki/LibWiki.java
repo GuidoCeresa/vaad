@@ -5,7 +5,6 @@ package it.algos.vaad.wiki;
  * .
  */
 
-import com.vaadin.ui.Notification;
 import it.algos.vaad.wiki.entities.wiki.Wiki;
 import it.algos.vaad.wiki.query.QueryCat;
 import it.algos.webbase.web.lib.LibText;
@@ -40,10 +39,15 @@ public abstract class LibWiki {
     public static final String NEW_BIO = "NewBio";
     public static final String REF = "<ref>";
     public static final String NOTE = "<!--";
+    public static final String QUADRA_INI = "[";
+    public static final String QUADRE_INI = QUADRA_INI + QUADRA_INI;
+    public static final String QUADRA_END = "]";
+    public static final String QUADRE_END = QUADRA_END + QUADRA_END;
     public static final String GRAFFA_INI = "{";
     public static final String GRAFFE_INI = GRAFFA_INI + GRAFFA_INI;
     public static final String GRAFFA_END = "}";
     public static final String GRAFFE_END = GRAFFA_END + GRAFFA_END;
+    public static final String BOLD = "'''";
     public static final String BIO = Cost.TAG_BIO;
 
     // tag per la stringa vuota
@@ -283,28 +287,6 @@ public abstract class LibWiki {
         return testoOut;
     } // fine del metodo
 
-    /**
-     * Elimina (eventuali) doppie graffe in testa e coda della stringa.
-     * Funziona solo se le graffe sono esattamente in TESTA ed in CODA alla stringa
-     * Se arriva una stringa vuota, restituisce una stringa vuota
-     * Elimina spazi vuoti iniziali e finali
-     *
-     * @param stringaIn in ingresso
-     * @return stringa con doppie graffe eliminate
-     */
-    public static String setNoGraffe(String stringaIn) {
-        String stringaOut = stringaIn;
-
-        if (stringaIn != null && stringaIn.length() > 0) {
-            stringaOut = stringaIn.trim();
-            stringaOut = levaTesta(stringaOut, GRAFFA_INI);
-            stringaOut = levaTesta(stringaOut, GRAFFA_INI);
-            stringaOut = levaCoda(stringaOut, GRAFFA_END);
-            stringaOut = levaCoda(stringaOut, GRAFFA_END);
-        }// fine del blocco if
-
-        return stringaOut.trim();
-    } // fine del metodo
 
     /**
      * Chiude il template
@@ -1257,5 +1239,148 @@ public abstract class LibWiki {
         return new Timestamp(new Date().getTime());
     }// end of method
 
+
+    /**
+     * Elimina (eventuali) doppie graffe in testa e coda della stringa.
+     * Funziona solo se le graffe sono esattamente in TESTA ed in CODA alla stringa
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param stringaIn in ingresso
+     * @return stringa con doppie graffe eliminate
+     */
+    public static String setNoGraffe(String stringaIn) {
+        String stringaOut = stringaIn;
+
+        if (stringaIn != null && stringaIn.length() > 0) {
+            stringaOut = stringaIn.trim();
+            stringaOut = levaTesta(stringaOut, GRAFFA_INI);
+            stringaOut = levaTesta(stringaOut, GRAFFA_INI);
+            stringaOut = levaCoda(stringaOut, GRAFFA_END);
+            stringaOut = levaCoda(stringaOut, GRAFFA_END);
+        }// fine del blocco if
+
+        return stringaOut.trim();
+    } // fine del metodo
+
+    /**
+     * Elimina (eventuali) doppie quadre in testa e coda della stringa.
+     * Funziona solo se le quadre sono esattamente in TESTA ed in CODA alla stringa
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param stringaIn in ingresso
+     * @return stringa con doppie quadre eliminate
+     */
+    public static String setNoQuadre(String stringaIn) {
+        String stringaOut = stringaIn;
+
+        if (stringaIn != null && stringaIn.length() > 0) {
+            stringaOut = stringaIn.trim();
+            stringaOut = levaTesta(stringaOut, QUADRA_INI);
+            stringaOut = levaTesta(stringaOut, QUADRA_INI);
+            stringaOut = levaCoda(stringaOut, QUADRA_END);
+            stringaOut = levaCoda(stringaOut, QUADRA_END);
+        }// fine del blocco if
+
+        return stringaOut.trim();
+    } // fine del metodo
+
+
+    /**
+     * Elimina (eventuali) tripli apici (grassetto) in testa e coda della stringa.
+     * Funziona solo se gli apici sono esattamente in TESTA ed in CODA alla stringa
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param stringaIn in ingresso
+     * @return stringa con tripli apici eliminati
+     */
+    public static String setNoBold(String stringaIn) {
+        String stringaOut = stringaIn;
+
+        if (stringaIn != null && stringaIn.length() > 0) {
+            stringaOut = stringaIn.trim();
+            stringaOut = levaTesta(stringaOut, BOLD);
+            stringaOut = levaCoda(stringaOut, BOLD);
+        }// fine del blocco if
+
+        return stringaOut.trim();
+    } // fine del metodo
+
+
+    /**
+     * Aggiunge doppie graffe in testa e coda alla stringa.
+     * Aggiunge SOLO se gia non esistono (ne doppie, ne singole)
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     * Elimina eventuali graffe già presenti, per evitare di metterle doppi
+     *
+     * @param stringaIn in ingresso
+     * @return stringa con doppie graffe aggiunte
+     */
+    public static String setGraffe(String stringaIn) {
+        String stringaOut = stringaIn;
+        String stringaPulita;
+
+        if (stringaIn != null && stringaIn.length() > 0) {
+            stringaPulita = setNoGraffe(stringaIn);
+            if (!stringaPulita.equals("")) {
+                stringaOut = GRAFFE_INI + stringaPulita + GRAFFE_END;
+            }// fine del blocco if-else
+        }// fine del blocco if
+
+        return stringaOut.trim();
+    } // fine del metodo
+
+
+    /**
+     * Aggiunge doppie quadre in testa e coda alla stringa.
+     * Aggiunge SOLO se gia non esistono (ne doppie, ne singole)
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     * Elimina eventuali quadre già presenti, per evitare di metterle doppi
+     *
+     * @param stringaIn in ingresso
+     * @return stringa con doppie quadre aggiunte
+     */
+    public static String setQuadre(String stringaIn) {
+        String stringaOut = stringaIn;
+        String stringaPulita;
+
+        if (stringaIn != null && stringaIn.length() > 0) {
+            stringaPulita = setNoQuadre(stringaIn);
+            if (!stringaPulita.equals("")) {
+                stringaOut = QUADRE_INI + stringaPulita + QUADRE_END;
+            }// fine del blocco if-else
+        }// fine del blocco if
+
+        return stringaOut.trim();
+    } // fine del metodo
+
+
+    /**
+     * Aggiunge tripli apici (grassetto) in testa ed in coda della stringa.
+     * Aggiunge SOLO se gia non esistono
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     * Elimina eventuali apici già presenti, per evitare di metterli doppi
+     *
+     * @param stringaIn in ingresso
+     * @return stringa con tripli apici aggiunte
+     */
+    public static String setBold(String stringaIn) {
+        String stringaOut = stringaIn;
+        String stringaPulita;
+
+        if (stringaIn != null && stringaIn.length() > 0) {
+            stringaPulita = setNoBold(stringaIn);
+            if (!stringaPulita.equals("")) {
+                stringaOut = BOLD + stringaPulita + BOLD;
+            }// fine del blocco if-else
+        }// fine del blocco if
+
+        return stringaOut.trim();
+    } // fine del metodo
 
 } // fine della classe astratta

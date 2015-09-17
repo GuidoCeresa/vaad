@@ -35,6 +35,7 @@ public abstract class VaadTest {
     protected static String TAG_END_TMPL = "}}";
     protected static String TAG_INI_TMPL_BIO = "{{Bio\n|Nome";
     protected static String TAG_END_TMPL_BIO = "}}";
+    protected static String VUOTA = "";
 
     // alcuni parametri utilizzati
     protected List<PagePar> listaPrevista = null;
