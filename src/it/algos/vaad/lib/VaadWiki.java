@@ -127,13 +127,13 @@ public abstract class VaadWiki {
     }// end of static method
 
     /**
-     * Estrae da un testo una serie di occorrenze comprese tra due estremi
+     * Estrae da un testo una serie di occorrenze di doppie quadre
      * Estremi esclusi
      *
      * @param testo da analizzare
      * @return la lista di valori
      */
-    public static ArrayList<String> estraeLink(String testo) {
+    public static ArrayList<String> estraeDoppieQuadre(String testo) {
         ArrayList<String> lista = null;
         ArrayList<String> listaGrezza = estrae(testo, TAG_INI, TAG_END);
 
@@ -146,6 +146,24 @@ public abstract class VaadWiki {
         }// fine del blocco if
 
         return lista;
+    }// end of static method
+
+    /**
+     * Estrae da un testo la prima occorrenza di doppie quadre
+     * Estremi esclusi
+     *
+     * @param testo da analizzare
+     * @return la lista di valori
+     */
+    public static String estraeDoppiaQuadra(String testo) {
+        String quadra = "";
+        ArrayList<String> lista = estraeDoppieQuadre(testo);
+
+        if (lista != null && lista.size() > 0) {
+            quadra = lista.get(0);
+        }// fine del blocco if
+
+        return quadra;
     }// end of static method
 
     /**

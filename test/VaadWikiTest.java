@@ -49,7 +49,7 @@ public class VaadWikiTest extends VaadTest {
     }// end of single test
 
     @Test
-    public void estra3() {
+    public void estraeQuadre() {
         ArrayList<String> arrayPrevisto = new ArrayList<String>();
         ArrayList<String> arrayOttenuto;
         arrayPrevisto.add("Feudo imperiale");
@@ -58,8 +58,16 @@ public class VaadWikiTest extends VaadTest {
         arrayPrevisto.add("Caffa");
         arrayPrevisto.add("Ucraina");
 
-        arrayOttenuto = VaadWiki.estraeLink(sorgente);
+        arrayOttenuto = VaadWiki.estraeDoppieQuadre(sorgente);
         assertEquals(arrayOttenuto, arrayPrevisto);
+    }// end of single test
+
+    @Test
+    public void estraeQuadrea() {
+        previsto = "Feudo imperiale";
+
+        ottenuto = VaadWiki.estraeDoppiaQuadra(sorgente);
+        assertEquals(ottenuto, previsto);
     }// end of single test
 
     @Test
