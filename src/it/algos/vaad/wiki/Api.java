@@ -1,14 +1,9 @@
 package it.algos.vaad.wiki;
 
-import com.vaadin.ui.Notification;
-import it.algos.vaad.wiki.entities.wiki.Wiki;
 import it.algos.vaad.wiki.query.QueryReadPageid;
 import it.algos.vaad.wiki.query.QueryReadTitle;
 import it.algos.vaad.wiki.query.QueryWiki;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Api {
@@ -133,46 +128,6 @@ public class Api {
         return testo;
     }// end of method
 
-    /**
-     * Legge una pagina
-     * <p>
-     *
-     * @param title della pagina
-     * @return contenuto completo della pagina (con i metadati mediawiki)
-     */
-    public static Page leggePage(String title) {
-        return leggePage(title, TipoRicerca.title);
-    }// end of method
-
-    /**
-     * Legge una pagina
-     * <p>
-     *
-     * @param pageId della pagina
-     * @return contenuto completo della pagina (con i metadati mediawiki)
-     */
-    public static Page leggePage(long pageId) {
-        return leggePage("" + pageId, TipoRicerca.pageid);
-    }// end of method
-
-    /**
-     * Legge una pagina
-     * <p>
-     *
-     * @param titlePageid (title oppure pageid)
-     * @param tipoRicerca title o pageId
-     * @return pagina (con i metadati mediawiki)
-     */
-    public static Page leggePage(String titlePageid, TipoRicerca tipoRicerca) {
-        Page page = null;
-        String contenuto = leggePagina(titlePageid, tipoRicerca);
-
-        if (contenuto != null && !contenuto.equals("")) {
-            page = new Page(contenuto);
-        }// fine del blocco if
-
-        return page;
-    }// end of method
 
     /**
      * Legge il contenuto (tutto) di una pagina
@@ -181,8 +136,14 @@ public class Api {
      * @param title della pagina
      * @return contenuto completo (json) della pagina (con i metadati mediawiki)
      */
+    @SuppressWarnings("all")
     public static String leggePagina(String title) {
-        return leggePagina(title, TipoRicerca.title);
+        try { // prova ad eseguire il codice
+            Integer.decode(title);
+            return leggePagina(title, TipoRicerca.pageid);
+        } catch (Exception unErrore) { // intercetta l'errore
+            return leggePagina(title, TipoRicerca.title);
+        }// fine del blocco try-catch
     }// end of method
 
     /**
@@ -222,6 +183,55 @@ public class Api {
         }// fine del blocco if-else
     }// end of method
 
+
+    /**
+     * Legge una pagina
+     * <p>
+     *
+     * @param title della pagina
+     * @return contenuto completo della pagina (con i metadati mediawiki)
+     */
+    @SuppressWarnings("all")
+    public static Page leggePage(String title) {
+        try { // prova ad eseguire il codice
+            Integer.decode(title);
+            return leggePage(title, TipoRicerca.pageid);
+        } catch (Exception unErrore) { // intercetta l'errore
+            return leggePage(title, TipoRicerca.title);
+        }// fine del blocco try-catch
+    }// end of method
+
+    /**
+     * Legge una pagina
+     * <p>
+     *
+     * @param pageId della pagina
+     * @return contenuto completo della pagina (con i metadati mediawiki)
+     */
+    public static Page leggePage(long pageId) {
+        return leggePage("" + pageId, TipoRicerca.pageid);
+    }// end of method
+
+    /**
+     * Legge una pagina
+     * <p>
+     *
+     * @param titlePageid (title oppure pageid)
+     * @param tipoRicerca title o pageId
+     * @return pagina (con i metadati mediawiki)
+     */
+    public static Page leggePage(String titlePageid, TipoRicerca tipoRicerca) {
+        Page page = null;
+        String contenuto = leggePagina(titlePageid, tipoRicerca);
+
+        if (contenuto != null && !contenuto.equals("")) {
+            page = new Page(contenuto);
+        }// fine del blocco if
+
+        return page;
+    }// end of method
+
+
     /**
      * Legge il contenuto (testo) di una voce
      * <p>
@@ -229,8 +239,14 @@ public class Api {
      * @param title della pagina
      * @return contenuto (solo testo) della pagina (senza i metadati mediawiki)
      */
+    @SuppressWarnings("all")
     public static String leggeVoce(String title) {
-        return leggeVoce(title, TipoRicerca.title);
+        try { // prova ad eseguire il codice
+            Integer.decode(title);
+            return leggeVoce(title, TipoRicerca.pageid);
+        } catch (Exception unErrore) { // intercetta l'errore
+            return leggeVoce(title, TipoRicerca.title);
+        }// fine del blocco try-catch
     }// end of method
 
     /**

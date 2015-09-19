@@ -13,6 +13,44 @@ public class ApiTest extends VaadTest {
 
     @Test
     /**
+     * Legge il contenuto (tutto) di una pagina
+     * <p/>
+     *
+     * @param titlePageid (title oppure pageid)
+     * @param tipoRicerca title o pageId
+     * @return contenuto completo (json) della pagina (con i metadati mediawiki)
+     */
+    public void leggePagina() {
+        // titolo corretto
+        ottenuto = Api.leggePagina(TITOLO);
+        assertNotNull(ottenuto);
+        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
+        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
+
+        // pageid corretto
+        ottenuto = Api.leggePagina(PAGEID);
+        assertNotNull(ottenuto);
+        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
+        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
+
+        // titolo NON corretto
+        ottenuto = Api.leggePagina(TITOLO_ERRATO);
+        assertEquals(ottenuto, "");
+
+        // pageid NON corretto
+        ottenuto = Api.leggePagina(PAGEID_ERRATO);
+        assertEquals(ottenuto, "");
+
+        // pageid CORRETTO, inviato come stringa
+        ottenuto = Api.leggePagina(PAGEID_COME_STRINGA);
+        assertNotNull(ottenuto);
+        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
+        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
+    }// end of single test
+
+
+    @Test
+    /**
      * Legge una pagina
      * <p/>
      *
@@ -51,38 +89,13 @@ public class ApiTest extends VaadTest {
         // titolo corretto, ma TipoRicerca errato
         pageOttenuta = Api.leggePage(TITOLO, TipoRicerca.listaPageids);
         assertNull(pageOttenuta);
+
+        // pageid CORRETTO, inviato come stringa
+        pageOttenuta = Api.leggePage(PAGEID_COME_STRINGA);
+        assertNotNull(pageOttenuta);
+        assertTrue(pageOttenuta.isValida());
     }// end of method
 
-    @Test
-    /**
-     * Legge il contenuto (tutto) di una pagina
-     * <p/>
-     *
-     * @param titlePageid (title oppure pageid)
-     * @param tipoRicerca title o pageId
-     * @return contenuto completo (json) della pagina (con i metadati mediawiki)
-     */
-    public void leggePagina() {
-        // titolo corretto
-        ottenuto = Api.leggePagina(TITOLO);
-        assertNotNull(ottenuto);
-        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
-        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
-
-        // pageid corretto
-        ottenuto = Api.leggePagina(PAGEID);
-        assertNotNull(ottenuto);
-        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
-        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
-
-        // titolo NON corretto
-        ottenuto = Api.leggePagina(TITOLO_ERRATO);
-        assertEquals(ottenuto, "");
-
-        // pageid NON corretto
-        ottenuto = Api.leggePagina(PAGEID_ERRATO);
-        assertEquals(ottenuto, "");
-    }// end of single test
 
     @Test
     /**
@@ -114,6 +127,12 @@ public class ApiTest extends VaadTest {
         // pageid NON corretto
         ottenuto = Api.leggeVoce(PAGEID_ERRATO);
         assertEquals(ottenuto, "");
+
+        // pageid CORRETTO, inviato come stringa
+        ottenuto = Api.leggeVoce(PAGEID_COME_STRINGA);
+        assertNotNull(ottenuto);
+        assertTrue(ottenuto.startsWith(TAG_INI_VOCE));
+        assertTrue(ottenuto.endsWith(TAG_END_VOCE));
     }// end of single test
 
 
