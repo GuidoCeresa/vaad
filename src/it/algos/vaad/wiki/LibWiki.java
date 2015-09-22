@@ -5,6 +5,7 @@ package it.algos.vaad.wiki;
  * .
  */
 
+import it.algos.vaad.WrapTime;
 import it.algos.vaad.wiki.entities.wiki.Wiki;
 import it.algos.vaad.wiki.query.QueryCat;
 import it.algos.webbase.web.lib.LibText;
@@ -58,6 +59,7 @@ public abstract class LibWiki {
     private static String PAGEID = "pageid";
     private static String PAGES = "pages";
     private static String REVISIONS = "revisions";
+    private static String TIMESTAMP = "timestamp";
     private static String CATEGORY_MEMBERS = "categorymembers";
     private static String QUERY_CONTINUE = "query-continue";
     private static String VIR = ",";
@@ -496,6 +498,67 @@ public abstract class LibWiki {
         }// fine del blocco if
 
         return patchMappa(mappa);
+    } // fine del metodo
+
+
+    /**
+     * Crea una mappa per leggere solo i timestamps dal testo JSON di una pagina
+     *
+     * @param textJSON in ingresso
+     * @return mappa timestamps
+     */
+    public static ArrayList<WrapTime> creaArrayWrapTime(String textJSON) {
+        ArrayList<WrapTime> lista = null;
+        WrapTime wrap;
+        JSONObject objectAll;
+        boolean batchcomplete;
+        JSONObject objectQuery;
+        JSONArray arrayPages = null;
+        JSONObject singlePage;
+        long pageid;
+        JSONArray singleRev;
+        JSONObject timeObj;
+        String timeStr;
+
+        // recupera i due oggetti al livello root del testo (batchcomplete e query)
+        objectAll = (JSONObject) JSONValue.parse(textJSON);
+
+        // controllo
+        if (objectAll == null) {
+            return null;
+        }// fine del blocco if
+
+        //recupera il valore del parametro di controllo per la gestione dell'ultima versione di mediawiki
+        if (objectAll.get(BATCH) != null && objectAll.get(BATCH) instanceof Boolean) {
+            batchcomplete = (Boolean) objectAll.get(BATCH);
+        }// fine del blocco if
+
+        //recupera i valori dei parametri
+        if (objectAll.get(QUERY) != null && objectAll.get(QUERY) instanceof JSONObject) {
+            objectQuery = (JSONObject) objectAll.get(QUERY);
+            if (objectQuery.get(PAGES) != null && objectQuery.get(PAGES) instanceof JSONArray) {
+                arrayPages = (JSONArray) objectQuery.get(PAGES);
+            }// fine del blocco if
+        }// fine del blocco if
+
+        // crea la mappa
+        if (arrayPages != null && arrayPages.get(0) != null && arrayPages.get(0) instanceof JSONObject) {
+            lista = new ArrayList<WrapTime>();
+            for (Object obj : arrayPages) {
+                if (obj instanceof JSONObject) {
+                    singlePage = (JSONObject) obj;
+                    pageid = (long) singlePage.get(PAGEID);
+                    singleRev = (JSONArray) singlePage.get(REVISIONS);
+                    timeObj = (JSONObject) singleRev.get(0);
+                    timeStr = (String) timeObj.get(TIMESTAMP);
+
+                    wrap = new WrapTime(pageid, timeStr);
+                    lista.add(wrap);
+                }// fine del blocco if
+            } // fine del ciclo for-each
+        }// fine del blocco if
+
+        return lista;
     } // fine del metodo
 
     /**

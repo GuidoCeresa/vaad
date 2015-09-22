@@ -682,7 +682,7 @@ public class LibWikiTest extends VaadTest {
 
         lista = LibWiki.creaListaCat(titolo);
         assertNotNull(lista);
-        assertTrue(lista.size() == 34);
+        assertTrue(lista.size() == 35);
     }// end of single test
 
     @Test

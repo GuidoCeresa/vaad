@@ -153,7 +153,7 @@ public class Api {
      * @param pageId della pagina
      * @return contenuto completo (json) della pagina (con i metadati mediawiki)
      */
-    public static String leggePagina(int pageId) {
+    public static String leggePagina(long pageId) {
         return leggePagina("" + pageId, TipoRicerca.pageid);
     }// end of method
 

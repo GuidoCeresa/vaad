@@ -10,7 +10,7 @@ import it.algos.vaad.wiki.TipoRicerca;
  * Necessita di Login per la sottoclasse QueryMultiId
  * Nelle sottoclassi vengono implementate le funzionalità specifiche
  */
-public abstract class QueryWiki extends Query{
+public abstract class QueryWiki extends Query {
 
     // codifica dei caratteri
     protected static String ENCODE = "UTF-8";
@@ -26,6 +26,7 @@ public abstract class QueryWiki extends Query{
 
     protected String title;
     protected String pageid;
+    protected String stringaPageIds;
 
 //    // risultato della pagina
 //    // risultato grezzo della query nel formato prescelto
@@ -73,6 +74,7 @@ public abstract class QueryWiki extends Query{
         if (titlepageid != null) {
             title = titlepageid;
             pageid = titlepageid;
+            stringaPageIds = titlepageid;
             domain = this.getDomain();
             super.inizializza();
         }// fine del blocco if

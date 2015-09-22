@@ -1,6 +1,7 @@
 package it.algos.vaad.wiki;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.HashMap;
 
 /**
@@ -104,6 +105,11 @@ public class Page implements Serializable {
     public String getText() {
         return (String) mappaReadObj.get(PagePar.content.toString());
     }// fine del metodo
+
+    public Timestamp getTimestamp() {
+        return (Timestamp) mappaReadObj.get(PagePar.timestamp.toString());
+    }// fine del metodo
+
 
     public boolean isValida() {
         return valida;

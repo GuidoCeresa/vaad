@@ -2,7 +2,12 @@ package it.algos.vaad.lib;
 
 import it.algos.webbase.web.lib.LibText;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Created by gac on 04 ago 2015.
@@ -186,5 +191,32 @@ public abstract class VaadWiki {
 
         return testoOut;
     }// end of static method
+
+    /**
+     * Converte una stringa formatta wiki in data.
+     *
+     * @param stringa da convertire
+     * @return la data corrispondente
+     */
+    public static Date getWikiData(String stringa) {
+        /* variabili e costanti locali di lavoro */
+        Date data;
+        DateFormat formatter;
+
+        data = getVuota();
+
+        GregorianCalendar calendario = new GregorianCalendar(0, 0, 0, 0, 0, 0);
+        SimpleDateFormat wikiDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        wikiDateFormat.setCalendar(calendario);
+
+        formatter = wikiDateFormat;
+        try { // prova ad eseguire il codice
+            data = formatter.parse(stringa);
+        } catch (ParseException unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch
+
+        /* valore di ritorno */
+        return data;
+    } // fine del metodo
 
 }// end of static class
