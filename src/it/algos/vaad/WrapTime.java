@@ -1,5 +1,6 @@
 package it.algos.vaad;
 
+import it.algos.vaad.lib.VaadWiki;
 import it.algos.webbase.web.lib.LibTime;
 
 import java.sql.Timestamp;
@@ -24,8 +25,7 @@ public class WrapTime {
 
     public WrapTime(long pageid, String timestampStr) {
         this.setPageid(pageid);
-        LibTime
-        this.setTimestamp(new Timestamp(timestampStr));
+        this.setTimestamp(VaadWiki.getWikiTime(timestampStr));
     }// fine del metodo costruttore
 
 

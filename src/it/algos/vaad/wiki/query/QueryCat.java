@@ -105,6 +105,9 @@ public class QueryCat extends QueryWiki {
 
     /**
      * Regola il risultato
+     * <p>
+     * Informazioni, contenuto e validita della risposta
+     * Controllo del contenuto (testo) ricevuto
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
     @Override

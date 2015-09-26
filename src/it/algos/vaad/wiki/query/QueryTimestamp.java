@@ -1,14 +1,13 @@
 package it.algos.vaad.wiki.query;
 
 import it.algos.vaad.WrapTime;
-import it.algos.vaad.wiki.Cost;
 import it.algos.vaad.wiki.LibWiki;
 import it.algos.vaad.wiki.TipoRequest;
 import it.algos.vaad.wiki.TipoRicerca;
+import it.algos.webbase.web.lib.LibArray;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by gac on 21 set 2015.
@@ -36,11 +35,15 @@ public class QueryTimestamp extends QueryWiki {
     }// fine del metodo costruttore
 
     public QueryTimestamp(String[] listaPageIds) {
-        super();
+        super(LibArray.fromStringToStringaPipe(listaPageIds), TipoRicerca.listaPageids, TipoRequest.read);
     }// fine del metodo costruttore
 
     public QueryTimestamp(ArrayList arrayPageIds) {
-//        super(LibArray.creaStringaPipe(arrayPageIds));
+        super(LibArray.toStringaPipe(arrayPageIds), TipoRicerca.listaPageids, TipoRequest.read);
+    }// fine del metodo costruttore
+
+    public QueryTimestamp(List arrayPageIds) {
+        super(LibArray.toStringaPipe(arrayPageIds), TipoRicerca.listaPageids, TipoRequest.read);
     }// fine del metodo costruttore
 
 
@@ -63,137 +66,17 @@ public class QueryTimestamp extends QueryWiki {
 
     /**
      * Regola il risultato
+     * <p>
+     * Informazioni, contenuto e validita della risposta
+     * Controllo del contenuto (testo) ricevuto
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
     @Override
     protected void regolaRisultato(String risultatoRequest) {
-        ArrayList<Long> lista;
-        String txtContinua;
-
-        HashMap<Long,String>  mappa = LibWiki.creaMappaTimestamp(risultatoRequest);
-
-//        lista = LibWiki.creaListaCatJson(risultatoRequest);
-//        if (lista != null) {
-//            this.addLista(lista);
-//        }// fine del blocco if
-
-        txtContinua = LibWiki.creaCatContinue(risultatoRequest);
-        this.continua = txtContinua;
+        this.listaWrapTime = LibWiki.creaArrayWrapTime(risultatoRequest);
+        this.continua = LibWiki.creaCatContinue(risultatoRequest);
     } // fine del metodo
 
-    public static WrapTime creaWrap(String singoloElemento) {
-        WrapTime wrapTime = null;
-        int pageid;
-        String tagPageIni = "'pageid'";
-        String tagPageEnd = "}";
-        String tagRev = "revisions";
-        String tagTime = "timestamp";
-        int posIni;
-        int posEnd;
-        String pageTxt;
-        String timeTxt;
-        HashMap mappa;
-        Timestamp timestamp;
-
-        //--pageid
-        posIni = singoloElemento.indexOf(tagPageIni) + tagPageIni.length() + 1;
-        posEnd = singoloElemento.indexOf(tagPageEnd, posIni);
-        pageTxt = singoloElemento.substring(posIni, posEnd);
-        try { // prova ad eseguire il codice
-            pageid = Integer.decode(pageTxt);
-        } catch (Exception unErrore) { // intercetta l'errore
-            Object nonUsato = unErrore;
-        }// fine del blocco try-catch
-
-        //--timestamp
-//        mappa = WikiLib.getMappaJson(singoloElemento, tagRev)
-//        if (mappa && mappa[tagTime]) {
-//            timeTxt = mappa[tagTime]
-//            timestamp = LibTime.getWikiTimestamp(timeTxt)
-//        }// fine del blocco if
-
-//        if (pageid != null && timestamp != null) {
-//            wrapTime = new WrapTime(pageid, timestamp)
-//        }// fine del blocco if
-
-        return wrapTime;
-    } // fine del metodo
-
-
-    /**
-     * Informazioni, contenuto e validita della risposta
-     * Controllo del contenuto (testo) ricevuto
-     * Estrae i valori e costruisce una mappa
-     */
-    protected void regolaRisultato() {
-        boolean continua = false;
-        ArrayList<WrapTime> listaWrapTime = new ArrayList<WrapTime>();
-        ArrayList listaErrori = new ArrayList();
-        String risultatoRequest = "";
-        String query = "query";
-        String pages = "pages";
-        HashMap mappaQuery = null;
-        HashMap mappaPages = null;
-        HashMap mappaNumId = null;
-        HashMap mappaVoci = null;
-        WrapTime wrapTime;
-
-//        risultatoRequest = this.getRisultato();
-
-        if (!risultatoRequest.equals("")) {
-            continua = true;
-        } else {
-//            log.error 'risultato vuoto'
-        }// fine del blocco if-else
-
-//        if (continua) {
-//            mappaQuery = (HashMap) JSON.parse(risultatoRequest)
-//            continua = (mappaQuery)
-//        }// fine del blocco if
-//
-//        if (continua) {
-//            mappaPages = (HashMap) mappaQuery[query]
-//            continua = (mappaPages)
-//        }// fine del blocco if
-//
-//        if (continua) {
-//            mappaNumId = (HashMap) mappaPages[pages]
-//            continua == (mappaNumId && mappaNumId.size == 1)
-//        }// fine del blocco if
-//
-//        if (continua) {
-//            mappaVoci = mappaNumId.values()
-//            continua = (mappaVoci)
-//        }// fine del blocco if
-//
-//        if (continua) {
-//            mappaVoci ?.each {
-//                wrapTime = creaWrap((String) it)
-//                if (wrapTime) {
-//                    listaWrapTime.add(creaWrap((String) it))
-//                } else {
-//                    if (it['title']) {
-//                        listaErrori.add(it['title'])
-//                    } else {
-//                        if (it['pageid']) {
-//                            listaErrori.add(it['pageid'])
-//                        } else {
-//                            listaErrori.add('generico')
-//                        }// fine del blocco if-else
-//                    }// fine del blocco if-else
-//                }// fine del blocco if-else
-//            } // fine del ciclo each
-//        }// fine del blocco if
-//
-//        if (listaWrapTime) {
-//            this.setListaWrapTime(listaWrapTime)
-//        }// fine del blocco if
-//
-//        if (listaErrori) {
-//            this.setListaErrori(listaErrori)
-//        }// fine del blocco if
-
-    } // fine del metodo
 
     public ArrayList<WrapTime> getListaWrapTime() {
         return listaWrapTime;

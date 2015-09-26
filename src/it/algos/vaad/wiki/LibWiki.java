@@ -52,20 +52,19 @@ public abstract class LibWiki {
 
     // tag per il valore falso per una posizione
     public static final int INT_NULLO = -1;
-
+    private static final String BATCH = "batchcomplete";
+    private static final String QUERY = "query";
+    private static final String PAGEID = "pageid";
+    private static final String PAGES = "pages";
+    private static final String REVISIONS = "revisions";
+    private static final String TIMESTAMP = "timestamp";
+    private static final String CATEGORY_MEMBERS = "categorymembers";
+    private static final String QUERY_CONTINUE = "query-continue";
+    private static final String LOGIN = "login";
+    private static final String VIR = ",";
+    private static final String APICI = "\"";
+    private static final String PUNTI = ":";
     public static Date DATA_NULLA = new Date(70, 0, 1);
-    private static String BATCH = "batchcomplete";
-    private static String QUERY = "query";
-    private static String PAGEID = "pageid";
-    private static String PAGES = "pages";
-    private static String REVISIONS = "revisions";
-    private static String TIMESTAMP = "timestamp";
-    private static String CATEGORY_MEMBERS = "categorymembers";
-    private static String QUERY_CONTINUE = "query-continue";
-    private static String VIR = ",";
-    private static String APICI = "\"";
-    private static String PUNTI = ":";
-
     // patch per la key del parametro testo
     private static String PATCH_OLD = "*";
     private static String PATCH_NEW = "text";
@@ -92,6 +91,9 @@ public abstract class LibWiki {
 //                    unErrore = null
 //                    valueObj = 0
 //                }// fine del blocco try-catch
+
+
+
 //                break;
 //            case PagePar.TypeField.date:            //--conversione delle date
 //                try { // prova ad eseguire il codice
@@ -498,6 +500,38 @@ public abstract class LibWiki {
         }// fine del blocco if
 
         return patchMappa(mappa);
+    } // fine del metodo
+
+    /**
+     * Crea una mappa login (valori String) dal testo JSON di una pagina di login
+     *
+     * @param textJSON in ingresso
+     * @return mappa standard (valori String)
+     */
+    public static HashMap<String, Object> creaMappaLogin(String textJSON) {
+        HashMap<String, Object> mappa = null;
+        JSONObject objectAll;
+        JSONObject objectQuery = null;
+
+        // recupera i due oggetti al livello root del testo (batchcomplete e query)
+        objectAll = (JSONObject) JSONValue.parse(textJSON);
+
+        // controllo
+        if (objectAll == null) {
+            return null;
+        }// fine del blocco if
+
+        //recupera i valori dei parametri base (3) ed info (1)
+        if (objectAll.get(LOGIN) != null && objectAll.get(LOGIN) instanceof JSONObject) {
+            objectQuery = (JSONObject) objectAll.get(LOGIN);
+            mappa = new HashMap<String, Object>();
+
+            for (Object key : objectQuery.keySet()) {
+                mappa.put((String) key, objectQuery.get(key));
+            } // fine del ciclo for-each
+        }// fine del blocco if
+
+        return mappa;
     } // fine del metodo
 
 

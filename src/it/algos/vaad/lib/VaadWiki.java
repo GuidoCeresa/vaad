@@ -2,6 +2,7 @@ package it.algos.vaad.lib;
 
 import it.algos.webbase.web.lib.LibText;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -193,17 +194,16 @@ public abstract class VaadWiki {
     }// end of static method
 
     /**
-     * Converte una stringa formatta wiki in data.
+     * Converte una stringa formatta wiki in timestamp.
      *
      * @param stringa da convertire
      * @return la data corrispondente
      */
-    public static Date getWikiData(String stringa) {
-        /* variabili e costanti locali di lavoro */
+    public static Timestamp getWikiTime(String stringa) {
         Date data;
         DateFormat formatter;
 
-        data = getVuota();
+        data = new Date();
 
         GregorianCalendar calendario = new GregorianCalendar(0, 0, 0, 0, 0, 0);
         SimpleDateFormat wikiDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -215,8 +215,7 @@ public abstract class VaadWiki {
         } catch (ParseException unErrore) { // intercetta l'errore
         }// fine del blocco try-catch
 
-        /* valore di ritorno */
-        return data;
+        return new Timestamp(data.getTime());
     } // fine del metodo
 
 }// end of static class
