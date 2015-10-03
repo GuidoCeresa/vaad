@@ -2,6 +2,7 @@ package it.algos.vaad;
 
 import com.vaadin.annotations.Theme;
 import it.algos.vaad.ui.VaadAlgosUI;
+import it.algos.vaad.wiki.WikiLogin;
 import it.algos.webbase.web.module.ModulePop;
 
 //@Theme("valo")
@@ -17,7 +18,7 @@ public class VaadUI extends VaadAlgosUI {
     @Override
     protected void addAllModuli() {
 //        moduloPartenza = new VersMod();
-        new Login("biobot","fulvia");
+        new WikiLogin("biobot","fulvia");
 
 //        this.addModulo(new PrefMod());
 //        this.addModulo(new LogMod());

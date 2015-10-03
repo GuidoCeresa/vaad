@@ -1,8 +1,12 @@
 package it.algos.vaad.wiki.query;
 
+import it.algos.vaad.wiki.WikiLogin;
 import it.algos.vaad.wiki.Cost;
 import it.algos.vaad.wiki.TipoRequest;
 import it.algos.vaad.wiki.TipoRicerca;
+import it.algos.webbase.web.lib.LibSession;
+
+import java.net.URLConnection;
 
 /**
  * Superclasse per le Request al server MediaWiki
@@ -44,7 +48,7 @@ public abstract class QueryWiki extends Query {
     private TipoRequest tipoRequest = TipoRequest.read;
 
     // collegamento utilizzato
-//    protected Login login = null
+//    protected Login login = null;
 
     /**
      * Costruttore di default per il sistema (a volte serve)
@@ -70,6 +74,7 @@ public abstract class QueryWiki extends Query {
         this.inizializza("" + pageid);
     }// fine del metodo costruttore
 
+
     protected void inizializza(String titlepageid) {
         if (titlepageid != null) {
             title = titlepageid;
@@ -91,6 +96,26 @@ public abstract class QueryWiki extends Query {
         return "";
     } // fine del metodo
 
+
+    /**
+     * Crea la connessione
+     * Regola i parametri della connessione
+     * Recupera i cookies dal Login di registrazione
+     */
+    @Override
+    protected URLConnection creaConnessione() throws Exception {
+        URLConnection urlConn = super.creaConnessione();
+        WikiLogin wikiLogin = (WikiLogin) LibSession.getAttribute("login");
+        String txtCookies;
+
+        // regolo i cookies
+        if (wikiLogin != null && wikiLogin.isValido()) {
+            txtCookies = wikiLogin.getStringCookies();
+            urlConn.setRequestProperty("Cookie", txtCookies);
+        }// fine del blocco if
+
+        return urlConn;
+    } // fine del metodo
 
     /**
      * Informazioni, risultato e validita della risposta

@@ -49,12 +49,7 @@ public abstract class Query {
         String stringa;
 
         // find the target
-        connection = new URL(domain).openConnection();
-        connection.setDoOutput(true);
-        connection.setRequestProperty("Accept-Encoding", "GZIP");
-        connection.setRequestProperty("Content-Encoding", "GZIP");
-        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; PPC Mac OS X; it-it) AppleWebKit/418.9 (KHTML, like Gecko) Safari/419.3");
+        connection = creaConnessione();
 
         // regola l'entrata
         input = connection.getInputStream();
@@ -76,6 +71,26 @@ public abstract class Query {
         regolaRisultato(textBuffer.toString());
         trovata = isValida();
     } // fine del metodo
+
+
+    /**
+     * Crea la connessione
+     * Regola i parametri della connessione
+     */
+    protected URLConnection creaConnessione() throws Exception {
+        URLConnection urlConn;
+
+        // regola le property
+        urlConn = new URL(domain).openConnection();
+        urlConn.setDoOutput(true);
+        urlConn.setRequestProperty("Accept-Encoding", "GZIP");
+        urlConn.setRequestProperty("Content-Encoding", "GZIP");
+        urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+        urlConn.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; PPC Mac OS X; it-it) AppleWebKit/418.9 (KHTML, like Gecko) Safari/419.3");
+
+        return urlConn;
+    } // fine del metodo
+
 
     /**
      * Regola il risultato

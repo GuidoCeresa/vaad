@@ -1,10 +1,6 @@
-package it.algos.vaad;
+package it.algos.vaad.wiki;
 
 import com.vaadin.ui.Notification;
-import it.algos.vaad.wiki.Cost;
-import it.algos.vaad.wiki.ErrLogin;
-import it.algos.vaad.wiki.LibWiki;
-import it.algos.vaad.wiki.Progetto;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -52,14 +48,14 @@ import java.util.LinkedHashMap;
  * @author gac
  * @see //www.mediawiki.org/wiki/API:Login
  */
-public class Login {
+public class WikiLogin {
 
     private static final String FIRST_RESULT = "result";
     private static final String SECOND_RESULT = "result";
     private static final String FIRST_TOKEN = "token";
     private static final String SECOND_TOKEN = "lgtoken";
-    private static final String COOKIE_PREFIX = "cookiePrefix";
-    private static final String SESSION_ID = "sessionId";
+    private static final String COOKIE_PREFIX = "cookieprefix";
+    private static final String SESSION_ID = "sessionid";
     private static final String USER_ID = "lguserid";
     private static final String USER_NAME = "lgusername";
 
@@ -80,7 +76,7 @@ public class Login {
     // risultato  (parametro di ritorno definitivo del secondo collegamento)
     private String result;
     // id utente   (parametro di ritorno)
-    private String lguserid;
+    private long lguserid;
     // nome utente (parametro di ritorno)
     private String lgusername;
     // token di controllo provvisorio (parametro di ritorno dal primo collegamento)
@@ -113,7 +109,7 @@ public class Login {
     /**
      * Costruttore parziale
      */
-    public Login() {
+    public WikiLogin() {
         this.setLingua(LINGUA_DEFAULT);
         this.setProgetto(PROGETTO_DEFAULT);
     }// fine del metodo costruttore
@@ -124,7 +120,7 @@ public class Login {
      * @param lgname     nickName in entrata per il collegamento
      * @param lgpassword password in entrata per il collegamento
      */
-    public Login(String lgname, String lgpassword) {
+    public WikiLogin(String lgname, String lgpassword) {
         this(LINGUA_DEFAULT, PROGETTO_DEFAULT, lgname, lgpassword);
     }// fine del metodo costruttore
 
@@ -137,7 +133,7 @@ public class Login {
      * @param lgname     nickName in entrata per il collegamento
      * @param lgpassword password in entrata per il collegamento
      */
-    public Login(String lingua, Progetto progetto, String lgname, String lgpassword) {
+    public WikiLogin(String lingua, Progetto progetto, String lgname, String lgpassword) {
         this.setLingua(lingua);
         this.setProgetto(progetto);
         this.setLgname(lgname);
@@ -350,7 +346,7 @@ public class Login {
 
         // Costruisce la mappa dei dati dalla risposta alla prima Request
         // Restituisce il parametro risultato
-        risultato = this.elaboraPrimaRisposta(testoRisposta);
+        this.elaboraPrimaRisposta(testoRisposta);
 
         // elabora il risultato
 //        switch (risultato) {
@@ -613,7 +609,7 @@ public class Login {
 
         // Costruisce la mappa dei dati dalla risposta alla seconda Request
         // Restituisce il parametro risultato
-        risultato = this.elaboraSecondaRisposta(testoRisposta);
+        this.elaboraSecondaRisposta(testoRisposta);
 
 //        // elabora il risultato
 //        switch (risultato) {
@@ -650,6 +646,10 @@ public class Login {
 //                break
 //        } // fine del blocco switch
 
+        risultato = this.getRisultato();
+        if (risultato == ErrLogin.success) {
+            this.setValido(true);
+        }// fine del blocco if
     } // fine della closure
 
 
@@ -658,19 +658,15 @@ public class Login {
      * Restituisce il parametro risultato
      *
      * @param testoRisposta della seconda Request
-     * @return risultato
      */
-    private ErrLogin elaboraSecondaRisposta(String testoRisposta) {
+    private void elaboraSecondaRisposta(String testoRisposta) {
         ErrLogin risultato = ErrLogin.generico;
         HashMap<String, Object> mappa = null;
 
         if (!testoRisposta.equals("")) {
             mappa = LibWiki.creaMappaLogin(testoRisposta);
             this.setPar(mappa);
-            this.setRisultato(risultato);
         }// fine del blocco if
-
-        return risultato;
     } // fine del metodo
 
 
@@ -684,12 +680,12 @@ public class Login {
 
         if (mappa != null && mappa.size() >= 6) {
             if (mappa.get(SECOND_RESULT) != null && mappa.get(SECOND_RESULT) instanceof String) {
-                firstresult = ErrLogin.get((String) mappa.get(SECOND_RESULT));
-                this.setFirstResult(firstresult);
+                risultato = ErrLogin.get((String) mappa.get(SECOND_RESULT));
+                this.setRisultato(risultato);
             }// fine del blocco if
 
-            if (mappa.get(USER_ID) != null && mappa.get(USER_ID) instanceof String) {
-                this.setLguserid((String) mappa.get(USER_ID));
+            if (mappa.get(USER_ID) != null && mappa.get(USER_ID) instanceof Long) {
+                this.setLguserid((Long) mappa.get(USER_ID));
             }// fine del blocco if
 
             if (mappa.get(USER_NAME) != null && mappa.get(USER_NAME) instanceof String) {
@@ -731,6 +727,43 @@ public class Login {
         this.setBot(isBot);
     } // fine del metodo
 
+
+    /**
+     * Restituisce i cookies
+     */
+    public String getStringCookies() {
+        String cookies = "";
+        String sep = ";";
+        String userName;
+        long userId;
+        String token;
+        String session;
+        String cookieprefix;
+
+        cookieprefix = this.getCookieprefix();
+        userName = this.getLgusername();
+        userId = this.getLguserid();
+        token = this.getToken();
+        session = this.getSessionId();
+
+        cookies = cookieprefix;
+        cookies += "UserName=";
+        cookies += userName;
+        cookies += sep;
+        cookies += cookieprefix;
+        cookies += "UserID=";
+        cookies += userId;
+        cookies += sep;
+        cookies += cookieprefix;
+        cookies += "Token=";
+        cookies += token;
+        cookies += sep;
+        cookies += cookieprefix;
+        cookies += "Session=";
+        cookies += session;
+
+        return cookies;
+    } // fine della closure
 
     public String getLingua() {
         return lingua;
@@ -780,11 +813,11 @@ public class Login {
         this.result = result;
     }//end of setter method
 
-    public String getLguserid() {
+    public long getLguserid() {
         return lguserid;
     }// end of getter method
 
-    public void setLguserid(String lguserid) {
+    public void setLguserid(long lguserid) {
         this.lguserid = lguserid;
     }//end of setter method
 

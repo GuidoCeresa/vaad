@@ -1,11 +1,11 @@
 package it.algos.@LOWERPROGETTO@.@LOWERNAME@;
 
-import it.algos.vaad.ui.AlgosModulePop;
+import it.algos.webbase.web.module.ModulePop;
 
 import javax.persistence.metamodel.Attribute;
 
 @SuppressWarnings("serial")
-public class @NAME@Mod extends AlgosModulePop {
+public class @NAME@Mod extends ModulePop {
 
     // indirizzo interno del modulo (serve nei menu)
     public static String MENU_ADDRESS="@NAME@";
