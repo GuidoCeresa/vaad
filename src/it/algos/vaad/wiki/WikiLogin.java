@@ -50,6 +50,9 @@ import java.util.LinkedHashMap;
  */
 public class WikiLogin {
 
+    // key to store the Login object in the session
+    public static final String WIKI_LOGIN_KEY_IN_SESSION = "wikilogin";
+
     private static final String FIRST_RESULT = "result";
     private static final String SECOND_RESULT = "result";
     private static final String FIRST_TOKEN = "token";

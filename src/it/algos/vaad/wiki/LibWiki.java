@@ -48,10 +48,15 @@ public abstract class LibWiki {
     public static final String BIO = Cost.TAG_BIO;
 
     // tag per la stringa vuota
+
     public static final String VUOTA = "";
 
     // tag per il valore falso per una posizione
     public static final int INT_NULLO = -1;
+
+    // key to store objects in a HashMap
+    public static final String KEY_PAGINE_VALIDE = "pagineValide";
+    public static final String KEY_PAGINE_MANCANTI = "pagineMancanti";
     private static final String BATCH = "batchcomplete";
     private static final String QUERY = "query";
     private static final String PAGEID = "pageid";
@@ -61,10 +66,12 @@ public abstract class LibWiki {
     private static final String CATEGORY_MEMBERS = "categorymembers";
     private static final String QUERY_CONTINUE = "query-continue";
     private static final String LOGIN = "login";
+    private static final String MISSING = "missing";
     private static final String VIR = ",";
     private static final String APICI = "\"";
     private static final String PUNTI = ":";
     public static Date DATA_NULLA = new Date(70, 0, 1);
+
     // patch per la key del parametro testo
     private static String PATCH_OLD = "*";
     private static String PATCH_NEW = "text";
@@ -91,7 +98,6 @@ public abstract class LibWiki {
 //                    unErrore = null
 //                    valueObj = 0
 //                }// fine del blocco try-catch
-
 
 
 //                break;
@@ -539,10 +545,12 @@ public abstract class LibWiki {
      * Crea una mappa per leggere solo i timestamps dal testo JSON di una pagina
      *
      * @param textJSON in ingresso
-     * @return mappa timestamps
+     * @return mappa con due array: timestamps validi e timestamps non validi
      */
-    public static ArrayList<WrapTime> creaArrayWrapTime(String textJSON) {
-        ArrayList<WrapTime> lista = null;
+    public static HashMap<String, ArrayList<WrapTime>> creaArrayWrapTime(String textJSON) {
+        HashMap<String, ArrayList<WrapTime>> mappa;
+        ArrayList<WrapTime> listaPagineValide = null;
+        ArrayList<WrapTime> listaPagineMancanti = null;
         WrapTime wrap;
         JSONObject objectAll;
         boolean batchcomplete;
@@ -577,22 +585,32 @@ public abstract class LibWiki {
 
         // crea la mappa
         if (arrayPages != null && arrayPages.get(0) != null && arrayPages.get(0) instanceof JSONObject) {
-            lista = new ArrayList<WrapTime>();
+            listaPagineValide = new ArrayList<WrapTime>();
+            listaPagineMancanti = new ArrayList<WrapTime>();
             for (Object obj : arrayPages) {
                 if (obj instanceof JSONObject) {
                     singlePage = (JSONObject) obj;
                     pageid = (long) singlePage.get(PAGEID);
-                    singleRev = (JSONArray) singlePage.get(REVISIONS);
-                    timeObj = (JSONObject) singleRev.get(0);
-                    timeStr = (String) timeObj.get(TIMESTAMP);
 
-                    wrap = new WrapTime(pageid, timeStr);
-                    lista.add(wrap);
+                    if (singlePage.get(MISSING) == null) {
+                        singleRev = (JSONArray) singlePage.get(REVISIONS);
+                        timeObj = (JSONObject) singleRev.get(0);
+                        timeStr = (String) timeObj.get(TIMESTAMP);
+                        wrap = new WrapTime(pageid, timeStr, true);
+                        listaPagineValide.add(wrap);
+                    } else {
+                        wrap = new WrapTime(pageid, null, false);
+                        listaPagineMancanti.add(wrap);
+                    }// end of if/else cycle
+
                 }// fine del blocco if
             } // fine del ciclo for-each
         }// fine del blocco if
 
-        return lista;
+        mappa = new HashMap<String, ArrayList<WrapTime>>();
+        mappa.put(KEY_PAGINE_VALIDE, listaPagineValide);
+        mappa.put(KEY_PAGINE_MANCANTI, listaPagineMancanti);
+        return mappa;
     } // fine del metodo
 
     /**

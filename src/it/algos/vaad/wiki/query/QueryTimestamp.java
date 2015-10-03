@@ -7,6 +7,7 @@ import it.algos.vaad.wiki.TipoRicerca;
 import it.algos.webbase.web.lib.LibArray;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -23,6 +24,7 @@ public class QueryTimestamp extends QueryWiki {
 
     //--lista di wrapper con pagesid e timestamp
     ArrayList<WrapTime> listaWrapTime;
+    ArrayList<WrapTime> listaWrapTimeMissing;
 
     //--lista di errori  (titolo della voce)
     ArrayList listaErrori;
@@ -73,25 +75,40 @@ public class QueryTimestamp extends QueryWiki {
      */
     @Override
     protected void regolaRisultato(String risultatoRequest) {
-        this.listaWrapTime = LibWiki.creaArrayWrapTime(risultatoRequest);
+        HashMap<String, ArrayList<WrapTime>> mappa;
+
+        mappa = LibWiki.creaArrayWrapTime(risultatoRequest);
+        if (mappa != null) {
+            this.setListaWrapTime(mappa.get(LibWiki.KEY_PAGINE_VALIDE));
+            this.setListaWrapTimeMissing(mappa.get(LibWiki.KEY_PAGINE_MANCANTI));
+        }// end of if cycle
+
         this.continua = LibWiki.creaCatContinue(risultatoRequest);
     } // fine del metodo
 
 
     public ArrayList<WrapTime> getListaWrapTime() {
         return listaWrapTime;
-    }
+    }// end of getter method
 
     public void setListaWrapTime(ArrayList<WrapTime> listaWrapTime) {
         this.listaWrapTime = listaWrapTime;
-    }
+    }//end of setter method
+
+    public ArrayList<WrapTime> getListaWrapTimeMissing() {
+        return listaWrapTimeMissing;
+    }// end of getter method
+
+    public void setListaWrapTimeMissing(ArrayList<WrapTime> listaWrapTimeMissing) {
+        this.listaWrapTimeMissing = listaWrapTimeMissing;
+    }//end of setter method
 
     public ArrayList getListaErrori() {
         return listaErrori;
-    }
+    }// end of getter method
 
     public void setListaErrori(ArrayList listaErrori) {
         this.listaErrori = listaErrori;
-    }
+    }//end of setter method
 
 } // fine della classe

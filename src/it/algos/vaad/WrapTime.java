@@ -1,7 +1,6 @@
 package it.algos.vaad;
 
 import it.algos.vaad.lib.VaadWiki;
-import it.algos.webbase.web.lib.LibTime;
 
 import java.sql.Timestamp;
 
@@ -16,6 +15,7 @@ public class WrapTime {
 
     private long pageid;
     private Timestamp timestamp;
+    private boolean trovata;
 
 
     public WrapTime(long pageid, Timestamp timestamp) {
@@ -24,8 +24,19 @@ public class WrapTime {
     }// fine del metodo costruttore
 
     public WrapTime(long pageid, String timestampStr) {
+        this(pageid, timestampStr, true);
+    }// fine del metodo costruttore
+
+    public WrapTime(long pageid, String timestampStr, boolean trovata) {
         this.setPageid(pageid);
-        this.setTimestamp(VaadWiki.getWikiTime(timestampStr));
+
+        if (timestampStr == null || timestampStr.equals("")) {
+            this.setTimestamp(null);
+        } else {
+            this.setTimestamp(VaadWiki.getWikiTime(timestampStr));
+        }// end of if/else cycle
+
+        this.setTrovata(trovata);
     }// fine del metodo costruttore
 
 
@@ -43,6 +54,14 @@ public class WrapTime {
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
+    }//end of setter method
+
+    public boolean isTrovata() {
+        return trovata;
+    }// end of getter method
+
+    public void setTrovata(boolean trovata) {
+        this.trovata = trovata;
     }//end of setter method
 
 } // fine della classe

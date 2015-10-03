@@ -105,7 +105,7 @@ public abstract class QueryWiki extends Query {
     @Override
     protected URLConnection creaConnessione() throws Exception {
         URLConnection urlConn = super.creaConnessione();
-        WikiLogin wikiLogin = (WikiLogin) LibSession.getAttribute("login");
+        WikiLogin wikiLogin = (WikiLogin) LibSession.getAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION);
         String txtCookies;
 
         // regolo i cookies

@@ -18,7 +18,6 @@ public class VaadUI extends VaadAlgosUI {
     @Override
     protected void addAllModuli() {
 //        moduloPartenza = new VersMod();
-        new WikiLogin("biobot","fulvia");
 
 //        this.addModulo(new PrefMod());
 //        this.addModulo(new LogMod());
