@@ -32,7 +32,7 @@ public class QueryCat extends QueryWiki {
     private static String CONT = "&rawcontinue";
 
     //--stringa per selezionare il numero di valori in risposta
-    private static String LIMIT = "&cmlimit=500";
+    private static String LIMIT = "&cmlimit=5000";
 
     //--stringa per indicare il titolo della pagina
     private static String TITLE = "&cmtitle=Category:";
@@ -45,6 +45,8 @@ public class QueryCat extends QueryWiki {
 
     // lista di pagine della categoria (namespace=0)
     private ArrayList<Long> listaPageids;
+
+    private boolean limite5000;
 
     /**
      * Costruttore completo
@@ -115,6 +117,12 @@ public class QueryCat extends QueryWiki {
         ArrayList<Long> lista;
         String txtContinua;
 
+        if (LibWiki.isWarnings(risultatoRequest)) {
+            setLimite5000(false);
+        } else {
+            setLimite5000(true);
+        }// end of if/else cycle
+
         lista = LibWiki.creaListaCatJson(risultatoRequest);
         if (lista != null) {
             this.addLista(lista);
@@ -152,6 +160,13 @@ public class QueryCat extends QueryWiki {
         return LibWiki.creaListaPageids(getListaPageids());
     } // fine del metodo
 
+    public boolean isLimite5000() {
+        return limite5000;
+    }// end of getter method
+
+    public void setLimite5000(boolean limite5000) {
+        this.limite5000 = limite5000;
+    }//end of setter method
 
 }// end of class
 

@@ -62,6 +62,7 @@ public abstract class LibWiki {
     private static final String PAGEID = "pageid";
     private static final String PAGES = "pages";
     private static final String REVISIONS = "revisions";
+    private static final String WARNINGS = "warnings";
     private static final String TIMESTAMP = "timestamp";
     private static final String CATEGORY_MEMBERS = "categorymembers";
     private static final String QUERY_CONTINUE = "query-continue";
@@ -968,6 +969,25 @@ public abstract class LibWiki {
     } // fine del metodo
 
     /**
+     * Controlla se esiste un warnings nella risposta del server
+     *
+     * @param textJSON in ingresso
+     * @return true se il testo in ingresso contiene un warning
+     */
+    public static boolean isWarnings(String textJSON) {
+        boolean status = false;
+
+        JSONObject allObj = (JSONObject) JSONValue.parse(textJSON);
+        JSONObject warningsObj = (JSONObject) allObj.get(WARNINGS);
+
+        if (warningsObj != null) {
+            status = true;
+        }// fine del blocco if
+
+        return status;
+    } // fine del metodo
+
+    /**
      * Estrae il valore del parametro continue dal testo JSON di una pagina
      *
      * @param textJSON in ingresso
@@ -1277,7 +1297,7 @@ public abstract class LibWiki {
                 value = mappa.get(key);
             }// fine del blocco if
 
-            //--controllo dei LONG che POSSONO esser anche zero
+            //--controllo dei LONG che POSSONO essere anche zero
             if (par.getType() == PagePar.TypeField.longzero) {
                 if (value == null) {
                     value = 0;

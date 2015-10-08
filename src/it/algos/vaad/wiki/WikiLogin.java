@@ -1,6 +1,8 @@
 package it.algos.vaad.wiki;
 
 import com.vaadin.ui.Notification;
+import it.algos.vaad.wiki.query.QueryCat;
+import it.algos.webbase.web.lib.LibSession;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -154,6 +156,7 @@ public class WikiLogin {
             this.setRisultato(ErrLogin.generico);
         }// fine del blocco try-catch
 
+        LibSession.setAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION, this);
         fixBot();
     }// fine del metodo costruttore completo
 
@@ -715,17 +718,14 @@ public class WikiLogin {
      */
     public void fixBot() {
         boolean isBot = false;
-//        QueryCatPageid query;
-//
-//        String titoloCategoria = 'Comuni della provincia di Modena';
-//        query = new QueryCatPageid(this, titoloCategoria);
-//        int limiteMassimo;
-//        int tagMax = 5000;
-//
-//        if (query) {
-//            limiteMassimo = query.getLimits()
-//            isBot = limiteMassimo == tagMax
-//        }// fine del blocco if
+        QueryCat query;
+
+        String titoloCategoria = "Nati il 29 febbraio";
+        query = new QueryCat(titoloCategoria);
+
+        if (query != null) {
+            isBot = query.isLimite5000();
+        }// fine del blocco if
 
         this.setBot(isBot);
     } // fine del metodo
