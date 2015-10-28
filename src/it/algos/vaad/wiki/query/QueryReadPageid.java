@@ -7,22 +7,22 @@ import it.algos.vaad.wiki.TipoRicerca;
  * Created by Gac on 15 ago 2015.
  * .
  */
-public class QueryReadPageid extends QueryPage{
+public class QueryReadPageid extends QueryPage {
 
     /**
      * Costruttore completo
-     * Rinvia al costruttore della superclasse, specificando i flag
+     * Rinvia al costruttore della superclasse
      */
-    public QueryReadPageid(String title) {
-        super(title, TipoRicerca.pageid, TipoRequest.read);
+    public QueryReadPageid(String titlepageid) {
+        super(titlepageid);
     }// fine del metodo costruttore
 
     /**
      * Costruttore completo
-     * Rinvia al costruttore della superclasse, specificando i flag
+     * Rinvia al costruttore della superclasse
      */
     public QueryReadPageid(int pageid) {
-        super(pageid, TipoRicerca.pageid, TipoRequest.read);
+        super(pageid);
     }// fine del metodo costruttore
 
     /**

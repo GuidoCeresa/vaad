@@ -41,11 +41,11 @@ public abstract class QueryWiki extends Query {
 
     //--tipo di ricerca della pagina
     //--di default il titolo
-    private TipoRicerca tipoRicerca = TipoRicerca.title;
+    protected TipoRicerca tipoRicerca = TipoRicerca.title;
 
     //--tipo di request - solo una per leggere - due per scrivere
     //--di default solo lettura (per la scrittura serve il login)
-    private TipoRequest tipoRequest = TipoRequest.read;
+    protected TipoRequest tipoRequest = TipoRequest.read;
 
     // collegamento utilizzato
 //    protected Login login = null;
@@ -62,7 +62,7 @@ public abstract class QueryWiki extends Query {
     public QueryWiki(String titlepageid, TipoRicerca tipoRicerca, TipoRequest tipoRequest) {
         this.tipoRicerca = tipoRicerca;
         this.tipoRequest = tipoRequest;
-        this.inizializza(titlepageid);
+        this.doInit(titlepageid);
     }// fine del metodo costruttore
 
     /**
@@ -71,17 +71,17 @@ public abstract class QueryWiki extends Query {
     public QueryWiki(int pageid, TipoRicerca tipoRicerca, TipoRequest tipoRequest) {
         this.tipoRicerca = tipoRicerca;
         this.tipoRequest = tipoRequest;
-        this.inizializza("" + pageid);
+        this.doInit("" + pageid);
     }// fine del metodo costruttore
 
 
-    protected void inizializza(String titlepageid) {
+    protected void doInit(String titlepageid) {
         if (titlepageid != null) {
             title = titlepageid;
             pageid = titlepageid;
             stringaPageIds = titlepageid;
             domain = this.getDomain();
-            super.inizializza();
+            super.doInit();
         }// fine del blocco if
     } // fine del metodo
 

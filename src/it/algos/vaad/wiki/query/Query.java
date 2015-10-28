@@ -29,7 +29,7 @@ public abstract class Query {
     /**
      * Metodo iniziale
      */
-    protected void inizializza() {
+    protected void doInit() {
         try { // prova ad eseguire il codice
             this.request();
         } catch (Exception unErrore) { // intercetta l'errore

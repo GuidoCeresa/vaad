@@ -15,10 +15,10 @@ public class QueryReadTitle extends QueryPage {
 
     /**
      * Costruttore completo
-     * Rinvia al costruttore della superclasse, specificando i flag
+     * Rinvia al costruttore della superclasse
      */
     public QueryReadTitle(String title) {
-        super(title, TipoRicerca.title, TipoRequest.read);
+        super(title);
     }// fine del metodo costruttore
 
     /**

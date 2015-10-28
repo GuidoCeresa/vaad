@@ -31,15 +31,13 @@ public class Wiki extends BaseEntity {
     @NotNull
     private long pageid;
 
-    private long ns;
-
     @NotEmpty
     private String title;
 
+    private long ns;
+
     //--parametri wiki info
     private String pagelanguage;
-//    private int lastrevid;
-//    private int length;
 
     //--parametri wiki revisions
     private long revid;

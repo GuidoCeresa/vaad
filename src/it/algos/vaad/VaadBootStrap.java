@@ -1,7 +1,7 @@
 package it.algos.vaad;
 
 import it.algos.vaad.wiki.VersioneBootStrap;
-import it.algos.webbase.web.ABootStrap;
+import it.algos.webbase.web.bootstrap.ABootStrap;
 import it.algos.webbase.web.entity.EM;
 
 import javax.servlet.ServletContext;
@@ -27,7 +27,6 @@ public class VaadBootStrap extends ABootStrap {
      * Regola il valore della persistence unit per crearae l'EntityManager <br>
      * DEVE essere sovrascritto (obbligatorio) nella sottoclasse del progetto <br>
      */
-    @Override
     public void setPersistenceEntity() {
         EM.PERSISTENCE_UNIT = "MySqlUnit";
     }// end of method

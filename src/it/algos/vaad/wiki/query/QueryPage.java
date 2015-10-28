@@ -16,27 +16,24 @@ import it.algos.vaad.wiki.TipoRicerca;
 public abstract class QueryPage extends QueryWiki {
 
     // tag per la costruzione della stringa della request
-    protected static String TAG_INI = "https://it.wikipedia.org/w/api.php?format=json&action=query";
     protected static String TAG_PROP = Cost.CONTENT_ALL;
-    protected static String TAG_QUERY = TAG_INI + TAG_PROP;
     protected static String TAG_TITOLO = "&titles=";
     protected static String TAG_PAGEID = "&pageids=";
 
     /**
      * Costruttore completo
-     * Rinvia al costruttore della superclasse
+     * Rinvia al costruttore della superclasse, specificando i flgas
      */
-    public QueryPage(String titlepageid, TipoRicerca tipoRicerca, TipoRequest tipoRequest) {
-        super(titlepageid, tipoRicerca, tipoRequest);
+    public QueryPage(String titlepageid) {
+        super(titlepageid, TipoRicerca.title, TipoRequest.read);
     }// fine del metodo costruttore
 
     /**
      * Costruttore completo
-     * Rinvia al costruttore della superclasse
+     * Rinvia al costruttore della superclasse, specificando i flgas
      */
-    public QueryPage(int pageid, TipoRicerca tipoRicerca, TipoRequest tipoRequest) {
-        super(pageid, tipoRicerca, tipoRequest);
+    public QueryPage(int pageid) {
+        super(pageid, TipoRicerca.pageid, TipoRequest.read);
     }// fine del metodo costruttore
-
 
 }// end of class

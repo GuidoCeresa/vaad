@@ -55,8 +55,8 @@ public class QueryCat extends QueryWiki {
         super(title, TipoRicerca.title, TipoRequest.read);
     }// fine del metodo costruttore
 
-
-    protected void inizializza(String titlepageid) {
+    @Override
+    protected void doInit(String titlepageid) {
 
         if (titlepageid != null) {
             title = titlepageid;
