@@ -1,9 +1,9 @@
 package it.algos.vaad.wiki.query;
 
-import it.algos.vaad.wiki.WikiLogin;
 import it.algos.vaad.wiki.Cost;
 import it.algos.vaad.wiki.TipoRequest;
 import it.algos.vaad.wiki.TipoRicerca;
+import it.algos.vaad.wiki.WikiLogin;
 import it.algos.webbase.web.lib.LibSession;
 
 import java.net.URLConnection;
@@ -43,10 +43,6 @@ public abstract class QueryWiki extends Query {
     //--di default il titolo
     protected TipoRicerca tipoRicerca = TipoRicerca.title;
 
-    //--tipo di request - solo una per leggere - due per scrivere
-    //--di default solo lettura (per la scrittura serve il login)
-    protected TipoRequest tipoRequest = TipoRequest.read;
-
     // collegamento utilizzato
 //    protected Login login = null;
 
@@ -61,7 +57,7 @@ public abstract class QueryWiki extends Query {
      */
     public QueryWiki(String titlepageid, TipoRicerca tipoRicerca, TipoRequest tipoRequest) {
         this.tipoRicerca = tipoRicerca;
-        this.tipoRequest = tipoRequest;
+        super.tipoRequest = tipoRequest;
         this.doInit(titlepageid);
     }// fine del metodo costruttore
 
@@ -70,7 +66,7 @@ public abstract class QueryWiki extends Query {
      */
     public QueryWiki(int pageid, TipoRicerca tipoRicerca, TipoRequest tipoRequest) {
         this.tipoRicerca = tipoRicerca;
-        this.tipoRequest = tipoRequest;
+        super.tipoRequest = tipoRequest;
         this.doInit("" + pageid);
     }// fine del metodo costruttore
 
@@ -103,8 +99,8 @@ public abstract class QueryWiki extends Query {
      * Recupera i cookies dal Login di registrazione
      */
     @Override
-    protected URLConnection creaConnessione() throws Exception {
-        URLConnection urlConn = super.creaConnessione();
+    protected URLConnection creaConnessione(String domain) throws Exception {
+        URLConnection urlConn = super.creaConnessione(domain);
         WikiLogin wikiLogin = (WikiLogin) LibSession.getAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION);
         String txtCookies;
 
@@ -118,42 +114,21 @@ public abstract class QueryWiki extends Query {
     } // fine del metodo
 
     /**
-     * Informazioni, risultato e validita della risposta
-     * Controllo del risultato (testo) ricevuto
-     * Estrae i valori e costruisce una mappa
+     * Regola il risultato
      * <p>
-     * Sovrascritto nelle sottoclassi
+     * Informazioni, contenuto e validita della risposta
+     * Controllo del contenuto (testo) ricevuto
+     * PUO essere sovrascritto nelle sottoclassi specifiche
      */
-    protected void regolaRisultato() {
+    @Override
+    protected void regolaRisultato(String risultatoRequest) {
     } // fine del metodo
 
-//    protected boolean isNotMissing() {
-//        boolean esistevaPagina = true
-//        def valoreMissing
-//        HashMap mappa = this.getMappa()
-//
-//        if (mappa) {
-//            valoreMissing = mappa['missing']
-//            if (valoreMissing != null && valoreMissing instanceof String) {
-//                esistevaPagina = false
-//            }// fine del blocco if
-//        }// fine del blocco if
-//
-//        return esistevaPagina
-//    } // fine del metodo
-
-
-//    HashMap getMappa() {
-//        return mappa
-//    }
-//
-//    void setMappa(HashMap mappa) {
-//        this.mappa = mappa
-//    }
 
     @Override
     public boolean isValida() {
         boolean valida = true;
+        String contenuto = getContenuto();
 
         if (contenuto.equals("")) {
             valida = false;
@@ -165,10 +140,6 @@ public abstract class QueryWiki extends Query {
 
         return valida;
     } // end of getter method
-
-    public String getContenuto() {
-        return contenuto;
-    }
 
     public String getContinua() {
         return continua;

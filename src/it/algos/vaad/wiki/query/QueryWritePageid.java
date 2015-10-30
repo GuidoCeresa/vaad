@@ -39,5 +39,19 @@ public class QueryWritePageid extends QueryWrite {
         super(pageid, testoNew, summary);
     }// fine del metodo costruttore
 
+    /**
+     * Costruisce la stringa della request
+     * Domain per l'URL dal titolo della pagina o dal pageid (a seconda del costruttore usato)
+     *
+     * @return domain
+     */
+    @Override
+    protected String getDomain() {
+        String domain = "";
+
+        domain = API_BASE + TAG_EDIT + TAG_PROP + TAG_PAGESID + pageid;
+
+        return domain;
+    } // fine del metodo
 
 }// end of class

@@ -65,10 +65,10 @@ public class QueryCat extends QueryWiki {
         }// fine del blocco if
 
         try { // prova ad eseguire il codice
-            super.request();
+            super.firstRequest();
             while (!continua.equals("")) {
                 domain = this.getDomain();
-                super.request();
+                super.firstRequest();
             } // fine del blocco while
         } catch (Exception unErrore) { // intercetta l'errore
             errore = unErrore.getClass().getSimpleName();

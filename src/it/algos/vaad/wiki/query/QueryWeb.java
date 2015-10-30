@@ -28,7 +28,7 @@ public class QueryWeb extends Query {
      */
     public QueryWeb(String domain) {
         this.domain = domain;
-        super.inizializza();
+        super.doInit();
     }// fine del metodo costruttore completo
 
     /**
@@ -38,6 +38,7 @@ public class QueryWeb extends Query {
     @Override
     protected boolean isValida() {
         boolean valida = true;
+        String contenuto = getContenuto();
 
         if (contenuto.equals("")) {
             valida = false;
