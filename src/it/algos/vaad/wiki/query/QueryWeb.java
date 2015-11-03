@@ -32,11 +32,11 @@ public class QueryWeb extends Query {
     }// fine del metodo costruttore completo
 
     /**
-     * Controlla la validità del risultato
+     * Controlla di aver trovato la pagina e di aver letto un contenuto valido
      * DEVE essere implementato nelle sottoclassi specifiche
      */
     @Override
-    protected boolean isValida() {
+    public boolean isLetta() {
         boolean valida = true;
         String contenuto = getContenuto();
 
@@ -52,5 +52,14 @@ public class QueryWeb extends Query {
 
         return valida;
     } // end of method
+
+    /**
+     * Controlla di aver scritto la pagina
+     * DEVE essere implementato nelle sottoclassi specifiche
+     */
+    @Override
+    public boolean isScritta() {
+        return false;
+    } // fine del metodo
 
 } // fine della classe

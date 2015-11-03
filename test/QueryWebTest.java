@@ -19,14 +19,14 @@ public class QueryWebTest extends VaadTest {
 
         query = new QueryWeb(TITOLO_WEB);
         assertNotNull(query);
-        assertTrue(query.isTrovata());
+        assertTrue(query.isLetta());
         contenuto = query.getContenuto();
         assertNotNull(contenuto);
         assertTrue(contenuto.contains(CONTENUTO_WEB));
 
         query = new QueryWeb(TITOLO_WEB_ERRATO);
         assertNotNull(query);
-        assertFalse(query.isTrovata());
+        assertFalse(query.isLetta());
         contenuto = query.getContenuto();
         assertNull(contenuto);
         assertTrue(query.getErrore().equals(TAG_ERRORE));

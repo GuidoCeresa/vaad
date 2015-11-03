@@ -57,11 +57,13 @@ public abstract class LibWiki {
     // key to store objects in a HashMap
     public static final String KEY_PAGINE_VALIDE = "pagineValide";
     public static final String KEY_PAGINE_MANCANTI = "pagineMancanti";
+    public static final String TOKEN = "csrftoken";
     private static final String BATCH = "batchcomplete";
     private static final String QUERY = "query";
     private static final String PAGEID = "pageid";
     private static final String PAGES = "pages";
     private static final String REVISIONS = "revisions";
+    private static final String TOKENS = "tokens";
     private static final String WARNINGS = "warnings";
     private static final String TIMESTAMP = "timestamp";
     private static final String CATEGORY_MEMBERS = "categorymembers";
@@ -72,7 +74,8 @@ public abstract class LibWiki {
     private static final String APICI = "\"";
     private static final String PUNTI = ":";
     public static Date DATA_NULLA = new Date(70, 0, 1);
-
+    /* caratteri finali per la stringa di edittoken da rinviare al server */
+    public static String END_TOKEN = "%2B%5C";
     // patch per la key del parametro testo
     private static String PATCH_OLD = "*";
     private static String PATCH_NEW = "text";
@@ -468,32 +471,40 @@ public abstract class LibWiki {
         JSONObject objectAll;
         boolean batchcomplete = false;
         JSONObject objectQuery = null;
+        JSONObject objectToken = null;
         JSONArray arrayPages = null;
         JSONObject objectRev = null;
         JSONArray arrayRev = null;
+        String token = "";
 
-        // recupera i due oggetti al livello root del testo (batchcomplete e query)
+        //--recupera i due oggetti al livello root del testo (batchcomplete e query)
         objectAll = (JSONObject) JSONValue.parse(textJSON);
 
-        // controllo
+        //--controllo
         if (objectAll == null) {
             return null;
         }// fine del blocco if
 
-        //recupera il valore del parametro di controllo per la gestione dell'ultima versione di mediawiki
+        //--recupera il valore del parametro di controllo per la gestione dell'ultima versione di mediawiki
         if (objectAll.get(BATCH) != null && objectAll.get(BATCH) instanceof Boolean) {
             batchcomplete = (Boolean) objectAll.get(BATCH);
         }// fine del blocco if
 
-        //recupera i valori dei parametri base (3) ed info (1)
+        //--recupera i valori dei parametri pages
         if (objectAll.get(QUERY) != null && objectAll.get(QUERY) instanceof JSONObject) {
             objectQuery = (JSONObject) objectAll.get(QUERY);
             if (objectQuery.get(PAGES) != null && objectQuery.get(PAGES) instanceof JSONArray) {
                 arrayPages = (JSONArray) objectQuery.get(PAGES);
             }// fine del blocco if
+            if (objectQuery.get(TOKENS) != null && objectQuery.get(TOKENS) instanceof JSONObject) {
+                objectToken = (JSONObject) objectQuery.get(TOKENS);
+                if (objectToken.get(TOKEN) != null && objectToken.get(TOKEN) instanceof String) {
+                    token = (String) objectToken.get(TOKEN);
+                }// end of if cycle
+            }// fine del blocco if
         }// fine del blocco if
 
-        //recupera i valori dei parametri revisions (12)
+        //--recupera i valori dei parametri revisions
         if (arrayPages != null && arrayPages.get(0) != null && arrayPages.get(0) instanceof JSONObject) {
             objectRev = (JSONObject) arrayPages.get(0);
             if (objectRev != null) {
@@ -501,9 +512,9 @@ public abstract class LibWiki {
             }// fine del blocco if
         }// fine del blocco if
 
-        // crea la mappa
+        //--crea la mappa
         if (arrayPages != null && arrayRev != null) {
-            mappa = mixJSON(batchcomplete, arrayPages, arrayRev);
+            mappa = mixJSON(batchcomplete, arrayPages, arrayRev, token);
         }// fine del blocco if
 
         return patchMappa(mappa);
@@ -637,30 +648,48 @@ public abstract class LibWiki {
      * @param arrayRev      parametri revisions (12)
      * @return mappa standard (valori String)
      */
-    public static HashMap<String, Object> mixJSON(boolean batchcomplete, JSONArray arrayPages, JSONArray arrayRev) {
+    public static HashMap<String, Object> mixJSON(boolean batchcomplete, JSONArray arrayPages, JSONArray arrayRev, String token) {
         HashMap<String, Object> mappa = new HashMap<String, Object>();
         HashMap<String, Object> mappaPages = null;
         HashMap<String, Object> mappaRev = null;
         Object value;
 
-        //recupera il valore del parametro di controllo per la gestione dell'ultima versione di mediawiki
+        //--recupera il valore del parametro di controllo per la gestione dell'ultima versione di mediawiki
         mappa.put(BATCH, batchcomplete);
 
-        //recupera i valori dei parametri base (3) ed info (1)
+        //--recupera i valori dei parametri info
         mappaPages = estraeMappaJsonPar(arrayPages);
         for (String key : mappaPages.keySet()) {
             value = mappaPages.get(key);
             mappa.put(key, value);
         } // fine del ciclo for-each
 
-        //recupera i valori dei parametri revisions (12)
+        //--recupera i valori dei parametri revisions
         mappaRev = estraeMappaJsonPar(arrayRev);
         for (String key : mappaRev.keySet()) {
             value = mappaRev.get(key);
             mappa.put(key, value);
         } // fine del ciclo for-each
 
+        //--recupera i valori dei parametro di controllo token
+        if (token != null && !token.equals("")) {
+            token = fixToken(token);
+            mappa.put(TOKEN, token);
+        }// end of if cycle
+
         return mappa;
+    } // fine del metodo
+
+
+    private static String fixToken(String edittokenIn) {
+        String edittokenOut = edittokenIn;
+
+        if (edittokenIn != null && !edittokenIn.equals("")) {
+            edittokenOut = edittokenIn.substring(0, edittokenIn.length() - 2);
+            edittokenOut += END_TOKEN;
+        }// fine del blocco if
+
+        return edittokenOut;
     } // fine del metodo
 
     /**

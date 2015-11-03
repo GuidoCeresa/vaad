@@ -1,17 +1,10 @@
 package it.algos.vaad.wiki.query;
 
-import it.algos.vaad.wiki.Cost;
-import it.algos.vaad.wiki.TipoRequest;
-import it.algos.vaad.wiki.TipoRicerca;
-import it.algos.vaad.wiki.WikiLogin;
+import it.algos.vaad.wiki.*;
 import it.algos.webbase.web.lib.LibSession;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.HashMap;
 
 /**
  * Query standard per scrivere il contenuto di una pagina
@@ -21,19 +14,14 @@ import java.net.URLEncoder;
 public abstract class QueryWrite extends QueryWiki {
 
     // tag per la costruzione della stringa della request
-    protected static  String TAG_PROP = Cost.CONTENT_ALL;
-    protected static  String TAG_TITOLO = "&titles=";
-    protected static  String TAG_PAGESID = "&pageids=";
-    protected static  String TAG_EDIT = "&meta=tokens";
+    protected static String TAG_PROP = Cost.CONTENT_ALL;
+    protected static String TAG_TITOLO = "&titles=";
+    protected static String TAG_PAGESID = "&pageids=";
+    protected static String TAG_EDIT = "&meta=tokens";
 
-    // contenuto della pagina
-    private String testoNew;
-    private String testoPrimaRequest;
-    private String testoSecondaRequest;
-
-    // oggetto della modifica
-    private String summary;
-
+    private boolean scritta = false;
+    // mappa dati di passaggio tra la prima e la seconda request
+    private HashMap mappa;
 
     /**
      * Costruttore
@@ -47,7 +35,7 @@ public abstract class QueryWrite extends QueryWiki {
      * Costruttore
      * Rinvia al costruttore completo
      */
-    public QueryWrite(int pageid, String testoNew) {
+    public QueryWrite(long pageid, String testoNew) {
         this(pageid, testoNew, "");
     }// fine del metodo costruttore
 
@@ -73,14 +61,14 @@ public abstract class QueryWrite extends QueryWiki {
      * Costruttore completo
      * Rinvia al costruttore della superclasse, specificando i flag
      */
-    public QueryWrite(int pageid, String testoNew, String summary) {
+    public QueryWrite(long pageid, String testoNew, String summary) {
         super.tipoRicerca = TipoRicerca.pageid;
         this.doInit("" + pageid, testoNew, summary, null);
     }// fine del metodo costruttore
 
     protected void doInit(String titlepageid, String testoNew, String summary, WikiLogin login) {
-        this.testoNew = testoNew;
-        this.summary = summary;
+        super.testoNew = testoNew;
+        super.summary = summary;
         super.tipoRequest = TipoRequest.write;
         super.setServeLogin(true);
 
@@ -101,41 +89,127 @@ public abstract class QueryWrite extends QueryWiki {
     } // fine del metodo
 
 
+    /**
+     * Regola il risultato
+     * <p>
+     * Informazioni, contenuto e validita della risposta
+     * Controllo del contenuto (testo) ricevuto
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     */
+    @Override
+    protected void regolaRisultato(String risultatoRequest) {
+        super.regolaRisultato(risultatoRequest);
+        this.elaboraPrimaRequest(risultatoRequest);
+    } // fine del metodo
 
-//    /**
-//     * Scrive il contenuto completo della pagina web
-//     */
-//    private void writeRequest() throws Exception {
-//        URLConnection connection = null;
-//        InputStream input = null;
-//        InputStreamReader inputReader = null;
-//        BufferedReader readBuffer = null;
-//        StringBuilder textBuffer = new StringBuilder();
-//        String stringa;
-//
-//        // find the target
-//        connection = creaConnessioneWrite();
-//
-//        // regola l'entrata
-//        input = connection.getInputStream();
-//        inputReader = new InputStreamReader(input, INPUT);
-//
-//        // legge la risposta
-//        readBuffer = new BufferedReader(inputReader);
-//        while ((stringa = readBuffer.readLine()) != null) {
-//            textBuffer.append(stringa);
-//        }// fine del blocco while
-//
-//        // chiude
-//        readBuffer.close();
-//        inputReader.close();
-//        input.close();
-//
-//        // controlla il valore di ritorno della request e regola il risultato
-//        contenuto = textBuffer.toString();
-//        regolaRisultatoWrite(textBuffer.toString());
-//        trovata = isValida();
-//    } // fine del metodo
+
+    /**
+     * Costruisce la mappa dei dati dalla risposta alla prima Request
+     * I dati servono per costruire la seconda request
+     *
+     * @param testoRisposta alla prima Request
+     */
+    protected void elaboraPrimaRequest(String testoRisposta) {
+        HashMap mappa = null;
+        int pageid;
+
+        // controllo di congruità
+        if (testoRisposta != null) {
+            mappa = LibWiki.creaMappa(testoRisposta);
+        }// fine del blocco if
+
+        if (mappa != null) {
+            this.mappa = mappa;
+        }// fine del blocco if
+    } // fine del metodo
+
+    //--Costruisce il domain per l'URL dal pageid della pagina
+    //--@return domain
+    protected String getSecondoDomain() {
+        String domain = "";
+        String titolo = "";
+        String tag = "https://it.wikipedia.org/w/api.php?format=json&action=edit";
+
+        try { // prova ad eseguire il codice
+            titolo = URLEncoder.encode(title, "UTF-8");
+        } catch (Exception unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch
+        domain = tag + "&title=" + titolo;
+
+        return domain;
+    } // fine del metodo
+
+    /**
+     * Restituisce il testo del POST per la seconda Request
+     * Aggiunge il token provvisorio ricevuto dalla prima Request
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     *
+     * @return post
+     */
+    @Override
+    protected String getSecondoPost() {
+        String testoPost;
+        String testo = this.getTestoNew();
+        String summary = this.getSummary();
+        String edittoken = (String) this.mappa.get(LibWiki.TOKEN);
+
+        if (testo != null && !testo.equals("")) {
+            try { // prova ad eseguire il codice
+                testo = URLEncoder.encode(testo, "UTF-8");
+            } catch (Exception unErrore) { // intercetta l'errore
+            }// fine del blocco try-catch
+        }// fine del blocco if
+
+        if (summary != null && !summary.equals("")) {
+            try { // prova ad eseguire il codice
+                summary = URLEncoder.encode(summary, "UTF-8");
+            } catch (Exception unErrore) { // intercetta l'errore
+            }// fine del blocco try-catch
+        }// fine del blocco if
+
+        testoPost = "text=" + testo;
+        testoPost += "&bot=true";
+        testoPost += "&minor=true";
+        testoPost += "&summary=" + summary;
+        testoPost += "&token=" + edittoken;
+
+        return testoPost;
+    } // fine della closure
+
+    /**
+     * Regola il risultato
+     * <p>
+     * Informazioni, contenuto e validita della risposta
+     * Controllo del contenuto (testo) ricevuto
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     */
+    protected void regolaRisultatoSecondo(String risultatoRequest) {
+        super.regolaRisultatoSecondo(risultatoRequest);
+        this.elaboraSecondaRequest(risultatoRequest);
+    } // end of getter method
+
+
+    /**
+     * Elabora la risposta alla seconda Request
+     *
+     * @param testoRisposta alla prima Request
+     */
+    protected void elaboraSecondaRequest(String testoRisposta) {
+        if (testoRisposta.contains(Cost.SUCCESSO)) {
+            scritta = true;
+        }// end of if cycle
+
+
+    } // fine del metodo
+
+    /**
+     * Controlla di aver scritto la pagina
+     * DEVE essere implementato nelle sottoclassi specifiche
+     */
+    @Override
+    public boolean isScritta() {
+        return scritta;
+    } // fine del metodo
 
 //    /**
 //     * Crea la connessione

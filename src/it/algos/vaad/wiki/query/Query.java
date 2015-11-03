@@ -25,7 +25,7 @@ public abstract class Query {
 //    protected String contenuto;
 
     // verifica finale
-    protected boolean trovata = false;
+//    protected boolean trovata = false;
     protected String errore = "";
 
     // indirizzo internet da leggere
@@ -36,18 +36,14 @@ public abstract class Query {
     //--di default solo lettura (per la scrittura serve il login)
     protected TipoRequest tipoRequest = TipoRequest.read;
     protected WikiLogin wikiLogin;
-
-    private String testoPrimaRequest;
-    private String testoSecondaRequest;
-
+    // contenuto della pagina in scrittura
+    protected String testoNew;
+    // oggetto della modifica in scrittura
+    protected String summary;
+    protected String testoPrimaRequest;
+    protected String testoSecondaRequest;
     // utilizzo indispensabile del login
     private boolean serveLogin = false;
-
-    // contenuto della pagina in scrittura
-    private String testoNew;
-
-    // oggetto della modifica in scrittura
-    private String summary;
 
     /**
      * Metodo iniziale
@@ -55,7 +51,7 @@ public abstract class Query {
     protected void doInit() {
         try { // prova ad eseguire il codice
             testoPrimaRequest = this.firstRequest();
-            if (tipoRequest == TipoRequest.write && isTrovata() && isValida()) {
+            if (tipoRequest == TipoRequest.write && isLetta()) {
                 testoSecondaRequest = secondRequest();
             }// end of if cycle
         } catch (Exception unErrore) { // intercetta l'errore
@@ -125,7 +121,7 @@ public abstract class Query {
         // controlla il valore di ritorno della request e regola il risultato
         contenuto = textBuffer.toString();
         regolaRisultato(contenuto);
-        trovata = isValida();
+//        trovata = isValida();
 
         return contenuto;
     } // fine del metodo
@@ -153,7 +149,7 @@ public abstract class Query {
         InputStreamReader inputReader = null;
         BufferedReader readBuffer = null;
         StringBuilder textBuffer = new StringBuilder();
-        String domain = this.getSecondDomain();
+        String domain = this.getSecondoDomain();
         PrintWriter out;
         String testoPost;
         String stringa;
@@ -185,8 +181,8 @@ public abstract class Query {
 
         // controlla il valore di ritorno della request e regola il risultato
         contenuto = textBuffer.toString();
-        regolaRisultatoSecond(contenuto);
-        trovata = isValida();
+        regolaRisultatoSecondo(contenuto);
+//        trovata = isValida();
 
         return contenuto;
     } // fine del metodo
@@ -227,36 +223,12 @@ public abstract class Query {
     /**
      * Restituisce il testo del POST per la seconda Request
      * Aggiunge il token provvisorio ricevuto dalla prima Request
+     * PUO essere sovrascritto nelle sottoclassi specifiche
      *
      * @return post
      */
-    private String getSecondoPost() {
-        String testoPost;
-        String testo = this.getTestoNew();
-        String summary = this.getSummary();
-//        String edittoken = this.getToken();
-
-        if (testo != null && !testo.equals("")) {
-            try { // prova ad eseguire il codice
-                testo = URLEncoder.encode(testo, "UTF-8");
-
-            } catch (Exception unErrore) { // intercetta l'errore
-            }// fine del blocco try-catch
-        }// fine del blocco if
-        if (summary != null && !summary.equals("")) {
-            try { // prova ad eseguire il codice
-                summary = URLEncoder.encode(summary, "UTF-8");
-            } catch (Exception unErrore) { // intercetta l'errore
-            }// fine del blocco try-catch
-        }// fine del blocco if
-
-        testoPost = "text=" + testo;
-        testoPost += "&bot=true";
-        testoPost += "&minor=true";
-        testoPost += "&summary=" + summary;
-//        testoPost += "&token=" + edittoken;
-
-        return testoPost;
+    protected String getSecondoPost() {
+        return "";
     } // fine della closure
 
     /**
@@ -267,6 +239,7 @@ public abstract class Query {
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
     protected void regolaRisultato(String risultatoRequest) {
+        testoPrimaRequest = risultatoRequest;
     } // end of getter method
 
     /**
@@ -276,7 +249,7 @@ public abstract class Query {
      * Controllo del contenuto (testo) ricevuto
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
-    protected void regolaRisultatoSecond(String risultatoRequest) {
+    protected void regolaRisultatoSecondo(String risultatoRequest) {
     } // end of getter method
 
 
@@ -305,14 +278,14 @@ public abstract class Query {
      * <p>
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
-    protected String getSecondDomain() {
+    protected String getSecondoDomain() {
         return domain;
     } // end of getter method
 
 
-    public boolean isTrovata() {
-        return trovata;
-    } // end of getter method
+//    public boolean isTrovata() {
+//        return trovata;
+//    } // end of getter method
 
     public String getErrore() {
         return errore;
@@ -351,9 +324,15 @@ public abstract class Query {
     }//end of setter method
 
     /**
-     * Controlla la validità del risultato
+     * Controlla di aver trovato la pagina e di aver letto un contenuto valido
      * DEVE essere implementato nelle sottoclassi specifiche
      */
-    protected abstract boolean isValida();
+    public abstract boolean isLetta();
+
+    /**
+     * Controlla di aver scritto la pagina
+     * DEVE essere implementato nelle sottoclassi specifiche
+     */
+    public abstract boolean isScritta();
 
 } // fine della classe

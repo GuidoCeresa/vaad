@@ -1,3 +1,4 @@
+import it.algos.vaad.wiki.LibWiki;
 import it.algos.vaad.wiki.query.QueryReadTitle;
 import org.junit.Test;
 
@@ -20,6 +21,8 @@ public class QueryReadTest {
 
         query = new QueryReadTitle(TITOLO);
         testo = query.getContenuto();
+        LibWiki.creaMappa(testo);
+
         int a=78;
     }// end of single test
 

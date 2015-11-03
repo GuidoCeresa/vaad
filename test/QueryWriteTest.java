@@ -13,15 +13,15 @@ import static org.junit.Assert.assertTrue;
 public class QueryWriteTest {
 
     private static String TITOLO = "Utente:Gac/Sandbox5";
-    private static String TESTO = "Proviamo a scrivere";
+    private static String TESTO = "Proviamo a scriverex";
     private static String SUMMARY = "Sola scrittura";
     private WikiLogin loginWiki;
 
     @Before
     // Setup logic here
     public void setUp() {
-        String nick = "gac";
-        String password = "alfa";
+        String nick = "biobot";
+        String password = "fulvia";
 
         loginWiki = new WikiLogin(nick, password);
     } // fine del metodo iniziale
@@ -36,7 +36,7 @@ public class QueryWriteTest {
         String contenuto;
 
         query = new QueryWriteTitle(TITOLO, TESTO, SUMMARY,loginWiki);
-        assertTrue("Pagina non trovata", query.isTrovata());
+        assertTrue("Pagina non trovata", query.isLetta());
         contenuto = query.getContenuto();
         int a = 76;
     }// end of single test

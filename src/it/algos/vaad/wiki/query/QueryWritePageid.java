@@ -18,7 +18,7 @@ public class QueryWritePageid extends QueryWrite {
      * Costruttore completo
      * Rinvia al costruttore completo
      */
-    public QueryWritePageid(int pageid, String testoNew) {
+    public QueryWritePageid(long pageid, String testoNew) {
         this(pageid, testoNew, "");
     }// fine del metodo costruttore
 
@@ -35,7 +35,7 @@ public class QueryWritePageid extends QueryWrite {
      * Costruttore completo
      * Rinvia al costruttore della superclasse
      */
-    public QueryWritePageid(int pageid, String testoNew, String summary) {
+    public QueryWritePageid(long pageid, String testoNew, String summary) {
         super(pageid, testoNew, summary);
     }// fine del metodo costruttore
 

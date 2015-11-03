@@ -23,21 +23,21 @@ public class ReadPageTest extends VaadTest{
         Query query;
 
         query = new QueryReadTitle(TITOLO);
-        assertTrue(query.isTrovata());
+        assertTrue(query.isLetta());
         ottenuto = query.getContenuto();
         assertNotNull(ottenuto);
         assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
         assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
 
         query = new QueryReadTitle(TITOLO_ERRATO);
-        assertFalse(query.isTrovata());
+        assertFalse(query.isLetta());
         ottenuto = query.getContenuto();
         assertNotNull(ottenuto);
         assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
         assertFalse(ottenuto.endsWith(TAG_END_PAGINA));
 
         query = new QueryReadPageid(PAGEID);
-        assertTrue(query.isTrovata());
+        assertTrue(query.isLetta());
         ottenuto = query.getContenuto();
         assertNotNull(ottenuto);
         assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));

@@ -176,7 +176,7 @@ public class Api {
             query = new QueryReadPageid(titlePageid);
         }// fine del blocco if
 
-        if (query != null && query.isTrovata()) {
+        if (query != null && query.isLetta()) {
             return query.getContenuto();
         } else {
             return "";
@@ -257,6 +257,17 @@ public class Api {
      * @return contenuto (solo testo) della pagina (senza i metadati mediawiki)
      */
     public static String leggeVoce(int pageId) {
+        return leggeVoce("" + pageId, TipoRicerca.pageid);
+    }// end of method
+
+    /**
+     * Legge il contenuto (testo) di una voce
+     * <p>
+     *
+     * @param pageId della pagina
+     * @return contenuto (solo testo) della pagina (senza i metadati mediawiki)
+     */
+    public static String leggeVoce(long pageId) {
         return leggeVoce("" + pageId, TipoRicerca.pageid);
     }// end of method
 

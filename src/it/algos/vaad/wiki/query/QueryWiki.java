@@ -122,27 +122,74 @@ public abstract class QueryWiki extends Query {
      */
     @Override
     protected void regolaRisultato(String risultatoRequest) {
+        super.regolaRisultato(risultatoRequest);
     } // fine del metodo
 
 
+    /**
+     * Restituisce il testo del POST per la seconda Request
+     * Aggiunge il token provvisorio ricevuto dalla prima Request
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     *
+     * @return post
+     */
+    protected String getSecondoPost() {
+//        String testoPost;
+//        String testo = this.getTestoNew();
+//        String summary = this.getSummary();
+////        String edittoken = this.getToken();
+//
+//        if (testo != null && !testo.equals("")) {
+//            try { // prova ad eseguire il codice
+//                testo = URLEncoder.encode(testo, "UTF-8");
+//
+//            } catch (Exception unErrore) { // intercetta l'errore
+//            }// fine del blocco try-catch
+//        }// fine del blocco if
+//        if (summary != null && !summary.equals("")) {
+//            try { // prova ad eseguire il codice
+//                summary = URLEncoder.encode(summary, "UTF-8");
+//            } catch (Exception unErrore) { // intercetta l'errore
+//            }// fine del blocco try-catch
+//        }// fine del blocco if
+//
+//        testoPost = "text=" + testo;
+//        testoPost += "&bot=true";
+//        testoPost += "&minor=true";
+//        testoPost += "&summary=" + summary;
+////        testoPost += "&token=" + edittoken;
+//
+        return "";
+    } // fine della closure
+
+    /**
+     * Controlla di aver trovato la pagina e di aver letto un contenuto valido
+     * DEVE essere implementato nelle sottoclassi specifiche
+     */
     @Override
-    public boolean isValida() {
-        boolean valida = true;
-        String contenuto = getContenuto();
+    public boolean isLetta() {
+        boolean valida = false;
+        String contenuto = testoPrimaRequest;
 
-        if (contenuto.equals("")) {
-            valida = false;
-        }// fine del blocco if
 
-        if (contenuto.length() < 200 && contenuto.contains("missing")) {
-            valida = false;
+        if (contenuto != null && contenuto.length() > 200 && !contenuto.contains("missing")) {
+            valida = true;
         }// fine del blocco if
 
         return valida;
-    } // end of getter method
+    } // fine del metodo
+
+    /**
+     * Controlla di aver scritto la pagina
+     * DEVE essere implementato nelle sottoclassi specifiche
+     */
+    @Override
+    public boolean isScritta() {
+        return false;
+    } // fine del metodo
 
     public String getContinua() {
         return continua;
-    }
+    } // fine del metodo
 
 } // fine della classe
