@@ -6,6 +6,7 @@ import it.algos.vaad.wiki.Page;
 import it.algos.webbase.domain.vers.Versione_;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.query.AQuery;
+import org.eclipse.persistence.annotations.Index;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Column;
@@ -29,6 +30,7 @@ public class Wiki extends BaseEntity {
     //--parametri wiki base
     @Column(unique = true)
     @NotNull
+    @Index
     private long pageid;
 
     @NotEmpty
