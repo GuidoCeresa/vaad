@@ -40,11 +40,11 @@ public class QueryWeb extends Query {
         boolean valida = true;
         String contenuto = getContenuto();
 
-        if (contenuto.equals("")) {
+        if (contenuto == null || contenuto.equals("")) {
             valida = false;
         }// fine del blocco if
 
-        if (contenuto.startsWith(WEB_MISSING)) {
+        if (contenuto != null &&contenuto.startsWith(WEB_MISSING)) {
             valida = false;
             contenuto = null;
             errore = "UnknownHostException";

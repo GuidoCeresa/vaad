@@ -1,6 +1,5 @@
 package it.algos.vaad.wiki.query;
 
-import it.algos.vaad.wiki.TipoRequest;
 import it.algos.vaad.wiki.TipoRicerca;
 
 /**
@@ -14,7 +13,7 @@ public class QueryReadPageid extends QueryPage {
      * Rinvia al costruttore della superclasse
      */
     public QueryReadPageid(String titlepageid) {
-        super(titlepageid);
+        super(titlepageid, TipoRicerca.pageid);
     }// fine del metodo costruttore
 
     /**

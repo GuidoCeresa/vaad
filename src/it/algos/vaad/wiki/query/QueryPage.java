@@ -24,8 +24,8 @@ public abstract class QueryPage extends QueryWiki {
      * Costruttore completo
      * Rinvia al costruttore della superclasse, specificando i flgas
      */
-    public QueryPage(String titlepageid) {
-        super(titlepageid, TipoRicerca.title, TipoRequest.read);
+    public QueryPage(String titlepageid, TipoRicerca tipoRicerca) {
+        super(titlepageid, tipoRicerca, TipoRequest.read);
     }// fine del metodo costruttore
 
     /**

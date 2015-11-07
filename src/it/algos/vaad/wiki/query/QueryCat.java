@@ -128,8 +128,11 @@ public class QueryCat extends QueryWiki {
             this.addLista(lista);
         }// fine del blocco if
 
+
         txtContinua = LibWiki.creaCatContinue(risultatoRequest);
         this.continua = txtContinua;
+
+        super.regolaRisultato(risultatoRequest);
     } // fine del metodo
 
 

@@ -1,7 +1,5 @@
 package it.algos.vaad.wiki.query;
 
-import it.algos.vaad.wiki.Cost;
-import it.algos.vaad.wiki.TipoRequest;
 import it.algos.vaad.wiki.TipoRicerca;
 
 import java.net.URLEncoder;
@@ -19,8 +17,9 @@ public class QueryReadTitle extends QueryPage {
      * Rinvia al costruttore della superclasse
      */
     public QueryReadTitle(String title) {
-        super(title);
+        super(title, TipoRicerca.title);
     }// fine del metodo costruttore
+
 
     /**
      * Costruisce la stringa della request
