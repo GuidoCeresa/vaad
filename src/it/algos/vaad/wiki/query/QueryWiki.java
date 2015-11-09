@@ -65,6 +65,7 @@ public abstract class QueryWiki extends Query {
      * Costruttore completo
      */
     public QueryWiki(int pageid, TipoRicerca tipoRicerca, TipoRequest tipoRequest) {
+        int a=87;
         this.tipoRicerca = tipoRicerca;
         super.tipoRequest = tipoRequest;
         this.doInit("" + pageid);

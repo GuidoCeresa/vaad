@@ -8,6 +8,7 @@ package it.algos.vaad.wiki;
 import it.algos.vaad.WrapTime;
 import it.algos.vaad.wiki.entities.wiki.Wiki;
 import it.algos.vaad.wiki.query.QueryCat;
+import it.algos.vaad.wiki.query.QueryReadTitle;
 import it.algos.webbase.web.lib.LibText;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -17,6 +18,9 @@ import java.sql.Timestamp;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Libreria
@@ -60,6 +64,7 @@ public abstract class LibWiki {
     public static final String TOKEN = "csrftoken";
     private static final String BATCH = "batchcomplete";
     private static final String QUERY = "query";
+    private static final String TITLE = "title";
     private static final String PAGEID = "pageid";
     private static final String PAGES = "pages";
     private static final String REVISIONS = "revisions";
@@ -67,6 +72,7 @@ public abstract class LibWiki {
     private static final String WARNINGS = "warnings";
     private static final String TIMESTAMP = "timestamp";
     private static final String CATEGORY_MEMBERS = "categorymembers";
+    private static final String BACK_LINKS = "backlinks";
     private static final String QUERY_CONTINUE = "query-continue";
     private static final String LOGIN = "login";
     private static final String MISSING = "missing";
@@ -756,63 +762,9 @@ public abstract class LibWiki {
             } // fine del ciclo for-each
         }// fine del blocco if
 
-//        //--patch per il nome 'atipico' del campo text
-//        if (mappaOut.containsKey(PATCH_OLD)) {
-//            value = mappaOut.get(PATCH_OLD);
-//            mappaOut.remove(PATCH_OLD);
-//            mappaOut.put(PATCH_NEW, value);
-//        }// fine del blocco if
-
         return mappaOut;
     } // fine del metodo
 
-//    /**
-//     * Crea una mappa standard (valori String) da una mappa JSON di una pagina
-//     * <p>
-//     * Prima i parametri delle info
-//     * Poi, se ci sono, i parametri della revisione
-//     *
-//     * @param mappaJson JSONObject in ingresso
-//     * @return mappa standard (valori String)
-//     */
-//    private static LinkedHashMap fixMappaOld(JSONObject mappaJson) {
-//        LinkedHashMap<String, Object> mappaOut = new LinkedHashMap<String, Object>();
-//        HashMap<String, Object> mappaValoriInfo = estraeMappaJson(mappaJson);
-//        HashMap<String, Object> mappaValoriRev = null;
-//        String key;
-//        Object value = null;
-//
-//        //--valori dei parametri ricavati dalle info della pagina
-//        for (PagePar par : PagePar.getInf()) {
-//            key = par.toString();
-//            value = mappaValoriInfo.get(key);
-//            if (value != null) {
-//                mappaOut.put(key, value);
-//            }// fine del blocco if
-//        } // fine del ciclo for-each
-//
-//        //--controlla che esistano i valori della revisione
-//        if (mappaValoriInfo.containsKey(REVISIONS) && mappaValoriInfo.get(REVISIONS) instanceof JSONArray) {
-//            mappaValoriRev = estraeMappaJson((JSONArray) mappaValoriInfo.get(REVISIONS));
-//        }// fine del blocco if
-//
-//        //--valori dei parametri ricavati dall'ultima revisione della pagina
-//        if (mappaValoriRev != null) {
-//            for (String keyRev : mappaValoriRev.keySet()) {
-//                value = mappaValoriRev.get(keyRev);
-//                mappaOut.put(keyRev, value);
-//            } // fine del ciclo for-each
-//        }// fine del blocco if
-//
-//        //--patch per il nome 'atipico' del campo text
-//        if (mappaOut.containsKey(PATCH_OLD)) {
-//            value = mappaOut.get(PATCH_OLD);
-//            mappaOut.remove(PATCH_OLD);
-//            mappaOut.put(PATCH_NEW, value);
-//        }// fine del blocco if
-//
-//        return mappaOut;
-//    } // fine del metodo
 
     /**
      * Estrae una mappa standard da un JSONObject
@@ -902,29 +854,6 @@ public abstract class LibWiki {
         return mappaOut;
     } // fine del metodo
 
-//    /**
-//     * Crea una mappa standard (valori String) da una mappa JSON di una pagina
-//     * <p/>
-//     * Prima i parametri delle info
-//     * Poi, se ci sono, i parametri della revisione
-//     *
-//     * @param mappa JSON in ingresso
-//     * @return mappa standard (valori String)
-//     */
-//    private static LinkedHashMap fixMappaJson(Object mappaIn) {
-//        LinkedHashMap mappaOut = new LinkedHashMap();
-//        String key;
-//        Object value;
-//
-////        //--valori dei parametri ricavati dal testo json
-////        PagePar.getPerm2().each {
-////            key = it.toString()
-////            value = mappaIn["${key}"]
-////            mappaOut.put(key, value)
-////        } // fine del ciclo each
-//
-//        return mappaOut;
-//    } // fine del metodo
 
     /**
      * Converte i typi di una mappa secondo i parametri PagePar
@@ -972,23 +901,121 @@ public abstract class LibWiki {
      */
     public static ArrayList<Long> creaListaCatJson(String textJSON) {
         ArrayList<Long> lista = null;
-        JSONObject jsonObject = null;
-        Object longPageid = null;
+        JSONObject jsonObject;
+        Object longPageid;
         long pageid = 0;
 
         JSONObject allObj = (JSONObject) JSONValue.parse(textJSON);
         JSONObject queryObj = (JSONObject) allObj.get(QUERY);
         JSONArray catObj = (JSONArray) queryObj.get(CATEGORY_MEMBERS);
 
-        if (catObj != null) {
+//        if (catObj != null) {
+//            lista = new ArrayList<Long>();
+//            for (Object obj : catObj) {
+//                if (obj instanceof JSONObject) {
+//                    jsonObject = (JSONObject) obj;
+//                    longPageid = jsonObject.get(PAGEID);
+//                    if (longPageid instanceof Long) {
+//                        pageid = ((Long) longPageid).intValue();
+//                        lista.add(pageid);
+//                    }// fine del blocco if
+//                }// fine del blocco if
+//            } // fine del ciclo for-each
+//        }// fine del blocco if
+
+        return creaListaBaseLongJson(catObj);
+    } // fine del metodo
+
+    /**
+     * Crea una lista di pagine (valori pageids) dal testo JSON di una pagina
+     *
+     * @param textJSON in ingresso
+     * @return lista pageid (valori Integer)
+     */
+    public static ArrayList<Long> creaListaBackJson(String textJSON) {
+        ArrayList<Long> lista = null;
+
+        JSONObject allObj = (JSONObject) JSONValue.parse(textJSON);
+        JSONObject contObj = (JSONObject) allObj.get(QUERY);
+        JSONObject batchObj = (JSONObject) allObj.get(QUERY);
+        JSONObject queryObj = (JSONObject) allObj.get(QUERY);
+        JSONArray backObj = (JSONArray) queryObj.get(BACK_LINKS);
+
+        lista = creaListaBaseLongJson(backObj);
+        return lista;
+    } // fine del metodo
+
+
+    /**
+     * Crea una lista di pagine (valori pageids) dal testo JSON di una pagina
+     *
+     * @param textJSON in ingresso
+     * @return lista pageid (valori Integer)
+     */
+    public static ArrayList<String> creaListaBackTxtJson(String textJSON) {
+        ArrayList<String> lista = null;
+
+        JSONObject allObj = (JSONObject) JSONValue.parse(textJSON);
+        JSONObject contObj = (JSONObject) allObj.get(QUERY);
+        JSONObject batchObj = (JSONObject) allObj.get(QUERY);
+        JSONObject queryObj = (JSONObject) allObj.get(QUERY);
+        JSONArray backObj = (JSONArray) queryObj.get(BACK_LINKS);
+
+        lista = creaListaBaseTextJson(backObj);
+        return lista;
+    } // fine del metodo
+
+
+    /**
+     * Crea una lista di pagine (valori pageids) da un JSONArray
+     *
+     * @param objArray in ingresso
+     * @return lista pageid (valori Integer)
+     */
+    private static ArrayList<Long> creaListaBaseLongJson(JSONArray objArray) {
+        ArrayList<Long> lista = null;
+        JSONObject jsonObject = null;
+        Object longPageid = null;
+        long pageid = 0;
+
+        if (objArray != null && objArray.size() > 0) {
             lista = new ArrayList<Long>();
-            for (Object obj : catObj) {
+            for (Object obj : objArray) {
                 if (obj instanceof JSONObject) {
                     jsonObject = (JSONObject) obj;
                     longPageid = jsonObject.get(PAGEID);
                     if (longPageid instanceof Long) {
                         pageid = ((Long) longPageid).intValue();
                         lista.add(pageid);
+                    }// fine del blocco if
+                }// fine del blocco if
+            } // fine del ciclo for-each
+        }// fine del blocco if
+
+        return lista;
+    } // fine del metodo
+
+    /**
+     * Crea una lista di pagine (valori title) da un JSONArray
+     *
+     * @param objArray in ingresso
+     * @return lista pageid (valori Integer)
+     */
+    private static ArrayList<String> creaListaBaseTextJson(JSONArray objArray) {
+        ArrayList<String> lista = null;
+        JSONObject jsonObject = null;
+        Object stringTitle = null;
+        String title = "";
+
+        if (objArray != null && objArray.size() > 0) {
+            lista = new ArrayList<String>();
+            for (Object obj : objArray) {
+                if (obj instanceof JSONObject) {
+                    jsonObject = (JSONObject) obj;
+                    stringTitle = jsonObject.get(TITLE);
+                    if (stringTitle instanceof String) {
+                        title = stringTitle.toString();
+                        lista.add(title);
                     }// fine del blocco if
                 }// fine del blocco if
             } // fine del ciclo for-each
@@ -1541,6 +1568,17 @@ public abstract class LibWiki {
         }// fine del blocco if
 
         return stringaOut.trim();
+    } // fine del metodo
+
+    /**
+     * Controlla l'esistenza di una pagina.
+     *
+     * @param title della pagina da ricercare
+     * @return true se la pagina esiste
+     */
+    public static boolean isEsiste(String title) {
+        QueryReadTitle query = new QueryReadTitle(title);
+        return query.isLetta();
     } // fine del metodo
 
 } // fine della classe astratta

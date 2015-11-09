@@ -26,8 +26,8 @@ import javax.servlet.annotation.WebServlet;
  * which provides you with the option to select UI by referring the UI class
  * directly toggle productionMode using a boolean and more
  */
-@WebServlet(value = "/*", asyncSupported = true, displayName = "Vaad")
-@VaadinServletConfiguration(productionMode = false, ui = VaadUI.class)
+//@WebServlet(value = "/*", asyncSupported = true, displayName = "Vaad")
+//@VaadinServletConfiguration(productionMode = false, ui = VaadUI.class)
 public class VaadServlet extends AlgosServlet {
 
     @Override
