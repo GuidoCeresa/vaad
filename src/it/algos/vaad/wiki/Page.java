@@ -45,7 +45,7 @@ public class Page implements Serializable {
 
     public Page(String testoPagina, TipoRequest tipoRequest) {
         this.tipoRequest = tipoRequest;
-        mappaReadTxt = LibWiki.creaMappa(testoPagina);
+        mappaReadTxt = LibWiki.creaMappaQuery(testoPagina);
         mappaReadObj = LibWiki.converteMappa(mappaReadTxt);
         mappaDB = creaMappaDB(mappaReadObj);
         valida = PagePar.isParValidiRead(mappaReadObj);

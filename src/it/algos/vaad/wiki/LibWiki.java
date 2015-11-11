@@ -8,7 +8,7 @@ package it.algos.vaad.wiki;
 import it.algos.vaad.WrapTime;
 import it.algos.vaad.wiki.entities.wiki.Wiki;
 import it.algos.vaad.wiki.query.QueryCat;
-import it.algos.vaad.wiki.query.QueryReadTitle;
+import it.algos.webbase.web.lib.LibArray;
 import it.algos.webbase.web.lib.LibText;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -18,9 +18,6 @@ import java.sql.Timestamp;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Libreria
@@ -62,10 +59,14 @@ public abstract class LibWiki {
     public static final String KEY_PAGINE_VALIDE = "pagineValide";
     public static final String KEY_PAGINE_MANCANTI = "pagineMancanti";
     public static final String TOKEN = "csrftoken";
-    private static final String BATCH = "batchcomplete";
-    private static final String QUERY = "query";
-    private static final String TITLE = "title";
-    private static final String PAGEID = "pageid";
+    public static final String EDIT = "edit";
+    public static final String RESULT = "result";
+    public static final String CHANGE = "nochange";
+    public static final String CONTENT_MODEL = "contentmodel";
+    public static final String TITLE = "title";
+    public static final String PAGEID = "pageid";
+    public static final String BATCH = "batchcomplete";
+    public static final String QUERY = "query";
     private static final String PAGES = "pages";
     private static final String REVISIONS = "revisions";
     private static final String TOKENS = "tokens";
@@ -467,12 +468,12 @@ public abstract class LibWiki {
 
 
     /**
-     * Crea una mappa standard (valori String) dal testo JSON di una pagina
+     * Crea una mappa standard (valori reali) dal testo JSON di una pagina action=query
      *
      * @param textJSON in ingresso
-     * @return mappa standard (valori String)
+     * @return mappa query (valori reali)
      */
-    public static HashMap<String, Object> creaMappa(String textJSON) {
+    public static HashMap<String, Object> creaMappaQuery(String textJSON) {
         HashMap<String, Object> mappa = null;
         JSONObject objectAll;
         boolean batchcomplete = false;
@@ -515,15 +516,96 @@ public abstract class LibWiki {
             objectRev = (JSONObject) arrayPages.get(0);
             if (objectRev != null) {
                 arrayRev = (JSONArray) objectRev.get(REVISIONS);
+                int a = 87;
             }// fine del blocco if
         }// fine del blocco if
 
         //--crea la mappa
-        if (arrayPages != null && arrayRev != null) {
-            mappa = mixJSON(batchcomplete, arrayPages, arrayRev, token);
-        }// fine del blocco if
+        mappa = mixJSON(batchcomplete, arrayPages, arrayRev, token);
 
         return patchMappa(mappa);
+    } // fine del metodo
+
+
+    /**
+     * Crea una mappa standard (valori reali) dal testo JSON di una pagina action=edit
+     *
+     * @param textJSON in ingresso
+     * @return mappa edit (valori reali)
+     */
+    public static HashMap<String, Object> creaMappaEdit(String textJSON) {
+        HashMap<String, Object> mappa = null;
+        JSONObject objectAll;
+        JSONObject objectEdit = null;
+        String result;
+        String contentmodel;
+        long pageid;
+        String title;
+        String change;
+
+        //--recupera i due oggetti al livello root del testo (batchcomplete e query)
+        objectAll = (JSONObject) JSONValue.parse(textJSON);
+
+        //--controllo
+        if (objectAll == null) {
+            return null;
+        }// fine del blocco if
+
+        if (objectAll.get(EDIT) != null && objectAll.get(EDIT) instanceof JSONObject) {
+            objectEdit = (JSONObject) objectAll.get(EDIT);
+        }// fine del blocco if
+
+        if (objectEdit != null) {
+            mappa = new HashMap<String, Object>();
+
+            result = (String) objectEdit.get(RESULT);
+            mappa.put(RESULT, result);
+
+            contentmodel = (String) objectEdit.get(CONTENT_MODEL);
+            mappa.put(CONTENT_MODEL, contentmodel);
+
+            pageid = (Long) objectEdit.get(PAGEID);
+            mappa.put(PAGEID, pageid);
+
+            title = (String) objectEdit.get(TITLE);
+            mappa.put(TITLE, title);
+
+            change = (String) objectEdit.get(CHANGE);
+            mappa.put(CHANGE, change);
+        }// fine del blocco if
+
+        return mappa;
+    } // fine del metodo
+
+    /**
+     * Crea una mappa standard (valori reali) dal testo JSON di una pagina
+     *
+     * @param textJSON in ingresso
+     * @return mappa standard (valori reali)
+     */
+    public static HashMap<String, Object> creaMappa(String textJSON) {
+        HashMap<String, Object> mappa = null;
+        JSONObject objectAll;
+        ArrayList<String> listaKeys;
+
+        //--recupera gli oggetti al livello root del testo
+        objectAll = (JSONObject) JSONValue.parse(textJSON);
+
+        //--controllo
+        if (objectAll == null) {
+            return null;
+        }// fine del blocco if
+
+        listaKeys = LibArray.getKeyFromMap(objectAll);
+
+        if (listaKeys != null) {
+            mappa = new HashMap<String, Object>();
+            for (String key : listaKeys) {
+                mappa.put(key, objectAll.get(key));
+            }// end of for cycle
+        }// end of if cycle
+
+        return mappa;
     } // fine del metodo
 
     /**
@@ -639,9 +721,15 @@ public abstract class LibWiki {
      * @return mappa in uscita
      */
     public static HashMap<String, Object> patchMappa(HashMap<String, Object> mappa) {
-        if (!mappa.containsKey(PagePar.anon.toString())) {
-            mappa.put(PagePar.anon.toString(), false);
-        }// fine del blocco if
+
+        if (mappa != null) {
+            if (!mappa.containsKey(PagePar.anon.toString())) {
+                mappa.put(PagePar.anon.toString(), false);
+            }// fine del blocco if
+            if (!mappa.containsKey(PagePar.missing.toString())) {
+                mappa.put(PagePar.missing.toString(), false);
+            }// fine del blocco if
+        }// end of if cycle
 
         return mappa;
     } // fine del metodo
@@ -1571,14 +1659,26 @@ public abstract class LibWiki {
     } // fine del metodo
 
     /**
-     * Controlla l'esistenza di una pagina.
+     * Crea una lista standard (valori String) dewlle chiavi del testo JSON di una pagina
      *
-     * @param title della pagina da ricercare
-     * @return true se la pagina esiste
+     * @param textJSON in ingresso
+     * @return lista standard di chiavi (valori String)
      */
-    public static boolean isEsiste(String title) {
-        QueryReadTitle query = new QueryReadTitle(title);
-        return query.isLetta();
+    public static ArrayList<String> creaListaKeys(String textJSON) {
+        ArrayList<String> listaKeys = null;
+        JSONObject objectAll = null;
+
+        //--recupera gli oggetti al livello root del testo
+        if (textJSON != null && !textJSON.equals("")) {
+            objectAll = (JSONObject) JSONValue.parse(textJSON);
+        }// end of if cycle
+
+        if (objectAll != null) {
+            listaKeys = LibArray.getKeyFromMap(objectAll);
+        }// end of if cycle
+
+        return listaKeys;
     } // fine del metodo
+
 
 } // fine della classe astratta

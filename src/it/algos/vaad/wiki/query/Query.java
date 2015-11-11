@@ -1,6 +1,7 @@
 package it.algos.vaad.wiki.query;
 
 import it.algos.vaad.wiki.TipoRequest;
+import it.algos.vaad.wiki.TipoRisultato;
 import it.algos.vaad.wiki.WikiLogin;
 
 import java.io.BufferedReader;
@@ -9,7 +10,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 
 /**
  * Superclasse astratta per le Request sul Web
@@ -45,13 +45,15 @@ public abstract class Query {
     // utilizzo indispensabile del login
     private boolean serveLogin = false;
 
+    protected TipoRisultato risultato = TipoRisultato.erroreGenerico;
+
     /**
      * Metodo iniziale
      */
     protected void doInit() {
         try { // prova ad eseguire il codice
             testoPrimaRequest = this.firstRequest();
-            if (tipoRequest == TipoRequest.write && isLetta()) {
+            if (tipoRequest == TipoRequest.write && risultato == TipoRisultato.letta) {
                 testoSecondaRequest = secondRequest();
             }// end of if cycle
         } catch (Exception unErrore) { // intercetta l'errore
@@ -121,7 +123,6 @@ public abstract class Query {
         // controlla il valore di ritorno della request e regola il risultato
         contenuto = textBuffer.toString();
         regolaRisultato(contenuto);
-//        trovata = isValida();
 
         return contenuto;
     } // fine del metodo
@@ -323,11 +324,21 @@ public abstract class Query {
         this.summary = summary;
     }//end of setter method
 
+    public TipoRisultato getRisultato() {
+        return risultato;
+    }// end of getter method
+
+    public void setRisultato(TipoRisultato risultato) {
+        this.risultato = risultato;
+    }//end of setter method
+
     /**
      * Controlla di aver trovato la pagina e di aver letto un contenuto valido
      * DEVE essere implementato nelle sottoclassi specifiche
      */
-    public abstract boolean isLetta();
+    public boolean isLetta() {
+        return (risultato == TipoRisultato.letta);
+    }// end of getter method
 
     /**
      * Controlla di aver scritto la pagina

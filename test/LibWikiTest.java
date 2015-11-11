@@ -2,6 +2,8 @@ import it.algos.vaad.wiki.LibWiki;
 import it.algos.vaad.wiki.PagePar;
 import it.algos.vaad.wiki.query.QueryCat;
 import it.algos.vaad.wiki.query.QueryReadTitle;
+import it.algos.webbase.web.lib.LibArray;
+import org.json.simple.JSONObject;
 import org.junit.Test;
 
 import java.sql.Timestamp;
@@ -23,6 +25,9 @@ public class LibWikiTest extends VaadTest {
     private static String SPAZI_MULTIPLI_PIU_ESTERNI = " Abc    def ghi   lmn ";
     private static String SPAZIO_SINGOLO = "Abc def ghi lmn";
     private static String SPAZIO_SINGOLO_PIU_ESTERNI = " Abc def ghi lmn ";
+
+    private ArrayList<String> listaPrevista = null;
+    private ArrayList<String> listaOttenuta = null;
 
     /**
      * Controllo di validità della mappa di stringhe lette dal server
@@ -604,21 +609,6 @@ public class LibWikiTest extends VaadTest {
         assertEquals(dataOttenuta, dataPrevista);
     }// end of single test
 
-    @Test
-    /**
-     * Crea una mappa standard (valori String) dal testo JSON di una pagina
-     *
-     * @param text in ingresso
-     * @return mappa standard (valori String)
-     */
-    public void creaMappa() {
-        HashMap mappa;
-        String textPagina = new QueryReadTitle(TITOLO).getContenuto();
-
-        mappa = LibWiki.creaMappa(textPagina);
-        assertNotNull(mappa);
-        isMappaReadTxtValida(mappa);
-    }// end of single test
 
     @Test
     /**
@@ -632,7 +622,7 @@ public class LibWikiTest extends VaadTest {
         HashMap mappaConvertita;
 
         String textPagina = new QueryReadTitle(TITOLO).getContenuto();
-        mappaString = LibWiki.creaMappa(textPagina);
+        mappaString = LibWiki.creaMappaQuery(textPagina);
         isMappaReadTxtValida(mappaString);
 
         mappaConvertita = LibWiki.converteMappa(mappaString);
@@ -682,7 +672,7 @@ public class LibWikiTest extends VaadTest {
 
         lista = LibWiki.creaListaCat(titolo);
         assertNotNull(lista);
-        assertTrue(lista.size() == 35);
+        assertTrue(lista.size() == 36);
     }// end of single test
 
     @Test
@@ -896,5 +886,95 @@ public class LibWikiTest extends VaadTest {
         ottenuto = LibWiki.setBold(VUOTA);
         assertEquals(ottenuto, VUOTA);
     }// end of single test
+
+
+    @Test
+    /**
+     * Crea una lista standard (valori String) dewlle chiavi del testo JSON di una pagina
+     *
+     * @param textJSON in ingresso
+     * @return lista standard di chiavi (valori String)
+     */
+    public void creaListaKeys() {
+        String textJSON;
+        listaPrevista = new ArrayList<String>();
+        listaPrevista.add(LibWiki.BATCH);
+        listaPrevista.add(LibWiki.QUERY);
+
+        textJSON = new QueryReadTitle(TITOLO).getContenuto();
+        listaOttenuta = LibWiki.creaListaKeys(textJSON);
+        assertEquals(listaOttenuta, listaPrevista);
+
+        textJSON = "{\"edit\":{\"result\":\"Success\",\"pageid\":2847116,\"title\":\"Utente:Gac/Sandbox5\",\"contentmodel\":\"wikitext\",\"nochange\":\"\"}}";
+        listaPrevista = new ArrayList<String>();
+        listaPrevista.add("edit");
+        listaOttenuta = LibWiki.creaListaKeys(textJSON);
+        assertEquals(listaOttenuta, listaPrevista);
+
+    }// end of single test
+
+    @Test
+    /**
+     * Crea una mappa standard (valori String) dal testo JSON di una pagina
+     *
+     * @param text in ingresso
+     * @return mappa standard (valori String)
+     */
+    public void creaMappaQuery() {
+        HashMap mappa;
+        String textPagina = new QueryReadTitle(TITOLO).getContenuto();
+
+        mappa = LibWiki.creaMappaQuery(textPagina);
+        assertNotNull(mappa);
+        isMappaReadTxtValida(mappa);
+    }// end of single test
+
+    @Test
+    /**
+     * Crea una mappa standard (valori String) dal testo JSON di una pagina action=edit
+     *
+     * @param textJSON in ingresso
+     * @return mappa edit (valori reali)
+     */
+    public void creaMappaEdit() {
+        String sorgente = "{\"edit\":{\"result\":\"Success\",\"pageid\":2847116,\"title\":\"Utente:Gac/Sandbox5\",\"contentmodel\":\"wikitext\",\"nochange\":\"\"}}";
+        HashMap<String, Object> mappaPrevista = new HashMap<String, Object>();
+        HashMap<String, Object> mappaOttenuta;
+        mappaPrevista.put(LibWiki.RESULT, "Success");
+        mappaPrevista.put(LibWiki.CONTENT_MODEL, "wikitext");
+        mappaPrevista.put(LibWiki.PAGEID, 2847116L);
+        mappaPrevista.put(LibWiki.TITLE, "Utente:Gac/Sandbox5");
+        mappaPrevista.put(LibWiki.CHANGE, "");
+
+        mappaOttenuta = LibWiki.creaMappaEdit(sorgente);
+        boolOttenuto = LibArray.isMapEquals(mappaOttenuta, mappaPrevista);
+        assertTrue(boolOttenuto);
+    }// end of single test
+
+    @Test
+    /**
+     * Crea una mappa standard (valori String) dal testo JSON di una pagina
+     *
+     * @param textJSON in ingresso
+     * @return mappa standard (valori reali)
+     */
+    public void creaMappa() {
+        String titolo = "Shortest path";
+        sorgente = new QueryReadTitle(titolo).getContenuto();
+        HashMap<String, Object> mappaPrevista = new HashMap<String, Object>();
+        HashMap<String, Object> mappaOttenuta;
+        mappaPrevista.put(LibWiki.BATCH, true);
+        mappaPrevista.put(LibWiki.QUERY, "wikitext");
+
+        mappaOttenuta = LibWiki.creaMappa(sorgente);
+        assertNotNull(mappaOttenuta);
+        assertEquals(mappaOttenuta.size(), 2);
+        assertTrue(mappaOttenuta.containsKey(LibWiki.BATCH));
+        assertTrue(mappaOttenuta.containsKey(LibWiki.QUERY));
+        assertTrue(mappaOttenuta.get(LibWiki.BATCH) instanceof Boolean);
+        assertEquals(mappaOttenuta.get(LibWiki.BATCH), true);
+        assertTrue(mappaOttenuta.get(LibWiki.QUERY) instanceof JSONObject);
+    }// end of single test
+
 
 }// end of testing class

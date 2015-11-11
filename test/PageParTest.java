@@ -30,6 +30,7 @@ public class PageParTest extends VaadTest {
         add(PagePar.pagelanguage, "linguaggio");
         add(PagePar.csrftoken, "token");
         add(PagePar.starttimestamp, LibWiki.getTime());
+        add(PagePar.missing, "missing");
 
         //--parametri wiki revisions
         add(PagePar.revid, 2435L);
@@ -46,7 +47,6 @@ public class PageParTest extends VaadTest {
         add(PagePar.content, "testo");
 
         //--parametri altri controlli
-        add(PagePar.missing, "missing");
         add(PagePar.revisions, "revisions");
         add(PagePar.ultimalettura, LibWiki.getTime());
 
@@ -78,7 +78,7 @@ public class PageParTest extends VaadTest {
      * @return collezione
      */
     public void getRead() {
-        numPrevisto = 17;
+        numPrevisto = PARAMETRI_LETTI_DAL_SERVER;
         listaOttenuta = PagePar.getRead();
         assertNotNull(listaOttenuta);
         numOttenuto = listaOttenuta.size();

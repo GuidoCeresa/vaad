@@ -1,12 +1,10 @@
 package it.algos.vaad.wiki.query;
 
-import it.algos.vaad.wiki.Cost;
-import it.algos.vaad.wiki.TipoRequest;
-import it.algos.vaad.wiki.TipoRicerca;
-import it.algos.vaad.wiki.WikiLogin;
+import it.algos.vaad.wiki.*;
 import it.algos.webbase.web.lib.LibSession;
 
 import java.net.URLConnection;
+import java.util.HashMap;
 
 /**
  * Superclasse per le Request al server MediaWiki
@@ -65,7 +63,6 @@ public abstract class QueryWiki extends Query {
      * Costruttore completo
      */
     public QueryWiki(int pageid, TipoRicerca tipoRicerca, TipoRequest tipoRequest) {
-        int a=87;
         this.tipoRicerca = tipoRicerca;
         super.tipoRequest = tipoRequest;
         this.doInit("" + pageid);
@@ -123,7 +120,24 @@ public abstract class QueryWiki extends Query {
      */
     @Override
     protected void regolaRisultato(String risultatoRequest) {
+        HashMap mappa = null;
         super.regolaRisultato(risultatoRequest);
+
+        if (risultatoRequest != null) {
+            mappa = LibWiki.creaMappaQuery(risultatoRequest);
+        }// fine del blocco if
+
+        if (mappa != null) {
+            if (mappa.get(PagePar.missing.toString()) != null && (Boolean) mappa.get(PagePar.missing.toString())) {
+                setRisultato(TipoRisultato.nonTrovata);
+            }// end of if cycle
+
+            if (mappa.get(PagePar.missing.toString()) != null && !(Boolean) mappa.get(PagePar.missing.toString())) {
+                if (mappa.get(PagePar.content.toString()) != null) {
+                    setRisultato(TipoRisultato.letta);
+                }// end of if cycle
+            }// end of if cycle
+        }// fine del blocco if
     } // fine del metodo
 
 
@@ -163,22 +177,22 @@ public abstract class QueryWiki extends Query {
         return "";
     } // fine della closure
 
-    /**
-     * Controlla di aver trovato la pagina e di aver letto un contenuto valido
-     * DEVE essere implementato nelle sottoclassi specifiche
-     */
-    @Override
-    public boolean isLetta() {
-        boolean valida = false;
-        String contenuto = testoPrimaRequest;
-
-
-        if (contenuto != null && contenuto.length() > 200 && !contenuto.contains("missing")) {
-            valida = true;
-        }// fine del blocco if
-
-        return valida;
-    } // fine del metodo
+//    /**
+//     * Controlla di aver trovato la pagina e di aver letto un contenuto valido
+//     * DEVE essere implementato nelle sottoclassi specifiche
+//     */
+//    @Override
+//    public boolean isLetta() {
+//        boolean valida = false;
+//        String contenuto = testoPrimaRequest;
+//
+//
+//        if (contenuto != null && contenuto.length() > 200 && !contenuto.contains("missing")) {
+//            valida = true;
+//        }// fine del blocco if
+//
+//        return valida;
+//    } // fine del metodo
 
     /**
      * Controlla di aver scritto la pagina

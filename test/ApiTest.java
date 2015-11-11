@@ -1,5 +1,7 @@
 import it.algos.vaad.wiki.Api;
 import it.algos.vaad.wiki.TipoRicerca;
+import it.algos.vaad.wiki.WikiLogin;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -10,6 +12,7 @@ import static org.junit.Assert.*;
  */
 public class ApiTest extends VaadTest {
 
+    private WikiLogin loginWiki;
 
     @Test
     /**
@@ -233,5 +236,55 @@ public class ApiTest extends VaadTest {
         assertTrue(ottenuto.startsWith(TAG_INI_TMPL_BIO));
         assertTrue(ottenuto.endsWith(TAG_END_TMPL_BIO));
     }// end of method
+
+
+    @Test
+    /**
+     * Controlla l'esistenza di una pagina.
+     *
+     * @param title della pagina da ricercare
+     * @return true se la pagina esiste
+     */
+    public void esiste() {
+        boolean status;
+
+        status = Api.isEsiste(TITOLO);
+        assertTrue(status);
+
+        status = Api.isEsiste(TITOLO_2);
+        assertTrue(status);
+
+        status = Api.isEsiste(TITOLO_ERRATO);
+        assertFalse(status);
+
+    }// end of single test
+
+    @Before
+    // Setup logic here
+    public void setUp() {
+        String nick = "biobot";
+        String password = "fulvia";
+
+        loginWiki = new WikiLogin(nick, password);
+    } // fine del metodo iniziale
+
+    @Test
+    /**
+     * Modifica il contenuto di una pagina.
+     *
+     * @param title   della pagina da ricercare
+     * @param oldText da eliminare
+     * @param newText da inserire
+     */
+    public void modificaPagina() {
+        String titoloPagina = "Utente:Gac/Sandbox4";
+        String oldTxt = "venti";
+        String newTxt = "diciotto senza remore";
+
+        previsto = "diciotto senza remore riga";
+        ottenuto = Api.modificaPagina(titoloPagina, oldTxt, newTxt, loginWiki);
+        assertEquals(ottenuto, previsto);
+
+    }// end of single test
 
 }// end of testing class

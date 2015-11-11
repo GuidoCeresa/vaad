@@ -3,6 +3,8 @@ package it.algos.vaad.wiki;
 import it.algos.vaad.wiki.query.QueryReadPageid;
 import it.algos.vaad.wiki.query.QueryReadTitle;
 import it.algos.vaad.wiki.query.QueryWiki;
+import it.algos.vaad.wiki.query.QueryWriteTitle;
+import it.algos.webbase.web.lib.LibText;
 
 import java.util.Map;
 
@@ -176,7 +178,7 @@ public class Api {
             query = new QueryReadPageid(titlePageid);
         }// fine del blocco if
 
-        if (query != null && query.isLetta()) {
+        if (query != null && query.getRisultato() == TipoRisultato.letta) {
             return query.getContenuto();
         } else {
             return "";
@@ -422,5 +424,53 @@ public class Api {
     public static String estraeTmplBio(String testo) {
         return LibWiki.estraeTmplBioCompresi(testo);
     }// end of method
+
+    /**
+     * Controlla l'esistenza di una pagina.
+     *
+     * @param title della pagina da ricercare
+     * @return true se la pagina esiste
+     */
+    public static boolean isEsiste(String title) {
+        QueryReadTitle query = new QueryReadTitle(title);
+        return query.isLetta();
+    } // fine del metodo
+
+    /**
+     * Modifica il contenuto di una pagina.
+     *
+     * @param title   della pagina da ricercare
+     * @param oldText da eliminare
+     * @param newText da inserire
+     */
+    public static String modificaPagina(String title, String oldText, String newText) {
+        return modificaPagina(title, oldText, newText, null);
+    } // fine del metodo
+
+    /**
+     * Modifica il contenuto di una pagina.
+     *
+     * @param title   della pagina da ricercare
+     * @param oldText da eliminare
+     * @param newText da inserire
+     * @param login   for testing purpose
+     */
+    public static String modificaPagina(String title, String oldText, String newText, WikiLogin login) {
+        String contenutoModificato = "";
+        String oldContenuto;
+        String testoTmp;
+        String summary = oldText + " -> " + newText;
+        QueryWriteTitle query;
+        Page pagina;
+
+        oldContenuto = Api.leggeVoce(title);
+        testoTmp = LibText.sostituisce(oldContenuto, oldText, newText);
+        query = new QueryWriteTitle(title, testoTmp, summary, login);
+        contenutoModificato = query.getContenuto();
+        pagina = new Page(contenutoModificato);
+        contenutoModificato = pagina.getText();
+
+        return contenutoModificato;
+    } // fine del metodo
 
 }// end of service class

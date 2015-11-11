@@ -1,5 +1,7 @@
 package it.algos.vaad.wiki.query;
 
+import it.algos.vaad.wiki.TipoRisultato;
+
 /**
  * Classe concreta per le Request sul Web
  * Legge una pagina internet (qualsiasi)
@@ -7,7 +9,7 @@ package it.algos.vaad.wiki.query;
  */
 public class QueryWeb extends Query {
 
-    private static String WEB_MISSING = " <html><!--<?xml version=\"1.0\" encoding=\"UTF-8\"?><WISPAccessGatewayParam xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance";
+    private static String WEB_MISSING = "UnknownHostException";
 
     /**
      * Costruttore utilizzato da una sottoclasse
@@ -28,30 +30,24 @@ public class QueryWeb extends Query {
      */
     public QueryWeb(String domain) {
         this.domain = domain;
-        super.doInit();
+        this.doInit();
     }// fine del metodo costruttore completo
 
     /**
-     * Controlla di aver trovato la pagina e di aver letto un contenuto valido
-     * DEVE essere implementato nelle sottoclassi specifiche
+     * Metodo iniziale
      */
-    @Override
-    public boolean isLetta() {
-        boolean valida = true;
-        String contenuto = getContenuto();
+    protected void doInit() {
+        try { // prova ad eseguire il codice
+            testoPrimaRequest = this.firstRequest();
+            risultato = TipoRisultato.letta;
+        } catch (Exception unErrore) { // intercetta l'errore
+            errore = unErrore.getClass().getSimpleName();
+            if (errore.equals(WEB_MISSING)) {
+                risultato = TipoRisultato.nonTrovata;
+            }// end of if cycle
+        }// fine del blocco try-catch
+    } // fine del metodo
 
-        if (contenuto == null || contenuto.equals("")) {
-            valida = false;
-        }// fine del blocco if
-
-        if (contenuto != null &&contenuto.startsWith(WEB_MISSING)) {
-            valida = false;
-            contenuto = null;
-            errore = "UnknownHostException";
-        }// fine del blocco if
-
-        return valida;
-    } // end of method
 
     /**
      * Controlla di aver scritto la pagina

@@ -33,16 +33,29 @@ public class QueryBacklinks extends QueryWiki {
     protected static String TAG_NS = "&blnamespace=0";
     protected static String TAG_TITOLO = "&bltitle=";
 
+    private boolean nameSpacePrincipale;
+
     // lista di pagine della categoria (namespace=0)
     private ArrayList<Long> listaPageids;
     private ArrayList<String> listaTitles;
 
     /**
+     * Costruttore
+     * Rinvia al costruttore completo
+     */
+    public QueryBacklinks(String title) {
+        this(title, true);
+    }// fine del metodo costruttore
+
+    /**
      * Costruttore completo
      * Rinvia al costruttore della superclasse
      */
-    public QueryBacklinks(String title) {
-        super(title, TipoRicerca.title, TipoRequest.read);
+    public QueryBacklinks(String title, boolean nameSpacePrincipale) {
+        this.tipoRicerca = TipoRicerca.title;
+        super.tipoRequest = TipoRequest.read;
+        this.nameSpacePrincipale = nameSpacePrincipale;
+        super.doInit(title);
     }// fine del metodo costruttore
 
 
@@ -54,14 +67,21 @@ public class QueryBacklinks extends QueryWiki {
      */
     @Override
     protected String getDomain() {
-        String domain = "";
+        String titolo = "";
+        String tag;
 
         try { // prova ad eseguire il codice
-            domain = API_BASE + TAG_BACK + TAG_NS + TAG_TITOLO + URLEncoder.encode(title, ENCODE);
+            titolo = URLEncoder.encode(title, ENCODE);
         } catch (Exception unErrore) { // intercetta l'errore
         }// fine del blocco try-catch
 
-        return domain;
+        if (nameSpacePrincipale) {
+            tag = API_BASE + TAG_BACK + TAG_NS + TAG_TITOLO;
+        } else {
+            tag = API_BASE + TAG_BACK + TAG_TITOLO;
+        }// end of if/else cycle
+
+        return tag + titolo;
     } // fine del metodo
 
 

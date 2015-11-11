@@ -15,6 +15,7 @@ public class QueryBacklinksTest {
     private static String TITOLO = "Piozzano";
     private static String TITOLO_2 = "Credito Sammarinese";
     private static String TITOLO_ERRATO = "Titolo che non esiste";
+    private static String TITOLO_ALTRO = "Utente:Gac/Sandbox4";
     private static String SUMMARY = "Sola scrittura";
     private WikiLogin loginWiki;
 
@@ -54,6 +55,26 @@ public class QueryBacklinksTest {
         assertFalse(query.isLetta());
         listaPageids = query.getListaPageids();
         assertNull(listaPageids);
+
+        query = new QueryBacklinks(TITOLO_ALTRO);
+        assertNotNull(query);
+        assertTrue(query.isLetta());
+        listaPageids = query.getListaPageids();
+        assertNull(listaPageids);
+
+        query = new QueryBacklinks(TITOLO_ALTRO, true);
+        assertNotNull(query);
+        assertTrue(query.isLetta());
+        listaPageids = query.getListaPageids();
+        assertNull(listaPageids);
+
+        query = new QueryBacklinks(TITOLO_ALTRO, false);
+        assertNotNull(query);
+        assertTrue(query.isLetta());
+        listaPageids = query.getListaPageids();
+        assertNotNull(listaPageids);
+        listaTitles = query.getListaTitles();
+        assertNotNull(listaTitles);
 
     }// end of single test
 

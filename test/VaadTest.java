@@ -1,5 +1,6 @@
 import it.algos.vaad.wiki.Page;
 import it.algos.vaad.wiki.PagePar;
+import it.algos.vaad.wiki.TipoRisultato;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,14 +12,17 @@ import java.util.List;
 public abstract class VaadTest {
 
     // alcuni valori da soddisfare
-    protected static int PARAMETRI_LETTI_DAL_SERVER = 17;
+    protected static int PARAMETRI_LETTI_DAL_SERVER = 18;
     protected static int PARAMETRI_PER_DATABASE = 16;
 
 
     // alcuni valori di prova
     protected static String TITOLO = "Nicola Conte (ufficiale)";
+    protected static String TITOLO_2 = "Credito Sammarinese";
+    protected static String TITOLO_3 = "Utente:Gac/Sandbox5";
     protected static String TITOLO_ERRATO = "Nicola Conte (xxx)";
     protected static String TITOLO_TMPL = "Fallout Shelter";
+
     protected static int PAGEID = 698528;
     protected static int PAGEID_UTF8 = 2286987;
     protected static int PAGEID_ERRATO = 289455234;
@@ -62,5 +66,7 @@ public abstract class VaadTest {
     protected Page page = null;
     protected Page pagePrevista = null;
     protected Page pageOttenuta = null;
+    protected TipoRisultato risultatoPrevisto = null;
+    protected TipoRisultato risultatoOttenuto = null;
 
 }// end of abstract class

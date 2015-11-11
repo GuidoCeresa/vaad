@@ -115,7 +115,7 @@ public abstract class QueryWrite extends QueryWiki {
 
         // controllo di congruità
         if (testoRisposta != null) {
-            mappa = LibWiki.creaMappa(testoRisposta);
+            mappa = LibWiki.creaMappaQuery(testoRisposta);
         }// fine del blocco if
 
         if (mappa != null) {
@@ -195,6 +195,15 @@ public abstract class QueryWrite extends QueryWiki {
      * @param testoRisposta alla prima Request
      */
     protected void elaboraSecondaRequest(String testoRisposta) {
+        boolean trovata = false;
+        boolean scritta = false;
+        HashMap mappa = LibWiki.creaMappaEdit(testoRisposta);
+
+        if (testoRisposta.equals("")) {
+            return;
+        }// end of if cycle
+
+
         if (testoRisposta.contains(Cost.SUCCESSO)) {
             scritta = true;
         }// end of if cycle
