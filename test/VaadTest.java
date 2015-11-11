@@ -22,7 +22,9 @@ public abstract class VaadTest {
     protected static String TITOLO_3 = "Utente:Gac/Sandbox5";
     protected static String TITOLO_ERRATO = "Nicola Conte (xxx)";
     protected static String TITOLO_TMPL = "Fallout Shelter";
-
+    protected static String TITOLO_4 = "Piozzano";
+    protected static String TITOLO_ALTRO = "Utente:Gac/Sandbox4";
+    protected static String SUMMARY = "Sola scrittura";
 
     protected static int PAGEID = 698528;
     protected static int PAGEID_UTF8 = 2286987;
@@ -40,6 +42,7 @@ public abstract class VaadTest {
     protected static String TITOLO_CAT_MEDIA = "Nati nel 1420";
     protected static String TITOLO_CAT_LUNGA = "Cantanti statunitensi";
     protected static String TITOLO_CAT_LUNGHISSIMA = "BioBot";
+    protected static String TITOLO_CAT_VUOTA = "Cancellare subito"; // a volte
 
     // numero massimo di elementi restituiti dalle API
     //--500 utente normale

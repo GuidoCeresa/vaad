@@ -1,8 +1,6 @@
 package it.algos.vaad.wiki.query;
 
-import it.algos.vaad.wiki.LibWiki;
-import it.algos.vaad.wiki.TipoRequest;
-import it.algos.vaad.wiki.TipoRicerca;
+import it.algos.vaad.wiki.*;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -94,20 +92,22 @@ public class QueryBacklinks extends QueryWiki {
      */
     @Override
     protected void regolaRisultato(String risultatoRequest) {
-        ArrayList<Long> listaLong;
-        ArrayList<String> listaTxt;
-        String txtContinua;
 
-        listaLong = LibWiki.creaListaBackJson(risultatoRequest);
-        listaTxt = LibWiki.creaListaBackTxtJson(risultatoRequest);
+        listaPageids = LibWiki.creaListaBackJson(risultatoRequest);
+        listaTitles = LibWiki.creaListaBackTxtJson(risultatoRequest);
 
-        if (listaLong != null) {
-            listaPageids = listaLong;
-        }// fine del blocco if
-
-        if (listaTxt != null) {
-            listaTitles = listaTxt;
-        }// fine del blocco if
+        if (listaPageids != null && listaTitles != null) {
+            if (listaPageids.size() == listaTitles.size()) {
+                risultato = TipoRisultato.letta;
+                valida = true;
+            }// end of if cycle
+        } else {
+            if (Api.isEsiste(title)) {
+                risultato = TipoRisultato.letta;
+            } else {
+                risultato = TipoRisultato.nonTrovata;
+            }// end of if/else cycle
+        }// end of if/else cycle
 
         super.regolaRisultato(risultatoRequest);
     } // fine del metodo

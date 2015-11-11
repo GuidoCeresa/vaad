@@ -123,11 +123,17 @@ public class QueryCat extends QueryWiki {
 
         lista = LibWiki.creaListaCatJson(risultatoRequest);
         if (lista == null) {
-            risultato= TipoRisultato.nonTrovata;
+            if (Api.isEsiste("Category:"+title)) {
+                risultato = TipoRisultato.letta;
+            } else {
+                risultato = TipoRisultato.nonTrovata;
+            }// end of if/else cycle
+            valida = false;
             return;
         }// fine del blocco if
 
-        risultato= TipoRisultato.letta;
+        risultato = TipoRisultato.letta;
+        valida = true;
         this.addLista(lista);
         txtContinua = LibWiki.creaCatContinue(risultatoRequest);
         this.continua = txtContinua;

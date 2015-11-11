@@ -199,7 +199,7 @@ public abstract class QueryWrite extends QueryWiki {
         boolean scritta = false;
         HashMap mappa = LibWiki.creaMappaEdit(testoRisposta);
 
-        if (testoRisposta.equals("")) {
+         if (testoRisposta.equals("")) {
             return;
         }// end of if cycle
 

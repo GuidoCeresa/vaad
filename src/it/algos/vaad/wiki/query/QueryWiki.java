@@ -130,11 +130,13 @@ public abstract class QueryWiki extends Query {
         if (mappa != null) {
             if (mappa.get(PagePar.missing.toString()) != null && (Boolean) mappa.get(PagePar.missing.toString())) {
                 setRisultato(TipoRisultato.nonTrovata);
+                valida = false;
             }// end of if cycle
 
             if (mappa.get(PagePar.missing.toString()) != null && !(Boolean) mappa.get(PagePar.missing.toString())) {
                 if (mappa.get(PagePar.content.toString()) != null) {
                     setRisultato(TipoRisultato.letta);
+                    valida = true;
                 }// end of if cycle
             }// end of if cycle
         }// fine del blocco if

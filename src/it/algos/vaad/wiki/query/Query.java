@@ -42,10 +42,10 @@ public abstract class Query {
     protected String summary;
     protected String testoPrimaRequest;
     protected String testoSecondaRequest;
+    protected TipoRisultato risultato = TipoRisultato.erroreGenerico;
+    boolean valida = false;
     // utilizzo indispensabile del login
     private boolean serveLogin = false;
-
-    protected TipoRisultato risultato = TipoRisultato.erroreGenerico;
 
     /**
      * Metodo iniziale
@@ -330,6 +330,14 @@ public abstract class Query {
 
     public void setRisultato(TipoRisultato risultato) {
         this.risultato = risultato;
+    }//end of setter method
+
+    public boolean isValida() {
+        return valida;
+    }// end of getter method
+
+    public void setValida(boolean valida) {
+        this.valida = valida;
     }//end of setter method
 
     /**

@@ -4,6 +4,7 @@ import it.algos.vaad.WrapTime;
 import it.algos.vaad.wiki.LibWiki;
 import it.algos.vaad.wiki.TipoRequest;
 import it.algos.vaad.wiki.TipoRicerca;
+import it.algos.vaad.wiki.TipoRisultato;
 import it.algos.webbase.web.lib.LibArray;
 
 import java.util.ArrayList;
@@ -82,6 +83,11 @@ public class QueryTimestamp extends QueryWiki {
             this.setListaWrapTime(mappa.get(LibWiki.KEY_PAGINE_VALIDE));
             this.setListaWrapTimeMissing(mappa.get(LibWiki.KEY_PAGINE_MANCANTI));
         }// end of if cycle
+
+        if (mappa != null) {
+            risultato = TipoRisultato.letta;
+        }// end of if cycle
+        valida = (getListaWrapTimeMissing().size() < 1);
 
         this.continua = LibWiki.creaCatContinue(risultatoRequest);
     } // fine del metodo

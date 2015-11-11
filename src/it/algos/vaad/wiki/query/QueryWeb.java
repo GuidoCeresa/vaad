@@ -40,6 +40,7 @@ public class QueryWeb extends Query {
         try { // prova ad eseguire il codice
             testoPrimaRequest = this.firstRequest();
             risultato = TipoRisultato.letta;
+            valida = true;
         } catch (Exception unErrore) { // intercetta l'errore
             errore = unErrore.getClass().getSimpleName();
             if (errore.equals(WEB_MISSING)) {

@@ -1,7 +1,11 @@
+import it.algos.vaad.WrapTime;
 import it.algos.vaad.wiki.Page;
 import it.algos.vaad.wiki.PagePar;
 import it.algos.vaad.wiki.TipoRisultato;
 import it.algos.vaad.wiki.query.*;
+import it.algos.webbase.web.lib.LibArray;
+import it.algos.webbase.web.lib.LibText;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -15,6 +19,36 @@ import static org.junit.Assert.*;
 public class QueryTest extends VaadTest {
 
 
+    private static final String[] listaPageIds = {"3397115", "4452510", "1691379", "3520373", "4956588", "5136975", "2072357", "4700355"};
+    private static final String pipe = "|";
+    private static final String virgola = ",";
+
+    private static String pageIdsPipe;
+    private static String pageIdsVirgola;
+    private static ArrayList<String> arrayPageIds;
+
+    @Before
+    @SuppressWarnings("all")
+    // Setup logic here
+    public void setUp() {
+        pageIdsPipe = "";
+        pageIdsVirgola = "";
+
+        for (String stringa : listaPageIds) {
+            pageIdsPipe += stringa;
+            pageIdsPipe += pipe;
+        } // fine del ciclo for-each
+        pageIdsPipe = LibText.levaCoda(pageIdsPipe, pipe);
+
+        for (String stringa : listaPageIds) {
+            pageIdsVirgola += stringa;
+            pageIdsVirgola += virgola;
+        } // fine del ciclo for-each
+        pageIdsVirgola = LibText.levaCoda(pageIdsVirgola, virgola);
+
+        arrayPageIds = (ArrayList) LibArray.fromString(listaPageIds);
+    } // fine del metodo iniziale
+
     @Test
     /**
      * Classe concreta per le Request sul Web
@@ -26,9 +60,11 @@ public class QueryTest extends VaadTest {
 
         query = new QueryWeb(TITOLO_WEB_ERRATO);
         assertEquals(query.getRisultato(), TipoRisultato.nonTrovata);
+        assertFalse(query.isValida());
 
         query = new QueryWeb(TITOLO_WEB);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
         contenuto = query.getContenuto();
         assertNotNull(contenuto);
         assertTrue(contenuto.contains(CONTENUTO_WEB));
@@ -46,6 +82,7 @@ public class QueryTest extends VaadTest {
 
         query = new QueryReadTitle(TITOLO_ERRATO);
         assertEquals(query.getRisultato(), TipoRisultato.nonTrovata);
+        assertFalse(query.isValida());
         ottenuto = query.getContenuto();
         assertNotNull(ottenuto);
         assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
@@ -53,6 +90,7 @@ public class QueryTest extends VaadTest {
 
         query = new QueryReadTitle(TITOLO);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
         ottenuto = query.getContenuto();
         assertNotNull(ottenuto);
         assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
@@ -60,6 +98,7 @@ public class QueryTest extends VaadTest {
 
         query = new QueryReadTitle(TITOLO_2);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
         ottenuto = query.getContenuto();
         assertNotNull(ottenuto);
         assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
@@ -68,6 +107,7 @@ public class QueryTest extends VaadTest {
         query = new QueryReadPageid(PAGEID_ERRATO);
         assertNotNull(query);
         assertEquals(query.getRisultato(), TipoRisultato.nonTrovata);
+        assertFalse(query.isValida());
         ottenuto = query.getContenuto();
         assertNotNull(ottenuto);
         assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
@@ -75,6 +115,7 @@ public class QueryTest extends VaadTest {
 
         query = new QueryReadPageid(PAGEID);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
         ottenuto = query.getContenuto();
         assertNotNull(ottenuto);
         assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
@@ -82,6 +123,7 @@ public class QueryTest extends VaadTest {
 
         query = new QueryReadPageid(PAGEID_UTF8);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
         ottenuto = query.getContenuto();
         assertNotNull(ottenuto);
         assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
@@ -89,6 +131,7 @@ public class QueryTest extends VaadTest {
 
         query = new QueryReadPageid(PAGEID_COME_STRINGA);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
         ottenuto = query.getContenuto();
         assertNotNull(ottenuto);
         assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
@@ -106,6 +149,7 @@ public class QueryTest extends VaadTest {
         String contenuto;
         Query query = new QueryReadTitle(TITOLO);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
 
         contenuto = query.getContenuto();
         assertNotNull(contenuto);
@@ -144,7 +188,7 @@ public class QueryTest extends VaadTest {
     }// end of single test
 
 
-//    @Test
+    @Test
     /**
      * Query standard per leggere/scrivere il risultato di una pagina
      * NON legge le categorie
@@ -160,32 +204,178 @@ public class QueryTest extends VaadTest {
 
         query = new QueryCat(TITOLO_CAT_ERRATA);
         assertEquals(query.getRisultato(), TipoRisultato.nonTrovata);
+        assertFalse(query.isValida());
         lista = query.getListaPageids();
         assertNull(lista);
 
         query = new QueryCat(TITOLO_CAT_BREVE);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
         lista = query.getListaPageids();
         assertNotNull(lista);
         assertTrue(lista.size() == 2);
 
         query = new QueryCat(TITOLO_CAT_MEDIA);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
         lista = query.getListaPageids();
         assertNotNull(lista);
         assertTrue(lista.size() == 36);
 
         query = new QueryCat(TITOLO_CAT_LUNGA);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
         lista = query.getListaPageids();
         assertNotNull(lista);
-        assertTrue(lista.size() >2300);
+        assertTrue(lista.size() > 2300);
 
-        query = new QueryCat(TITOLO_CAT_LUNGHISSIMA);
+        //--temporanea e dinamica, potrebbe NON essere vuota
+        //--se da errore, controllare la categoria
+        query = new QueryCat(TITOLO_CAT_VUOTA);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertFalse(query.isValida());
         lista = query.getListaPageids();
-        assertNotNull(lista);
-        assertTrue(lista.size() >290000);
+        assertNull(lista);
+
+        //--circa 2 minuti
+        if (false) {
+            query = new QueryCat(TITOLO_CAT_LUNGHISSIMA);
+            assertEquals(query.getRisultato(), TipoRisultato.letta);
+            assertTrue(query.isValida());
+            lista = query.getListaPageids();
+            assertNotNull(lista);
+            assertTrue(lista.size() > 290000);
+        }// end of if cycle
     }// end of single test
+
+    @Test
+    /**
+     * Created by gac on 08 nov 2015.
+     * <p>
+     * Rif: https://www.mediawiki.org/wiki/API:Backlinks
+     * Lists pages that link to a given page, similar to Special:Whatlinkshere. Ordered by linking page title.
+     * <p>
+     * Parametrs:
+     * bltitle: List pages linking to this title. The title does not need to exist.
+     * blnamespace: Only list pages in these namespaces
+     * blfilterredir: How to filter redirects (Default: all)
+     * - all: List all pages regardless of their redirect flag
+     * - redirects: Only list redirects
+     * - nonredirects: Don't list redirects
+     * bllimit: Maximum amount of pages to list. Maximum limit is halved if blredirect is set. No more than 500 (5000 for bots) allowed. (Default: 10)
+     * blredirect: If set, pages linking to bltitle through a redirect will also be listed. See below for more detailed information.
+     * blcontinue: Used to continue a previous request
+     * <p>
+     * Es:
+     * https://it.wikipedia.org/w/api.php?action=query&list=backlinks&bltitle=Piozzano&format=jsonfm
+     */
+    public void back() {
+        QueryBacklinks query;
+        ArrayList<Long> listaPageids;
+        ArrayList<String> listaTitles;
+
+        query = new QueryBacklinks(TITOLO_4);
+        assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
+        listaPageids = query.getListaPageids();
+        assertNotNull(listaPageids);
+        listaTitles = query.getListaTitles();
+        assertNotNull(listaTitles);
+
+        query = new QueryBacklinks(TITOLO_2);
+        assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertFalse(query.isValida());
+
+        query = new QueryBacklinks(TITOLO_ERRATO);
+        assertEquals(query.getRisultato(), TipoRisultato.nonTrovata);
+        assertFalse(query.isValida());
+        listaPageids = query.getListaPageids();
+        assertNull(listaPageids);
+
+        query = new QueryBacklinks(TITOLO_ALTRO);
+        assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertFalse(query.isValida());
+        listaPageids = query.getListaPageids();
+        assertNull(listaPageids);
+
+        query = new QueryBacklinks(TITOLO_ALTRO, true);
+        assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertFalse(query.isValida());
+        listaPageids = query.getListaPageids();
+        assertNull(listaPageids);
+
+        query = new QueryBacklinks(TITOLO_ALTRO, false);
+        assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
+        listaPageids = query.getListaPageids();
+        assertNotNull(listaPageids);
+        listaTitles = query.getListaTitles();
+        assertNotNull(listaTitles);
+    }// end of single test
+
+
+    @Test
+    /**
+     * Created by gac on 21 set 2015.
+     * Query per leggere il timestamp di molte pagine tramite una lista di pageIds
+     * Legge solamente
+     * Mantiene una lista di pageIds e timestamps
+     */
+    public void time() {
+        QueryTimestamp query;
+        ArrayList<WrapTime> lista;
+
+        query = new QueryTimestamp(pageIdsPipe);
+        assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
+        ottenuto = query.getContenuto();
+        assertNotNull(ottenuto);
+        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
+        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
+        lista = query.getListaWrapTime();
+        assertNotNull(lista);
+
+        query = new QueryTimestamp(pageIdsVirgola);
+        assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
+        ottenuto = query.getContenuto();
+        assertNotNull(ottenuto);
+        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
+        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
+        lista = query.getListaWrapTime();
+        assertNotNull(lista);
+
+        query = new QueryTimestamp(arrayPageIds);
+        assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
+        ottenuto = query.getContenuto();
+        assertNotNull(ottenuto);
+        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
+        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
+        lista = query.getListaWrapTime();
+        assertNotNull(lista);
+
+        query = new QueryTimestamp(listaPageIds);
+        assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
+        ottenuto = query.getContenuto();
+        assertNotNull(ottenuto);
+        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
+        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
+        lista = query.getListaWrapTime();
+        assertNotNull(lista);
+
+        arrayPageIds.add("pippo");
+        query = new QueryTimestamp(arrayPageIds);
+        assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertFalse(query.isValida());
+        ottenuto = query.getContenuto();
+        assertNotNull(ottenuto);
+        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
+        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
+        lista = query.getListaWrapTime();
+        assertNotNull(lista);
+
+    }// fine metodo test
 
 }// end of testing class
