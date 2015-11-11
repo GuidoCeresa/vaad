@@ -23,6 +23,7 @@ public abstract class VaadTest {
     protected static String TITOLO_ERRATO = "Nicola Conte (xxx)";
     protected static String TITOLO_TMPL = "Fallout Shelter";
 
+
     protected static int PAGEID = 698528;
     protected static int PAGEID_UTF8 = 2286987;
     protected static int PAGEID_ERRATO = 289455234;
@@ -33,6 +34,18 @@ public abstract class VaadTest {
     protected static String TITOLO_WEB_ERRATO = "http://www.pippozbelloz.it/";
     protected static String CONTENUTO_WEB = "http://www.danielapossenti.it/quattroprovince/";
     protected static String TAG_ERRORE = "UnknownHostException";
+
+    protected static String TITOLO_CAT_BREVE = "Eventi del 1902";
+    protected static String TITOLO_CAT_ERRATA = "Eventi del 2902";
+    protected static String TITOLO_CAT_MEDIA = "Nati nel 1420";
+    protected static String TITOLO_CAT_LUNGA = "Cantanti statunitensi";
+    protected static String TITOLO_CAT_LUNGHISSIMA = "BioBot";
+
+    // numero massimo di elementi restituiti dalle API
+    //--500 utente normale
+    //--5.000 bot
+    protected int limits;
+
     protected static String TAG_INI_PAGINA = "{\"batchcomplete\":true,\"query\":";
     protected static String TAG_END_PAGINA = "\"}]}]}}";
     protected static String TAG_INI_VOCE = "{{F|militari italiani|luglio 2013}}";

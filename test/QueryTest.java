@@ -4,6 +4,8 @@ import it.algos.vaad.wiki.TipoRisultato;
 import it.algos.vaad.wiki.query.*;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 /**
@@ -11,7 +13,6 @@ import static org.junit.Assert.*;
  * .
  */
 public class QueryTest extends VaadTest {
-
 
 
     @Test
@@ -142,5 +143,49 @@ public class QueryTest extends VaadTest {
         assertTrue(ottenuto.endsWith(TAG_END_VOCE));
     }// end of single test
 
+
+//    @Test
+    /**
+     * Query standard per leggere/scrivere il risultato di una pagina
+     * NON legge le categorie
+     * Usa il titolo della pagina o il pageid (a seconda della sottoclasse concreta utilizzata)
+     * Legge o scrive (a seconda della sottoclasse concreta utilizzata)
+     * Legge le informazioni base della pagina (oltre al risultato)
+     * Legge una sola Pagina con le informazioni base
+     * Necessita di Login per scrivere, non per leggere solamente
+     */
+    public void cat() {
+        QueryCat query;
+        ArrayList<Long> lista;
+
+        query = new QueryCat(TITOLO_CAT_ERRATA);
+        assertEquals(query.getRisultato(), TipoRisultato.nonTrovata);
+        lista = query.getListaPageids();
+        assertNull(lista);
+
+        query = new QueryCat(TITOLO_CAT_BREVE);
+        assertEquals(query.getRisultato(), TipoRisultato.letta);
+        lista = query.getListaPageids();
+        assertNotNull(lista);
+        assertTrue(lista.size() == 2);
+
+        query = new QueryCat(TITOLO_CAT_MEDIA);
+        assertEquals(query.getRisultato(), TipoRisultato.letta);
+        lista = query.getListaPageids();
+        assertNotNull(lista);
+        assertTrue(lista.size() == 36);
+
+        query = new QueryCat(TITOLO_CAT_LUNGA);
+        assertEquals(query.getRisultato(), TipoRisultato.letta);
+        lista = query.getListaPageids();
+        assertNotNull(lista);
+        assertTrue(lista.size() >2300);
+
+        query = new QueryCat(TITOLO_CAT_LUNGHISSIMA);
+        assertEquals(query.getRisultato(), TipoRisultato.letta);
+        lista = query.getListaPageids();
+        assertNotNull(lista);
+        assertTrue(lista.size() >290000);
+    }// end of single test
 
 }// end of testing class

@@ -1,9 +1,6 @@
 package it.algos.vaad.wiki.query;
 
-import it.algos.vaad.wiki.Cost;
-import it.algos.vaad.wiki.LibWiki;
-import it.algos.vaad.wiki.TipoRequest;
-import it.algos.vaad.wiki.TipoRicerca;
+import it.algos.vaad.wiki.*;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -114,6 +111,7 @@ public class QueryCat extends QueryWiki {
      */
     @Override
     protected void regolaRisultato(String risultatoRequest) {
+        testoPrimaRequest = risultatoRequest;
         ArrayList<Long> lista;
         String txtContinua;
 
@@ -124,15 +122,15 @@ public class QueryCat extends QueryWiki {
         }// end of if/else cycle
 
         lista = LibWiki.creaListaCatJson(risultatoRequest);
-        if (lista != null) {
-            this.addLista(lista);
+        if (lista == null) {
+            risultato= TipoRisultato.nonTrovata;
+            return;
         }// fine del blocco if
 
-
+        risultato= TipoRisultato.letta;
+        this.addLista(lista);
         txtContinua = LibWiki.creaCatContinue(risultatoRequest);
         this.continua = txtContinua;
-
-        super.regolaRisultato(risultatoRequest);
     } // fine del metodo
 
 
