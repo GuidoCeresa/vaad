@@ -16,40 +16,43 @@ import java.util.ArrayList;
  */
 public class QueryCat extends QueryWiki {
 
+    private static final int LIMITE = 5000;
     //--stringa per la lista di categoria
     private static String CAT = "&list=categorymembers";
-
     //--stringa selezionare il namespace (0=principale - 14=sottocategorie) (per adesso solo il principale)
     private static String NS = "&cmnamespace=0";
-
     //--stringa selezionare il tipo di categoria (page, subcat, file) (per adesso solo page)
     private static String TYPE = "&cmtype=page";
-
     //--stringa per ottenere il codice di continuazione
     private static String CONT = "&rawcontinue";
-
     //--stringa per selezionare il numero di valori in risposta
-    private static String LIMIT = "&cmlimit=5000";
-
+    private static String LIMIT = "&cmlimit=";
     //--stringa per indicare il titolo della pagina
     private static String TITLE = "&cmtitle=Category:";
-
     //--stringa iniziale (sempre valida) del DOMAIN a cui aggiungere le ulteriori specifiche
-    private static String API_BASE_CAT = API_BASE + CAT + NS + TYPE + CONT + LIMIT + TITLE;
+    private static String API_BASE_CAT = API_BASE + CAT + NS + TYPE + CONT + LIMIT;
 
     //--stringa per il successivo inizio della lista
     private static String CONTINUE = "&cmcontinue=";
 
     // lista di pagine della categoria (namespace=0)
     private ArrayList<Long> listaPageids;
-
     private boolean limite5000;
+    private int limite;
 
     /**
      * Costruttore completo
      */
     public QueryCat(String title) {
+        this(title, LIMITE);
+    }// fine del metodo costruttore
+
+    /**
+     * Costruttore completo
+     */
+    public QueryCat(String title, int limite) {
         super(title, TipoRicerca.title, TipoRequest.read);
+        this.limite = limite;
     }// fine del metodo costruttore
 
     @Override
@@ -58,6 +61,9 @@ public class QueryCat extends QueryWiki {
         if (titlepageid != null) {
             title = titlepageid;
             pageid = "";
+            if (limite < 1) {
+                limite = LIMITE;
+            }// end of if cycle
             domain = this.getDomain();
         }// fine del blocco if
 
@@ -84,7 +90,7 @@ public class QueryCat extends QueryWiki {
     protected String getDomain() {
         String domain = "";
         String titolo = "";
-        String startDomain = API_BASE_CAT;
+        String startDomain = API_BASE_CAT + limite + TITLE;
 
         try { // prova ad eseguire il codice
             titolo = URLEncoder.encode(title, Cost.ENC);
@@ -123,7 +129,7 @@ public class QueryCat extends QueryWiki {
 
         lista = LibWiki.creaListaCatJson(risultatoRequest);
         if (lista == null) {
-            if (Api.isEsiste("Category:"+title)) {
+            if (Api.isEsiste("Category:" + title)) {
                 risultato = TipoRisultato.letta;
             } else {
                 risultato = TipoRisultato.nonTrovata;

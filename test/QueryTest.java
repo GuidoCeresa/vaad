@@ -229,6 +229,13 @@ public class QueryTest extends VaadTest {
         assertNotNull(lista);
         assertTrue(lista.size() > 2300);
 
+        query = new QueryCat(TITOLO_CAT_LUNGA, 100);
+        assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
+        lista = query.getListaPageids();
+        assertNotNull(lista);
+        assertTrue(lista.size() > 2300);
+
         //--temporanea e dinamica, potrebbe NON essere vuota
         //--se da errore, controllare la categoria
         query = new QueryCat(TITOLO_CAT_VUOTA);
