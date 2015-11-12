@@ -45,7 +45,7 @@ public abstract class Query {
     protected TipoRisultato risultato = TipoRisultato.erroreGenerico;
     boolean valida = false;
     // utilizzo indispensabile del login
-    private boolean serveLogin = false;
+    protected boolean serveLogin = false;
 
     /**
      * Metodo iniziale
@@ -183,7 +183,6 @@ public abstract class Query {
         // controlla il valore di ritorno della request e regola il risultato
         contenuto = textBuffer.toString();
         regolaRisultatoSecondo(contenuto);
-//        trovata = isValida();
 
         return contenuto;
     } // fine del metodo

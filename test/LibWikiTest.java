@@ -937,14 +937,17 @@ public class LibWikiTest extends VaadTest {
      * @return mappa edit (valori reali)
      */
     public void creaMappaEdit() {
-        String sorgente = "{\"edit\":{\"result\":\"Success\",\"pageid\":2847116,\"title\":\"Utente:Gac/Sandbox5\",\"contentmodel\":\"wikitext\",\"nochange\":\"\"}}";
+        String sorgente= "{\"edit\":{\"result\":\"Success\",\"pageid\":2847116,\"title\":\"Utente:Gac/Sandbox5\",\"contentmodel\":\"wikitext\",\"oldrevid\":76121198,\"newrevid\":76469856,\"newtimestamp\":\"2015-11-12T14:57:22Z\"}}";
         HashMap<String, Object> mappaPrevista = new HashMap<String, Object>();
         HashMap<String, Object> mappaOttenuta;
         mappaPrevista.put(LibWiki.RESULT, "Success");
-        mappaPrevista.put(LibWiki.CONTENT_MODEL, "wikitext");
         mappaPrevista.put(LibWiki.PAGEID, 2847116L);
         mappaPrevista.put(LibWiki.TITLE, "Utente:Gac/Sandbox5");
-        mappaPrevista.put(LibWiki.CHANGE, "");
+        mappaPrevista.put(LibWiki.CONTENT_MODEL, "wikitext");
+        mappaPrevista.put(LibWiki.OLD_REV_ID, 76121198L);
+        mappaPrevista.put(LibWiki.NEW_REV_ID, 76469856L);
+        mappaPrevista.put(LibWiki.NEW_TIME_STAMP, "2015-11-12T14:57:22Z");
+        mappaPrevista.put(LibWiki.NOCHANGE, false);
 
         mappaOttenuta = LibWiki.creaMappaEdit(sorgente);
         boolOttenuto = LibArray.isMapEquals(mappaOttenuta, mappaPrevista);

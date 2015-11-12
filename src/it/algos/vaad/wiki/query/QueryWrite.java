@@ -70,13 +70,25 @@ public abstract class QueryWrite extends QueryWiki {
         super.testoNew = testoNew;
         super.summary = summary;
         super.tipoRequest = TipoRequest.write;
-        super.setServeLogin(true);
+        super.serveLogin = true;
+
+        if (testoNew == null || testoNew.equals("")) {
+            risultato = TipoRisultato.erroreGenerico;
+            valida = false;
+            return;
+        }// end of if cycle
 
         if (login == null) {
             wikiLogin = (WikiLogin) LibSession.getAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION);
         } else {
             wikiLogin = login;
         }// end of if/else cycle
+
+        if (serveLogin && wikiLogin == null) {
+            risultato = TipoRisultato.noLogin;
+            valida = false;
+            return;
+        }// end of if cycle
 
         if (titlepageid != null) {
             title = titlepageid;
@@ -195,19 +207,23 @@ public abstract class QueryWrite extends QueryWiki {
      * @param testoRisposta alla prima Request
      */
     protected void elaboraSecondaRequest(String testoRisposta) {
-        boolean trovata = false;
-        boolean scritta = false;
+        boolean noChange;
         HashMap mappa = LibWiki.creaMappaEdit(testoRisposta);
 
-         if (testoRisposta.equals("")) {
+        if (testoRisposta.equals("")) {
+            risultato = TipoRisultato.erroreGenerico;
             return;
         }// end of if cycle
 
-
-        if (testoRisposta.contains(Cost.SUCCESSO)) {
-            scritta = true;
+        valida = true;
+        if (mappa != null && mappa.get(LibWiki.NOCHANGE) != null) {
+            noChange = (Boolean) mappa.get(LibWiki.NOCHANGE);
+            if (noChange) {
+                risultato = TipoRisultato.nonRegistrata;
+            } else {
+                risultato = TipoRisultato.registrata;
+            }// end of if/else cycle
         }// end of if cycle
-
 
     } // fine del metodo
 
@@ -219,38 +235,5 @@ public abstract class QueryWrite extends QueryWiki {
     public boolean isScritta() {
         return scritta;
     } // fine del metodo
-
-//    /**
-//     * Crea la connessione
-//     * Regola i parametri della connessione
-//     */
-//    protected URLConnection creaConnessioneWrite() throws Exception {
-//        URLConnection urlConn = null;
-//        String txtCookies = "";
-//        WikiLogin login = null;
-//
-//        if (isServeLogin()) {
-//            login = this.wikiLogin;
-//            if (login == null) {
-//                return null;
-//            }// end of if cycle
-//            txtCookies = login.getStringCookies();
-//        }// end of if cycle
-//
-//        // regola le property
-//        if (domain != null && !domain.equals("")) {
-//            urlConn = new URL(domain).openConnection();
-//            urlConn.setDoOutput(true);
-//            urlConn.setRequestProperty("Accept-Encoding", "GZIP");
-//            urlConn.setRequestProperty("Content-Encoding", "GZIP");
-//            urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-//            urlConn.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; PPC Mac OS X; it-it) AppleWebKit/418.9 (KHTML, like Gecko) Safari/419.3");
-//            if (isServeLogin()) {
-//                urlConn.setRequestProperty("Cookie", txtCookies);
-//            }// end of if cycle
-//        }// end of if cycle
-//
-//        return urlConn;
-//    } // fine del metodo
 
 }// end of class

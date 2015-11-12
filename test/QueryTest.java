@@ -1,7 +1,5 @@
 import it.algos.vaad.WrapTime;
-import it.algos.vaad.wiki.Page;
-import it.algos.vaad.wiki.PagePar;
-import it.algos.vaad.wiki.TipoRisultato;
+import it.algos.vaad.wiki.*;
 import it.algos.vaad.wiki.query.*;
 import it.algos.webbase.web.lib.LibArray;
 import it.algos.webbase.web.lib.LibText;
@@ -26,6 +24,18 @@ public class QueryTest extends VaadTest {
     private static String pageIdsPipe;
     private static String pageIdsVirgola;
     private static ArrayList<String> arrayPageIds;
+
+    private WikiLogin loginWiki = null;
+
+    // Login logic here
+    private void setLogin() {
+        String nick = "biobot";
+        String password = "fulvia";
+
+        if (loginWiki == null) {
+            loginWiki = new WikiLogin(nick, password);
+        }// end of if cycle
+    } // fine del metodo iniziale
 
     @Before
     @SuppressWarnings("all")
@@ -382,6 +392,59 @@ public class QueryTest extends VaadTest {
         assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
         lista = query.getListaWrapTime();
         assertNotNull(lista);
+    }// fine metodo test
+
+    @Test
+    /**
+     * Query standard per scrivere il contenuto di una pagina
+     * Usa il titolo della pagina
+     * Necessita di Login per scrivere
+     */
+    public void write() {
+        setLogin();
+        Query query;
+        String testoIniziale;
+        String testoA;
+        String testoB;
+        String summaryA = LibWiki.getSummary("test add x");
+        String summaryB = LibWiki.getSummary("test minus x");
+
+        //--recupera il testo esistente per partire da una situazione pulita
+        testoIniziale = Api.leggeVoce(TITOLO_3);
+
+        query = new QueryWriteTitle(TITOLO_3, "", "", null);
+        assertEquals(query.getRisultato(), TipoRisultato.erroreGenerico);
+        assertFalse(query.isValida());
+
+        query = new QueryWriteTitle(TITOLO_3, testoIniziale, "", null);
+        assertEquals(query.getRisultato(), TipoRisultato.noLogin);
+        assertFalse(query.isValida());
+
+        query = new QueryWriteTitle(TITOLO_3, testoIniziale, "", loginWiki);
+        assertEquals(query.getRisultato(), TipoRisultato.nonRegistrata);
+        assertTrue(query.isValida());
+
+        query = new QueryWriteTitle(TITOLO_3, testoIniziale, summaryA, loginWiki);
+        assertEquals(query.getRisultato(), TipoRisultato.nonRegistrata);
+        assertTrue(query.isValida());
+
+        testoA = testoIniziale + "x";
+        query = new QueryWriteTitle(TITOLO_3, testoA, summaryA, loginWiki);
+        assertEquals(query.getRisultato(), TipoRisultato.registrata);
+        assertTrue(query.isValida());
+
+        query = new QueryWriteTitle(TITOLO_3, testoA, summaryA, loginWiki);
+        assertEquals(query.getRisultato(), TipoRisultato.nonRegistrata);
+        assertTrue(query.isValida());
+
+        testoB = testoIniziale;
+        query = new QueryWriteTitle(TITOLO_3, testoB, summaryB, loginWiki);
+        assertEquals(query.getRisultato(), TipoRisultato.registrata);
+        assertTrue(query.isValida());
+
+        query = new QueryWriteTitle(TITOLO_3, testoB, summaryB, loginWiki);
+        assertEquals(query.getRisultato(), TipoRisultato.nonRegistrata);
+        assertTrue(query.isValida());
 
     }// fine metodo test
 

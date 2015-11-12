@@ -61,7 +61,10 @@ public abstract class LibWiki {
     public static final String TOKEN = "csrftoken";
     public static final String EDIT = "edit";
     public static final String RESULT = "result";
-    public static final String CHANGE = "nochange";
+    public static final String NOCHANGE = "nochange";
+    public static final String OLD_REV_ID = "oldrevid";
+    public static final String NEW_REV_ID = "newrevid";
+    public static final String NEW_TIME_STAMP = "newtimestamp";
     public static final String CONTENT_MODEL = "contentmodel";
     public static final String TITLE = "title";
     public static final String PAGEID = "pageid";
@@ -542,6 +545,9 @@ public abstract class LibWiki {
         long pageid;
         String title;
         String change;
+        long oldrevid;
+        long newrevid;
+        String newtimestamp;
 
         //--recupera i due oggetti al livello root del testo (batchcomplete e query)
         objectAll = (JSONObject) JSONValue.parse(textJSON);
@@ -558,20 +564,48 @@ public abstract class LibWiki {
         if (objectEdit != null) {
             mappa = new HashMap<String, Object>();
 
-            result = (String) objectEdit.get(RESULT);
-            mappa.put(RESULT, result);
+            if (objectEdit.get(RESULT) != null && objectEdit.get(RESULT) instanceof String) {
+                result = (String) objectEdit.get(RESULT);
+                mappa.put(RESULT, result);
+            }// end of if cycle
 
-            contentmodel = (String) objectEdit.get(CONTENT_MODEL);
-            mappa.put(CONTENT_MODEL, contentmodel);
+            if (objectEdit.get(CONTENT_MODEL) != null && objectEdit.get(CONTENT_MODEL) instanceof String) {
+                contentmodel = (String) objectEdit.get(CONTENT_MODEL);
+                mappa.put(CONTENT_MODEL, contentmodel);
+            }// end of if cycle
 
-            pageid = (Long) objectEdit.get(PAGEID);
-            mappa.put(PAGEID, pageid);
+            if (objectEdit.get(PAGEID) != null && objectEdit.get(PAGEID) instanceof Long) {
+                pageid = (Long) objectEdit.get(PAGEID);
+                mappa.put(PAGEID, pageid);
+            }// end of if cycle
 
-            title = (String) objectEdit.get(TITLE);
-            mappa.put(TITLE, title);
+            if (objectEdit.get(TITLE) != null && objectEdit.get(TITLE) instanceof String) {
+                title = (String) objectEdit.get(TITLE);
+                mappa.put(TITLE, title);
+            }// end of if cycle
 
-            change = (String) objectEdit.get(CHANGE);
-            mappa.put(CHANGE, change);
+
+            change = (String) objectEdit.get(NOCHANGE);
+            if (change == null || !change.equals("")) {
+                mappa.put(NOCHANGE, false);
+
+                if (objectEdit.get(OLD_REV_ID) != null && objectEdit.get(OLD_REV_ID) instanceof Long) {
+                    oldrevid = (Long) objectEdit.get(OLD_REV_ID);
+                    mappa.put(OLD_REV_ID, oldrevid);
+                }// end of if cycle
+
+                if (objectEdit.get(NEW_REV_ID) != null && objectEdit.get(NEW_REV_ID) instanceof Long) {
+                    newrevid = (Long) objectEdit.get(NEW_REV_ID);
+                    mappa.put(NEW_REV_ID, newrevid);
+                }// end of if cycle
+
+                if (objectEdit.get(NEW_TIME_STAMP) != null && objectEdit.get(NEW_TIME_STAMP) instanceof String) {
+                    newtimestamp = (String) objectEdit.get(NEW_TIME_STAMP);
+                    mappa.put(NEW_TIME_STAMP, newtimestamp);
+                }// end of if cycle
+            } else {
+                mappa.put(NOCHANGE, true);
+            }// end of if/else cycle
         }// fine del blocco if
 
         return mappa;
@@ -1678,6 +1712,24 @@ public abstract class LibWiki {
         }// end of if cycle
 
         return listaKeys;
+    } // fine del metodo
+
+    /**
+     * Sommario standard in funzione della versione
+     *
+     * @return stringa oggetto della modifica
+     */
+    public static String getSummary() {
+        return "[[Utente:Biobot|Biobot]]";
+    } // fine del metodo
+
+    /**
+     * Sommario standard in funzione della versione
+     *
+     * @return stringa oggetto della modifica
+     */
+    public static String getSummary(String dettaglio) {
+        return getSummary() + " " + dettaglio;
     } // fine del metodo
 
 
