@@ -23,6 +23,7 @@ public abstract class VaadTest {
     protected static String TITOLO_ERRATO = "Nicola Conte (xxx)";
     protected static String TITOLO_TMPL = "Fallout Shelter";
     protected static String TITOLO_4 = "Piozzano";
+    protected static String TITOLO8 = "Utente:Gac/Sandbox8";
     protected static String TITOLO_ALTRO = "Utente:Gac/Sandbox4";
     protected static String SUMMARY = "Sola scrittura";
 
@@ -85,4 +86,4 @@ public abstract class VaadTest {
     protected TipoRisultato risultatoPrevisto = null;
     protected TipoRisultato risultatoOttenuto = null;
 
-}// end of abstract class
+}// end of abstract testing class

@@ -401,13 +401,15 @@ public class QueryTest extends VaadTest {
      * Necessita di Login per scrivere
      */
     public void write() {
-        setLogin();
         Query query;
         String testoIniziale;
         String testoA;
         String testoB;
         String summaryA = LibWiki.getSummary("test add x");
         String summaryB = LibWiki.getSummary("test minus x");
+
+        //--login obbligatorio
+        setLogin();
 
         //--recupera il testo esistente per partire da una situazione pulita
         testoIniziale = Api.leggeVoce(TITOLO_3);
@@ -445,7 +447,6 @@ public class QueryTest extends VaadTest {
         query = new QueryWriteTitle(TITOLO_3, testoB, summaryB, loginWiki);
         assertEquals(query.getRisultato(), TipoRisultato.nonRegistrata);
         assertTrue(query.isValida());
-
-    }// fine metodo test
+    }// end of single test
 
 }// end of testing class
