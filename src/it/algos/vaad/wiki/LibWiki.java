@@ -70,6 +70,10 @@ public abstract class LibWiki {
     public static final String PAGEID = "pageid";
     public static final String BATCH = "batchcomplete";
     public static final String QUERY = "query";
+    public static final String ERROR = "error";
+    public static final String CODE = "code";
+    public static final String DOCREF = "docref";
+    public static final String INFO = "info";
     private static final String PAGES = "pages";
     private static final String REVISIONS = "revisions";
     private static final String TOKENS = "tokens";
@@ -606,6 +610,54 @@ public abstract class LibWiki {
             } else {
                 mappa.put(NOCHANGE, true);
             }// end of if/else cycle
+        }// fine del blocco if
+
+        return mappa;
+    } // fine del metodo
+
+    /**
+     * Crea una mappa standard (valori reali) dal testo JSON di una pagina action=move
+     *
+     * @param textJSON in ingresso
+     * @return mappa edit (valori reali)
+     */
+    public static HashMap<String, Object> creaMappaMove(String textJSON) {
+        HashMap<String, Object> mappa = null;
+        JSONObject objectAll;
+        JSONObject objectError = null;
+        String code;
+        String docref;
+        String info;
+
+        //--recupera i due oggetti al livello root del testo (batchcomplete e query)
+        objectAll = (JSONObject) JSONValue.parse(textJSON);
+
+        //--controllo
+        if (objectAll == null) {
+            return null;
+        }// fine del blocco if
+
+        if (objectAll.get(ERROR) != null && objectAll.get(ERROR) instanceof JSONObject) {
+            objectError = (JSONObject) objectAll.get(ERROR);
+        }// fine del blocco if
+
+        if (objectError != null) {
+            mappa = new HashMap<String, Object>();
+
+            if (objectError.get(CODE) != null && objectError.get(CODE) instanceof String) {
+                code = (String) objectError.get(CODE);
+                mappa.put(CODE, code);
+            }// end of if cycle
+
+            if (objectError.get(DOCREF) != null && objectError.get(DOCREF) instanceof String) {
+                docref = (String) objectError.get(DOCREF);
+                mappa.put(DOCREF, docref);
+            }// end of if cycle
+
+            if (objectError.get(INFO) != null && objectError.get(INFO) instanceof String) {
+                info = (String) objectError.get(INFO);
+                mappa.put(INFO, info);
+            }// end of if cycle
         }// fine del blocco if
 
         return mappa;

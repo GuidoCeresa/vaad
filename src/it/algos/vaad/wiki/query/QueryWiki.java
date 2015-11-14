@@ -26,6 +26,12 @@ public abstract class QueryWiki extends Query {
     //--stringa iniziale (sempre valida) del DOMAIN a cui aggiungere le ulteriori specifiche
     protected static String API_BASE = Cost.API_HTTP + LANGUAGE + Cost.API_WIKI + PROJECT + Cost.API_QUERY + Cost.API_FORMAT;
 
+    // tag per la costruzione della stringa della request
+    protected static String TAG_PROP = Cost.CONTENT_ALL;
+    protected static String TAG_TITOLO = "&titles=";
+    protected static String TAG_PAGESID = "&pageids=";
+    protected static String TAG_EDIT = "&meta=tokens";
+
     protected String title;
     protected String pageid;
     protected String stringaPageIds;

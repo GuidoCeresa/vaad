@@ -13,11 +13,6 @@ import java.util.HashMap;
  */
 public abstract class QueryWrite extends QueryWiki {
 
-    // tag per la costruzione della stringa della request
-    protected static String TAG_PROP = Cost.CONTENT_ALL;
-    protected static String TAG_TITOLO = "&titles=";
-    protected static String TAG_PAGESID = "&pageids=";
-    protected static String TAG_EDIT = "&meta=tokens";
 
     private boolean scritta = false;
     // mappa dati di passaggio tra la prima e la seconda request

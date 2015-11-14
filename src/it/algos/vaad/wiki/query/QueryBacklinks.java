@@ -47,10 +47,10 @@ public class QueryBacklinks extends QueryWiki {
 
     /**
      * Costruttore completo
-     * Rinvia al costruttore della superclasse
+     * Rinvia al medodo iniziale della superclasse
      */
     public QueryBacklinks(String title, boolean nameSpacePrincipale) {
-        this.tipoRicerca = TipoRicerca.title;
+        super.tipoRicerca = TipoRicerca.title;
         super.tipoRequest = TipoRequest.read;
         this.nameSpacePrincipale = nameSpacePrincipale;
         super.doInit(title);
@@ -66,7 +66,7 @@ public class QueryBacklinks extends QueryWiki {
     @Override
     protected String getDomain() {
         String titolo = "";
-        String tag;
+        String domain;
 
         try { // prova ad eseguire il codice
             titolo = URLEncoder.encode(title, ENCODE);
@@ -74,12 +74,12 @@ public class QueryBacklinks extends QueryWiki {
         }// fine del blocco try-catch
 
         if (nameSpacePrincipale) {
-            tag = API_BASE + TAG_BACK + TAG_NS + TAG_TITOLO;
+            domain = API_BASE + TAG_BACK + TAG_NS + TAG_TITOLO + titolo;
         } else {
-            tag = API_BASE + TAG_BACK + TAG_TITOLO;
+            domain = API_BASE + TAG_BACK + TAG_TITOLO + titolo;
         }// end of if/else cycle
 
-        return tag + titolo;
+        return domain;
     } // fine del metodo
 
 

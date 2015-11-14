@@ -937,7 +937,7 @@ public class LibWikiTest extends VaadTest {
      * @return mappa edit (valori reali)
      */
     public void creaMappaEdit() {
-        String sorgente= "{\"edit\":{\"result\":\"Success\",\"pageid\":2847116,\"title\":\"Utente:Gac/Sandbox5\",\"contentmodel\":\"wikitext\",\"oldrevid\":76121198,\"newrevid\":76469856,\"newtimestamp\":\"2015-11-12T14:57:22Z\"}}";
+        sorgente = "{\"edit\":{\"result\":\"Success\",\"pageid\":2847116,\"title\":\"Utente:Gac/Sandbox5\",\"contentmodel\":\"wikitext\",\"oldrevid\":76121198,\"newrevid\":76469856,\"newtimestamp\":\"2015-11-12T14:57:22Z\"}}";
         HashMap<String, Object> mappaPrevista = new HashMap<String, Object>();
         HashMap<String, Object> mappaOttenuta;
         mappaPrevista.put(LibWiki.RESULT, "Success");
@@ -979,5 +979,19 @@ public class LibWikiTest extends VaadTest {
         assertTrue(mappaOttenuta.get(LibWiki.QUERY) instanceof JSONObject);
     }// end of single test
 
+    @Test
+    /**
+     * Crea una mappa standard (valori reali) dal testo JSON di una pagina action=move
+     *
+     * @param textJSON in ingresso
+     * @return mappa edit (valori reali)
+     */
+    public void creaMappaMove() {
+        sorgente = "{\"servedby\":\"mw1200\",\"error\":{\"code\":\"selfmove\",\"info\":\"Source and destination titles are the same;\\ncannot move a page over itself.\",\"docref\":\"See https://it.wikipedia.org/w/api.php for API usage\"}}";
+
+        mappa = LibWiki.creaMappaMove(sorgente);
+        assertNotNull(mappa);
+        assertEquals(mappa.get(LibWiki.CODE), "selfmove");
+    }// end of single test
 
 }// end of testing class

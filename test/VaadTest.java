@@ -24,7 +24,9 @@ public abstract class VaadTest {
     protected static String TITOLO_TMPL = "Fallout Shelter";
     protected static String TITOLO_4 = "Piozzano";
     protected static String TITOLO8 = "Utente:Gac/Sandbox8";
+    protected static String TITOLO9 = "Utente:Gac/Sandbox9";
     protected static String TITOLO_ALTRO = "Utente:Gac/Sandbox4";
+    protected static String TITOLO_BLOCCATO = "Utente:Rompiballe11";
     protected static String SUMMARY = "Sola scrittura";
 
     protected static int PAGEID = 698528;
@@ -44,12 +46,6 @@ public abstract class VaadTest {
     protected static String TITOLO_CAT_LUNGA = "Cantanti statunitensi";
     protected static String TITOLO_CAT_LUNGHISSIMA = "BioBot";
     protected static String TITOLO_CAT_VUOTA = "Cancellare subito"; // a volte
-
-    // numero massimo di elementi restituiti dalle API
-    //--500 utente normale
-    //--5.000 bot
-    protected int limits;
-
     protected static String TAG_INI_PAGINA = "{\"batchcomplete\":true,\"query\":";
     protected static String TAG_END_PAGINA = "\"}]}]}}";
     protected static String TAG_INI_VOCE = "{{F|militari italiani|luglio 2013}}";
@@ -59,7 +55,10 @@ public abstract class VaadTest {
     protected static String TAG_INI_TMPL_BIO = "{{Bio\n|Nome";
     protected static String TAG_END_TMPL_BIO = "}}";
     protected static String VUOTA = "";
-
+    // numero massimo di elementi restituiti dalle API
+    //--500 utente normale
+    //--5.000 bot
+    protected int limits;
     // alcuni parametri utilizzati
     protected List<PagePar> listaPrevista = null;
     protected List<PagePar> listaOttenuta = null;
