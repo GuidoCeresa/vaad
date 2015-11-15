@@ -101,7 +101,7 @@ public class QueryMove extends QueryWiki {
     @Override
     protected String getDomain() {
         String domain;
-        String tag = "&prop=info";
+        String tag = "&prop=info&movetalk";
 
         //@todo NON serve il titolo per ottenere il token
         domain = API_BASE + TAG_EDIT + tag;
@@ -227,6 +227,7 @@ public class QueryMove extends QueryWiki {
             return;
         }// end of if cycle
 
+        risultato = TipoRisultato.spostata;
         valida = true;
         if (mappa != null && mappa.get(LibWiki.CODE) != null) {
             valida = false;

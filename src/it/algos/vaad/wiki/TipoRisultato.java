@@ -19,6 +19,8 @@ public enum TipoRisultato {
     nonRegistrata("Pagina non registrata (probabilmente cancellata)."),
     modificaRegistrata("Registrata modifica alla voce."),
     modificaInutile("La voce aveva già il testo richiesto."),
+
+    spostata("Pagina spostata"),
     selfmove("Can't move a page to itself"),
     articleexists("The destination article already exists and is not a redirect to the source article"),
     protectedtitle("The destination article has been protected from creation");
