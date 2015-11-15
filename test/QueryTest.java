@@ -211,58 +211,81 @@ public class QueryTest extends VaadTest {
      */
     public void cat() {
         QueryCat query;
-        ArrayList<Long> lista;
+        ArrayList<Long> listaPageids;
+        ArrayList<String> listaTitles;
 
         query = new QueryCat(TITOLO_CAT_ERRATA);
         assertEquals(query.getRisultato(), TipoRisultato.nonTrovata);
         assertFalse(query.isValida());
-        lista = query.getListaPageids();
-        assertNull(lista);
+        listaPageids = query.getListaPageids();
+        assertNull(listaPageids);
+        listaTitles = query.getListaTitles();
+        assertNull(listaTitles);
 
         query = new QueryCat(TITOLO_CAT_BREVE);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
         assertTrue(query.isValida());
-        lista = query.getListaPageids();
-        assertNotNull(lista);
-        assertTrue(lista.size() == 2);
+        listaPageids = query.getListaPageids();
+        assertNotNull(listaPageids);
+        assertTrue(listaPageids.size() == 2);
+        listaTitles = query.getListaTitles();
+        assertNotNull(listaTitles);
+        assertTrue(listaTitles.size() == 2);
 
         query = new QueryCat(TITOLO_CAT_MEDIA);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
         assertTrue(query.isValida());
-        lista = query.getListaPageids();
-        assertNotNull(lista);
-        assertTrue(lista.size() == 36);
+        listaPageids = query.getListaPageids();
+        assertNotNull(listaPageids);
+        assertTrue(listaPageids.size() == 36);
+        listaTitles = query.getListaTitles();
+        assertNotNull(listaTitles);
+        assertTrue(listaTitles.size() == 36);
 
         query = new QueryCat(TITOLO_CAT_LUNGA);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
         assertTrue(query.isValida());
-        lista = query.getListaPageids();
-        assertNotNull(lista);
-        assertTrue(lista.size() > 2300);
+        listaPageids = query.getListaPageids();
+        assertNotNull(listaPageids);
+        assertTrue(listaPageids.size() > 2300);
+        listaTitles = query.getListaTitles();
+        assertNotNull(listaTitles);
+        assertTrue(listaTitles.size() > 2300);
 
         query = new QueryCat(TITOLO_CAT_LUNGA, 100);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
         assertTrue(query.isValida());
-        lista = query.getListaPageids();
-        assertNotNull(lista);
-        assertTrue(lista.size() > 2300);
+        listaPageids = query.getListaPageids();
+        assertNotNull(listaPageids);
+        assertTrue(listaPageids.size() > 2300);
+        listaTitles = query.getListaTitles();
+        assertNotNull(listaTitles);
+        assertTrue(listaTitles.size() > 2300);
 
         //--temporanea e dinamica, potrebbe NON essere vuota
         //--se da errore, controllare la categoria
-        query = new QueryCat(TITOLO_CAT_VUOTA);
-        assertEquals(query.getRisultato(), TipoRisultato.letta);
-        assertFalse(query.isValida());
-        lista = query.getListaPageids();
-        assertNull(lista);
+        if (false) {
+            query = new QueryCat(TITOLO_CAT_VUOTA);
+            assertEquals(query.getRisultato(), TipoRisultato.letta);
+            assertFalse(query.isValida());
+            listaPageids = query.getListaPageids();
+            assertNull(listaPageids);
+            listaTitles = query.getListaTitles();
+            assertNull(listaTitles);
+        }// end of if cycle
 
-        //--circa 2 minuti
+
+        //--circa 2-3 minuti
         if (false) {
             query = new QueryCat(TITOLO_CAT_LUNGHISSIMA);
             assertEquals(query.getRisultato(), TipoRisultato.letta);
             assertTrue(query.isValida());
-            lista = query.getListaPageids();
-            assertNotNull(lista);
-            assertTrue(lista.size() > 290000);
+            listaPageids = query.getListaPageids();
+            assertNotNull(listaPageids);
+            assertTrue(listaPageids.size() > 290000);
+            listaTitles = query.getListaTitles();
+            assertNotNull(listaTitles);
+            assertTrue(listaTitles.size() > 290000);
         }// end of if cycle
     }// end of single test
 

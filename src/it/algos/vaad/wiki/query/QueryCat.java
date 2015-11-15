@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Legge una sola Pagina con le informazioni base
  * Necessita di Login per scrivere, non per leggere solamente
  */
-public class QueryCat extends QueryWiki {
+public  class QueryCat extends QueryWiki {
 
     private static final int LIMITE = 5000;
     //--stringa per la lista di categoria
@@ -37,6 +37,7 @@ public class QueryCat extends QueryWiki {
 
     // lista di pagine della categoria (namespace=0)
     private ArrayList<Long> listaPageids;
+    private ArrayList<String> listaTitles;
     private boolean limite5000;
     private int limite;
 
@@ -118,7 +119,8 @@ public class QueryCat extends QueryWiki {
     @Override
     protected void regolaRisultato(String risultatoRequest) {
         testoPrimaRequest = risultatoRequest;
-        ArrayList<Long> lista;
+        ArrayList<Long> listaPageidsTmp;
+        ArrayList<String> listaTitlesTmp;
         String txtContinua;
 
         if (LibWiki.isWarnings(risultatoRequest)) {
@@ -127,8 +129,9 @@ public class QueryCat extends QueryWiki {
             setLimite5000(true);
         }// end of if/else cycle
 
-        lista = LibWiki.creaListaCatJson(risultatoRequest);
-        if (lista == null) {
+        listaPageidsTmp = LibWiki.creaListaCatJson(risultatoRequest);
+        listaTitlesTmp = LibWiki.creaListaCatTxtJson(risultatoRequest);
+        if (listaPageidsTmp == null) {
             if (Api.isEsiste("Category:" + title)) {
                 risultato = TipoRisultato.letta;
             } else {
@@ -140,13 +143,14 @@ public class QueryCat extends QueryWiki {
 
         risultato = TipoRisultato.letta;
         valida = true;
-        this.addLista(lista);
+        this.addListaPageids(listaPageidsTmp);
+        this.addListaTitles(listaTitlesTmp);
         txtContinua = LibWiki.creaCatContinue(risultatoRequest);
         this.continua = txtContinua;
     } // fine del metodo
 
 
-    private void addLista(ArrayList<Long> listaNew) {
+    private void addListaPageids(ArrayList<Long> listaNew) {
         ArrayList<Long> lista;
 
         lista = this.getListaPageids();
@@ -161,6 +165,21 @@ public class QueryCat extends QueryWiki {
         this.setListaPageids(lista);
     } // fine del metodo
 
+    private void addListaTitles(ArrayList<String> listaNew) {
+        ArrayList<String> lista;
+
+        lista = this.getListaTitles();
+        if (lista == null) {
+            lista = new ArrayList<String>();
+        }// fine del blocco if
+
+        for (String title : listaNew) {
+            lista.add(title);
+        } // fine del ciclo for-each
+
+        this.setListaTitles(lista);
+    } // fine del metodo
+
     public ArrayList<Long> getListaPageids() {
         return listaPageids;
     } // fine del metodo
@@ -168,6 +187,14 @@ public class QueryCat extends QueryWiki {
     void setListaPageids(ArrayList<Long> listaPageids) {
         this.listaPageids = listaPageids;
     } // fine del metodo
+
+    public ArrayList<String> getListaTitles() {
+        return listaTitles;
+    }// end of getter method
+
+    public void setListaTitles(ArrayList<String> listaTitles) {
+        this.listaTitles = listaTitles;
+    }//end of setter method
 
     public String getTxtPageids() {
         return LibWiki.creaListaPageids(getListaPageids());

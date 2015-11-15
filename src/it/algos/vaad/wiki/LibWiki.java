@@ -1071,7 +1071,7 @@ public abstract class LibWiki {
      * Crea una lista di pagine (valori pageids) dal testo JSON di una pagina
      *
      * @param textJSON in ingresso
-     * @return lista pageid (valori Integer)
+     * @return lista pageid (valori Long)
      */
     public static ArrayList<Long> creaListaCatJson(String textJSON) {
         ArrayList<Long> lista = null;
@@ -1083,21 +1083,26 @@ public abstract class LibWiki {
         JSONObject queryObj = (JSONObject) allObj.get(QUERY);
         JSONArray catObj = (JSONArray) queryObj.get(CATEGORY_MEMBERS);
 
-//        if (catObj != null) {
-//            lista = new ArrayList<Long>();
-//            for (Object obj : catObj) {
-//                if (obj instanceof JSONObject) {
-//                    jsonObject = (JSONObject) obj;
-//                    longPageid = jsonObject.get(PAGEID);
-//                    if (longPageid instanceof Long) {
-//                        pageid = ((Long) longPageid).intValue();
-//                        lista.add(pageid);
-//                    }// fine del blocco if
-//                }// fine del blocco if
-//            } // fine del ciclo for-each
-//        }// fine del blocco if
-
         return creaListaBaseLongJson(catObj);
+    } // fine del metodo
+
+    /**
+     * Crea una lista di pagine (valori title) dal testo JSON di una pagina
+     *
+     * @param textJSON in ingresso
+     * @return lista title (valori String)
+     */
+    public static ArrayList<String> creaListaCatTxtJson(String textJSON) {
+        ArrayList<String> lista = null;
+        JSONObject jsonObject;
+        Object longPageid;
+        long pageid = 0;
+
+        JSONObject allObj = (JSONObject) JSONValue.parse(textJSON);
+        JSONObject queryObj = (JSONObject) allObj.get(QUERY);
+        JSONArray catObj = (JSONArray) queryObj.get(CATEGORY_MEMBERS);
+
+        return creaListaBaseTextJson(catObj);
     } // fine del metodo
 
     /**
