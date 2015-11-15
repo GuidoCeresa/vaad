@@ -6,22 +6,21 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
- * Query standard per leggere/scrivere il risultato di una pagina
- * NON legge le categorie
- * Usa il titolo della pagina o il pageid (a seconda della sottoclasse concreta utilizzata)
- * Legge o scrive (a seconda della sottoclasse concreta utilizzata)
- * Legge le informazioni base della pagina (oltre al risultato)
- * Legge una sola Pagina con le informazioni base
- * Necessita di Login per scrivere, non per leggere solamente
+ * Query per recuperare le pagine di una categoria
+ * NON legge le sottocategorie
+ * Non necessita di Login, ma se esiste lo usa
+ * Può essere sovrascritta per leggere anche le sottocategorie
  */
-public  class QueryCat extends QueryWiki {
+public class QueryCat extends QueryWiki {
 
-    private static final int LIMITE = 5000;
+    protected static final int LIMITE = 5000;
+    //--stringa per selezionare il namespace (0=principale - 14=sottocategorie) (per adesso solo il principale)
+    protected static String NS_0 = "&cmnamespace=0";
+    //--stringa per selezionare il namespace (0=principale - 14=sottocategorie) (per adesso solo il principale)
+    protected static String NS_0_14 = "&cmnamespace=0|14";
     //--stringa per la lista di categoria
     private static String CAT = "&list=categorymembers";
-    //--stringa selezionare il namespace (0=principale - 14=sottocategorie) (per adesso solo il principale)
-    private static String NS = "&cmnamespace=0";
-    //--stringa selezionare il tipo di categoria (page, subcat, file) (per adesso solo page)
+    //--stringa per selezionare il tipo di categoria (page, subcat, file) (per adesso solo page)
     private static String TYPE = "&cmtype=page";
     //--stringa per ottenere il codice di continuazione
     private static String CONT = "&rawcontinue";
@@ -29,17 +28,19 @@ public  class QueryCat extends QueryWiki {
     private static String LIMIT = "&cmlimit=";
     //--stringa per indicare il titolo della pagina
     private static String TITLE = "&cmtitle=Category:";
-    //--stringa iniziale (sempre valida) del DOMAIN a cui aggiungere le ulteriori specifiche
-    private static String API_BASE_CAT = API_BASE + CAT + NS + TYPE + CONT + LIMIT;
+//    //--stringa iniziale (sempre valida) del DOMAIN a cui aggiungere le ulteriori specifiche
+//    private static String API_BASE_CAT = API_BASE + CAT + NS + TYPE + CONT + LIMIT;
 
     //--stringa per il successivo inizio della lista
     private static String CONTINUE = "&cmcontinue=";
+    protected int limite;
+    protected String namespace;
 
     // lista di pagine della categoria (namespace=0)
     private ArrayList<Long> listaPageids;
     private ArrayList<String> listaTitles;
+
     private boolean limite5000;
-    private int limite;
 
     /**
      * Costruttore completo
@@ -62,6 +63,9 @@ public  class QueryCat extends QueryWiki {
         if (titlepageid != null) {
             title = titlepageid;
             pageid = "";
+            if (namespace == null) {
+                namespace = NS_0_14;
+            }// end of if cycle
             if (limite < 1) {
                 limite = LIMITE;
             }// end of if cycle
@@ -91,7 +95,7 @@ public  class QueryCat extends QueryWiki {
     protected String getDomain() {
         String domain = "";
         String titolo = "";
-        String startDomain = API_BASE_CAT + limite + TITLE;
+        String startDomain = API_BASE + CAT + namespace + TYPE + CONT + LIMIT + limite + TITLE;
 
         try { // prova ad eseguire il codice
             titolo = URLEncoder.encode(title, Cost.ENC);

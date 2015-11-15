@@ -200,29 +200,26 @@ public class QueryTest extends VaadTest {
 
 
     @Test
-    /**
-     * Query standard per leggere/scrivere il risultato di una pagina
-     * NON legge le categorie
-     * Usa il titolo della pagina o il pageid (a seconda della sottoclasse concreta utilizzata)
-     * Legge o scrive (a seconda della sottoclasse concreta utilizzata)
-     * Legge le informazioni base della pagina (oltre al risultato)
-     * Legge una sola Pagina con le informazioni base
-     * Necessita di Login per scrivere, non per leggere solamente
+     /**
+     * Query per recuperare le pagine di una categoria
+     * NON legge le sottocategorie
+     * Non necessita di Login, ma se esiste lo usa
+     * Può essere sovrascritta per leggere anche le sottocategorie
      */
     public void cat() {
         QueryCat query;
         ArrayList<Long> listaPageids;
         ArrayList<String> listaTitles;
 
-        query = new QueryCat(TITOLO_CAT_ERRATA);
-        assertEquals(query.getRisultato(), TipoRisultato.nonTrovata);
-        assertFalse(query.isValida());
-        listaPageids = query.getListaPageids();
-        assertNull(listaPageids);
-        listaTitles = query.getListaTitles();
-        assertNull(listaTitles);
+//        query = new QueryCat(TITOLO_CAT_ERRATA);
+//        assertEquals(query.getRisultato(), TipoRisultato.nonTrovata);
+//        assertFalse(query.isValida());
+//        listaPageids = query.getListaPageids();
+//        assertNull(listaPageids);
+//        listaTitles = query.getListaTitles();
+//        assertNull(listaTitles);
 
-        query = new QueryCat(TITOLO_CAT_BREVE);
+        query = new QueryCat(TITOLO_CAT_BREVE,3);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
         assertTrue(query.isValida());
         listaPageids = query.getListaPageids();
@@ -286,6 +283,19 @@ public class QueryTest extends VaadTest {
             listaTitles = query.getListaTitles();
             assertNotNull(listaTitles);
             assertTrue(listaTitles.size() > 290000);
+        }// end of if cycle
+
+        //--sottoclasse per leggere anche le categorie
+        if (false) {
+            query = new QueryCatCat(TITOLO_CAT_BREVE);
+            assertEquals(query.getRisultato(), TipoRisultato.letta);
+            assertTrue(query.isValida());
+            listaPageids = query.getListaPageids();
+            assertNotNull(listaPageids);
+            assertTrue(listaPageids.size() == 2);
+            listaTitles = query.getListaTitles();
+            assertNotNull(listaTitles);
+            assertTrue(listaTitles.size() == 2);
         }// end of if cycle
     }// end of single test
 
