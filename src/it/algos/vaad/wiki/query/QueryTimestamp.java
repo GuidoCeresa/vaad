@@ -1,6 +1,6 @@
 package it.algos.vaad.wiki.query;
 
-import it.algos.vaad.WrapTime;
+import it.algos.vaad.wiki.WrapTime;
 import it.algos.vaad.wiki.LibWiki;
 import it.algos.vaad.wiki.TipoRequest;
 import it.algos.vaad.wiki.TipoRicerca;
@@ -46,7 +46,7 @@ public class QueryTimestamp extends QueryWiki {
     }// fine del metodo costruttore
 
     public QueryTimestamp(List arrayPageIds) {
-        super(LibArray.toStringaPipe(arrayPageIds), TipoRicerca.listaPageids, TipoRequest.read);
+        super(LibArray.toStringaPipe((ArrayList)arrayPageIds), TipoRicerca.listaPageids, TipoRequest.read);
     }// fine del metodo costruttore
 
 

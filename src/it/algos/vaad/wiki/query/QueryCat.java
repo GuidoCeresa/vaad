@@ -1,9 +1,11 @@
 package it.algos.vaad.wiki.query;
 
 import it.algos.vaad.wiki.*;
+import it.algos.webbase.web.lib.LibArray;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Query per recuperare le pagine di una categoria
@@ -21,6 +23,7 @@ public class QueryCat extends QueryWiki {
     //--stringa per la lista di categoria
     private static String CAT = "&list=categorymembers";
     //--stringa per selezionare il tipo di categoria (page, subcat, file) (per adesso solo page)
+    private static String TYPE_CAT = "&cmtype=page|subcat";
     private static String TYPE = "&cmtype=page";
     //--stringa per ottenere il codice di continuazione
     private static String CONT = "&rawcontinue";
@@ -36,38 +39,55 @@ public class QueryCat extends QueryWiki {
     protected int limite;
     protected String namespace;
 
-    // lista di pagine della categoria (namespace=0)
+    // liste di pagine della categoria (namespace=0)
     private ArrayList<Long> listaPageids;
     private ArrayList<String> listaTitles;
 
+    // liste di sottocategorie della categoria (namespace=14)
+    private ArrayList<Long> listaCatPageids;
+    private ArrayList<String> listaCatTitles;
+
     private boolean limite5000;
+    private boolean vociCategorieTitoli;
 
     /**
      * Costruttore completo
      */
     public QueryCat(String title) {
-        this(title, LIMITE);
+        this(title, true);
     }// fine del metodo costruttore
 
     /**
      * Costruttore completo
      */
-    public QueryCat(String title, int limite) {
-        super(title, TipoRicerca.title, TipoRequest.read);
-        this.limite = limite;
+    public QueryCat(String title, boolean vociCategorieTitoli) {
+        this(title, LIMITE, vociCategorieTitoli);
     }// fine del metodo costruttore
 
-    @Override
-    protected void doInit(String titlepageid) {
+    /**
+     * Costruttore completo
+     */
+    public QueryCat(String title, int limite, boolean vociCategorieTitoli) {
+        this.title = title;
+        this.limite = limite;
+        this.vociCategorieTitoli = vociCategorieTitoli;
+        super.tipoRicerca = TipoRicerca.title;
+        super.tipoRequest = TipoRequest.read;
+        this.doInit();
+    }// fine del metodo costruttore
 
-        if (titlepageid != null) {
-            title = titlepageid;
+
+    @Override
+    protected void doInit() {
+
+        if (title != null) {
             pageid = "";
             if (namespace == null) {
-                namespace = NS_0_14;
-            }// end of if cycle
-            if (limite < 1) {
-                limite = LIMITE;
+                if (vociCategorieTitoli) {
+                    namespace = NS_0_14;
+                } else {
+                    namespace = NS_0;
+                }// end of if/else cycle
             }// end of if cycle
             domain = this.getDomain();
         }// fine del blocco if
@@ -84,7 +104,6 @@ public class QueryCat extends QueryWiki {
 
     } // fine del metodo
 
-
     /**
      * Costruisce la stringa della request
      * Domain per l'URL dal titolo della pagina o dal pageid (a seconda del costruttore usato)
@@ -95,7 +114,13 @@ public class QueryCat extends QueryWiki {
     protected String getDomain() {
         String domain = "";
         String titolo = "";
-        String startDomain = API_BASE + CAT + namespace + TYPE + CONT + LIMIT + limite + TITLE;
+        String startDomain;
+
+        if (vociCategorieTitoli) {
+            startDomain = API_BASE + CAT + namespace + TYPE_CAT + LIMIT + limite + TITLE;
+        } else {
+            startDomain = API_BASE + CAT + namespace + TYPE + LIMIT + limite + TITLE;
+        }// end of if/else cycle
 
         try { // prova ad eseguire il codice
             titolo = URLEncoder.encode(title, Cost.ENC);
@@ -123,9 +148,10 @@ public class QueryCat extends QueryWiki {
     @Override
     protected void regolaRisultato(String risultatoRequest) {
         testoPrimaRequest = risultatoRequest;
+        String txtContinua;
+        HashMap<String, ArrayList> mappa = null;
         ArrayList<Long> listaPageidsTmp;
         ArrayList<String> listaTitlesTmp;
-        String txtContinua;
 
         if (LibWiki.isWarnings(risultatoRequest)) {
             setLimite5000(false);
@@ -133,26 +159,57 @@ public class QueryCat extends QueryWiki {
             setLimite5000(true);
         }// end of if/else cycle
 
-        listaPageidsTmp = LibWiki.creaListaCatJson(risultatoRequest);
-        listaTitlesTmp = LibWiki.creaListaCatTxtJson(risultatoRequest);
-        if (listaPageidsTmp == null) {
-            if (Api.isEsiste("Category:" + title)) {
-                risultato = TipoRisultato.letta;
-            } else {
-                risultato = TipoRisultato.nonTrovata;
-            }// end of if/else cycle
-            valida = false;
-            return;
-        }// fine del blocco if
+        if (vociCategorieTitoli) {
+            mappa = LibWiki.getMappaWrap(risultatoRequest);
+
+            if (mappa != null) {
+                if (mappa.get(LibWiki.KEY_VOCE_PAGEID) != null && mappa.get(LibWiki.KEY_VOCE_PAGEID).size() > 0) {
+                    this.setListaPageids(LibArray.somma(this.getListaPageids(), mappa.get(LibWiki.KEY_VOCE_PAGEID)));
+                }// end of if cycle
+
+                if (mappa.get(LibWiki.KEY_VOCE_TITLE) != null && mappa.get(LibWiki.KEY_VOCE_TITLE).size() > 0) {
+                    this.setListaTitles(LibArray.somma(this.getListaTitles(), mappa.get(LibWiki.KEY_VOCE_TITLE)));
+                }// end of if cycle
+
+                if (mappa.get(LibWiki.KEY_CAT_PAGEID) != null && mappa.get(LibWiki.KEY_CAT_PAGEID).size() > 0) {
+                    this.setListaCatPageids(LibArray.somma(this.getListaCatPageids(), mappa.get(LibWiki.KEY_CAT_PAGEID)));
+                }// end of if cycle
+
+                if (mappa.get(LibWiki.KEY_CAT_TITLE) != null && mappa.get(LibWiki.KEY_CAT_TITLE).size() > 0) {
+                    this.setListaCatTitles(LibArray.somma(this.getListaCatTitles(), mappa.get(LibWiki.KEY_CAT_TITLE)));
+                }// end of if cycle
+            }// end of if cycle
+
+            if (mappa == null) {
+                if (Api.isEsiste("Category:" + title)) {
+                    risultato = TipoRisultato.letta;
+                } else {
+                    risultato = TipoRisultato.nonTrovata;
+                }// end of if/else cycle
+                valida = false;
+                return;
+            }// fine del blocco if
+        } else {
+            listaPageidsTmp = LibWiki.creaListaCatJson(risultatoRequest);
+
+            if (listaPageidsTmp == null) {
+                if (Api.isEsiste("Category:" + title)) {
+                    risultato = TipoRisultato.letta;
+                } else {
+                    risultato = TipoRisultato.nonTrovata;
+                }// end of if/else cycle
+                valida = false;
+                return;
+            }// fine del blocco if
+
+            this.addListaPageids(listaPageidsTmp);
+        }// end of if/else cycle
 
         risultato = TipoRisultato.letta;
         valida = true;
-        this.addListaPageids(listaPageidsTmp);
-        this.addListaTitles(listaTitlesTmp);
         txtContinua = LibWiki.creaCatContinue(risultatoRequest);
         this.continua = txtContinua;
     } // fine del metodo
-
 
     private void addListaPageids(ArrayList<Long> listaNew) {
         ArrayList<Long> lista;
@@ -203,6 +260,32 @@ public class QueryCat extends QueryWiki {
     public String getTxtPageids() {
         return LibWiki.creaListaPageids(getListaPageids());
     } // fine del metodo
+
+    public ArrayList<Long> getListaCatPageids() {
+        return listaCatPageids;
+    }// end of getter method
+
+    public void setListaCatPageids(ArrayList<Long> listaCatPageids) {
+        this.listaCatPageids = listaCatPageids;
+    }//end of setter method
+
+    public ArrayList<String> getListaCatTitles() {
+        return listaCatTitles;
+    }// end of getter method
+
+    public void setListaCatTitles(ArrayList<String> listaCatTitles) {
+        this.listaCatTitles = listaCatTitles;
+    }//end of setter method
+
+
+    public ArrayList<Long> getListaAllPageids() {
+        return (ArrayList<Long>) LibArray.somma(listaPageids, listaCatPageids);
+    }// end of getter method
+
+    public ArrayList<String> getListaAllTitles() {
+        return (ArrayList<String>) LibArray.somma(listaTitles, listaCatTitles);
+    }// end of getter method
+
 
     public boolean isLimite5000() {
         return limite5000;

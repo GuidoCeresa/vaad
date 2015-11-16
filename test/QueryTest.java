@@ -1,4 +1,3 @@
-import it.algos.vaad.WrapTime;
 import it.algos.vaad.wiki.*;
 import it.algos.vaad.wiki.query.*;
 import it.algos.webbase.web.lib.LibArray;
@@ -200,7 +199,7 @@ public class QueryTest extends VaadTest {
 
 
     @Test
-     /**
+    /**
      * Query per recuperare le pagine di una categoria
      * NON legge le sottocategorie
      * Non necessita di Login, ma se esiste lo usa
@@ -210,16 +209,35 @@ public class QueryTest extends VaadTest {
         QueryCat query;
         ArrayList<Long> listaPageids;
         ArrayList<String> listaTitles;
+        ArrayList<Long> listaCatPageids;
+        ArrayList<String> listaCatTitles;
+        ArrayList<Long> listaAllPageids;
+        ArrayList<String> listaAllTitles;
 
-//        query = new QueryCat(TITOLO_CAT_ERRATA);
-//        assertEquals(query.getRisultato(), TipoRisultato.nonTrovata);
-//        assertFalse(query.isValida());
-//        listaPageids = query.getListaPageids();
-//        assertNull(listaPageids);
-//        listaTitles = query.getListaTitles();
-//        assertNull(listaTitles);
+        query = new QueryCat(TITOLO_CAT_ERRATA);
+        assertEquals(query.getRisultato(), TipoRisultato.nonTrovata);
+        assertFalse(query.isValida());
+        listaPageids = query.getListaPageids();
+        assertNull(listaPageids);
+        listaTitles = query.getListaTitles();
+        assertNull(listaTitles);
+        listaCatPageids = query.getListaCatPageids();
+        assertNull(listaCatPageids);
+        listaCatTitles = query.getListaCatTitles();
+        assertNull(listaCatTitles);
+        listaAllPageids = query.getListaAllPageids();
+        assertNull(listaAllPageids);
+        listaAllTitles = query.getListaAllTitles();
+        assertNull(listaAllTitles);
 
-        query = new QueryCat(TITOLO_CAT_BREVE,3);
+        query = new QueryCat(TITOLO_CAT_BREVE, false);
+        assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
+        listaPageids = query.getListaPageids();
+        assertNotNull(listaPageids);
+        assertTrue(listaPageids.size() == 2);
+
+        query = new QueryCat(TITOLO_CAT_BREVE);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
         assertTrue(query.isValida());
         listaPageids = query.getListaPageids();
@@ -228,6 +246,25 @@ public class QueryTest extends VaadTest {
         listaTitles = query.getListaTitles();
         assertNotNull(listaTitles);
         assertTrue(listaTitles.size() == 2);
+        listaCatPageids = query.getListaCatPageids();
+        assertNotNull(listaCatPageids);
+        assertTrue(listaCatPageids.size() == 12);
+        listaCatTitles = query.getListaCatTitles();
+        assertNotNull(listaCatTitles);
+        assertTrue(listaCatTitles.size() == 12);
+        listaAllPageids = query.getListaAllPageids();
+        assertNotNull(listaAllPageids);
+        assertTrue(listaAllPageids.size() == 14);
+        listaAllTitles = query.getListaAllTitles();
+        assertNotNull(listaAllTitles);
+        assertTrue(listaAllTitles.size() == 14);
+
+        query = new QueryCat(TITOLO_CAT_MEDIA, false);
+        assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
+        listaPageids = query.getListaPageids();
+        assertNotNull(listaPageids);
+        assertTrue(listaPageids.size() == 36);
 
         query = new QueryCat(TITOLO_CAT_MEDIA);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
@@ -238,6 +275,23 @@ public class QueryTest extends VaadTest {
         listaTitles = query.getListaTitles();
         assertNotNull(listaTitles);
         assertTrue(listaTitles.size() == 36);
+        listaCatPageids = query.getListaCatPageids();
+        assertNull(listaCatPageids);
+        listaCatTitles = query.getListaCatTitles();
+        assertNull(listaCatTitles);
+        listaAllPageids = query.getListaAllPageids();
+        assertNotNull(listaAllPageids);
+        assertTrue(listaAllPageids.size() == 36);
+        listaAllTitles = query.getListaAllTitles();
+        assertNotNull(listaAllTitles);
+        assertTrue(listaAllTitles.size() == 36);
+
+        query = new QueryCat(TITOLO_CAT_LUNGA, false);
+        assertEquals(query.getRisultato(), TipoRisultato.letta);
+        assertTrue(query.isValida());
+        listaPageids = query.getListaPageids();
+        assertNotNull(listaPageids);
+        assertTrue(listaPageids.size() > 2300);
 
         query = new QueryCat(TITOLO_CAT_LUNGA);
         assertEquals(query.getRisultato(), TipoRisultato.letta);
@@ -248,54 +302,41 @@ public class QueryTest extends VaadTest {
         listaTitles = query.getListaTitles();
         assertNotNull(listaTitles);
         assertTrue(listaTitles.size() > 2300);
+        listaCatPageids = query.getListaCatPageids();
+        assertNotNull(listaCatPageids);
+        assertTrue(listaCatPageids.size() > 15);
+        listaCatTitles = query.getListaCatTitles();
+        assertNotNull(listaCatTitles);
+        assertTrue(listaCatTitles.size() > 15);
+        listaAllPageids = query.getListaAllPageids();
+        assertNotNull(listaAllPageids);
+        assertTrue(listaAllPageids.size() > 2300);
+        listaAllTitles = query.getListaAllTitles();
+        assertNotNull(listaAllTitles);
+        assertTrue(listaAllTitles.size() > 2300);
 
-        query = new QueryCat(TITOLO_CAT_LUNGA, 100);
-        assertEquals(query.getRisultato(), TipoRisultato.letta);
-        assertTrue(query.isValida());
-        listaPageids = query.getListaPageids();
-        assertNotNull(listaPageids);
-        assertTrue(listaPageids.size() > 2300);
-        listaTitles = query.getListaTitles();
-        assertNotNull(listaTitles);
-        assertTrue(listaTitles.size() > 2300);
-
-        //--temporanea e dinamica, potrebbe NON essere vuota
-        //--se da errore, controllare la categoria
-        if (false) {
-            query = new QueryCat(TITOLO_CAT_VUOTA);
-            assertEquals(query.getRisultato(), TipoRisultato.letta);
-            assertFalse(query.isValida());
-            listaPageids = query.getListaPageids();
-            assertNull(listaPageids);
-            listaTitles = query.getListaTitles();
-            assertNull(listaTitles);
-        }// end of if cycle
-
+//        //--temporanea e dinamica, potrebbe NON essere vuota
+//        //--se da errore, controllare la categoria
+//        if (true) {
+//            query = new QueryCat(TITOLO_CAT_VUOTA);
+//            assertEquals(query.getRisultato(), TipoRisultato.letta);
+//            assertFalse(query.isValida());
+//            listaPageids = query.getListaPageids();
+//            assertNull(listaPageids);
+//            listaTitles = query.getListaTitles();
+//            assertNull(listaTitles);
+//        }// end of if cycle
 
         //--circa 2-3 minuti
-        if (false) {
-            query = new QueryCat(TITOLO_CAT_LUNGHISSIMA);
+        if (true) {
+            query = new QueryCat(TITOLO_CAT_LUNGHISSIMA, false);
             assertEquals(query.getRisultato(), TipoRisultato.letta);
             assertTrue(query.isValida());
             listaPageids = query.getListaPageids();
             assertNotNull(listaPageids);
             assertTrue(listaPageids.size() > 290000);
             listaTitles = query.getListaTitles();
-            assertNotNull(listaTitles);
-            assertTrue(listaTitles.size() > 290000);
-        }// end of if cycle
-
-        //--sottoclasse per leggere anche le categorie
-        if (false) {
-            query = new QueryCatCat(TITOLO_CAT_BREVE);
-            assertEquals(query.getRisultato(), TipoRisultato.letta);
-            assertTrue(query.isValida());
-            listaPageids = query.getListaPageids();
-            assertNotNull(listaPageids);
-            assertTrue(listaPageids.size() == 2);
-            listaTitles = query.getListaTitles();
-            assertNotNull(listaTitles);
-            assertTrue(listaTitles.size() == 2);
+            assertNull(listaTitles);
         }// end of if cycle
     }// end of single test
 

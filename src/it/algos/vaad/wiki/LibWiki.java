@@ -5,7 +5,6 @@ package it.algos.vaad.wiki;
  * .
  */
 
-import it.algos.vaad.WrapTime;
 import it.algos.vaad.wiki.entities.wiki.Wiki;
 import it.algos.vaad.wiki.query.QueryCat;
 import it.algos.webbase.web.lib.LibArray;
@@ -66,22 +65,31 @@ public abstract class LibWiki {
     public static final String NEW_REV_ID = "newrevid";
     public static final String NEW_TIME_STAMP = "newtimestamp";
     public static final String CONTENT_MODEL = "contentmodel";
-    public static final String TITLE = "title";
+    public static final String NS = "ns";
     public static final String PAGEID = "pageid";
+    public static final String TITLE = "title";
     public static final String BATCH = "batchcomplete";
     public static final String QUERY = "query";
     public static final String ERROR = "error";
     public static final String CODE = "code";
     public static final String DOCREF = "docref";
     public static final String INFO = "info";
+
+    public static final String KEY_VOCE_PAGEID = "keyvocepageid";
+    public static final String KEY_VOCE_TITLE = "keyvocetitle";
+    public static final String KEY_CAT_PAGEID = "keycatpageid";
+    public static final String KEY_CAT_TITLE = "keycattitle";
+
     private static final String PAGES = "pages";
     private static final String REVISIONS = "revisions";
     private static final String TOKENS = "tokens";
     private static final String WARNINGS = "warnings";
     private static final String TIMESTAMP = "timestamp";
-    private static final String CATEGORY_MEMBERS = "categorymembers";
     private static final String BACK_LINKS = "backlinks";
-    private static final String QUERY_CONTINUE = "query-continue";
+    private static final String CATEGORY_MEMBERS = "categorymembers"; // deprecated
+    private static final String QUERY_CONTINUE = "query-continue"; // deprecated
+    private static final String CONTINUE = "continue";
+    private static final String CM_CONTINUE = "cmcontinue";
     private static final String LOGIN = "login";
     private static final String MISSING = "missing";
     private static final String VIR = ",";
@@ -1072,6 +1080,7 @@ public abstract class LibWiki {
      *
      * @param textJSON in ingresso
      * @return lista pageid (valori Long)
+     * @deprecated
      */
     public static ArrayList<Long> creaListaCatJson(String textJSON) {
         ArrayList<Long> lista = null;
@@ -1091,6 +1100,7 @@ public abstract class LibWiki {
      *
      * @param textJSON in ingresso
      * @return lista title (valori String)
+     * @deprecated
      */
     public static ArrayList<String> creaListaCatTxtJson(String textJSON) {
         ArrayList<String> lista = null;
@@ -1203,12 +1213,138 @@ public abstract class LibWiki {
         return lista;
     } // fine del metodo
 
+
+    /**
+     * Crea una lista di wrapper dal testo JSON di una pagina per le categorie
+     *
+     * @param textJSON in ingresso
+     * @return lista wrapper
+     */
+    public static ArrayList<WrapCat> creaListaWrapJson(String textJSON) {
+
+        JSONObject allObj = (JSONObject) JSONValue.parse(textJSON);
+        JSONObject queryObj = (JSONObject) allObj.get(QUERY);
+        JSONArray catObj = (JSONArray) queryObj.get(CATEGORY_MEMBERS);
+
+        return creaListaWrapJson(catObj);
+    } // fine del metodo
+
+    /**
+     * Crea una lista di wrapper da un JSONArray per le categorie
+     *
+     * @param objArray in ingresso
+     * @return lista wrapper
+     */
+    private static ArrayList<WrapCat> creaListaWrapJson(JSONArray objArray) {
+        ArrayList<WrapCat> lista = null;
+        JSONObject jsonObject = null;
+        long ns = 0;
+        long pageid = 0L;
+        String title = "";
+        WrapCat wrap;
+
+        if (objArray != null && objArray.size() > 0) {
+            lista = new ArrayList<WrapCat>();
+            for (Object obj : objArray) {
+                if (obj instanceof JSONObject) {
+                    jsonObject = (JSONObject) obj;
+
+                    if (jsonObject.get(NS) != null && jsonObject.get(NS) instanceof Long) {
+                        ns = (Long) jsonObject.get(NS);
+                    }// fine del blocco if
+
+                    if (jsonObject.get(PAGEID) != null && jsonObject.get(PAGEID) instanceof Long) {
+                        pageid = (Long) jsonObject.get(PAGEID);
+                    }// fine del blocco if
+
+                    if (jsonObject.get(TITLE) != null && jsonObject.get(TITLE) instanceof String) {
+                        title = (String) jsonObject.get(TITLE);
+                    }// fine del blocco if
+
+                    wrap = new WrapCat(ns, pageid, title);
+                    lista.add(wrap);
+                }// fine del blocco if
+            } // fine del ciclo for-each
+        }// fine del blocco if
+
+        return lista;
+    } // fine del metodo
+
+
+    /**
+     * Suddivide la lista di wrapper in quattro liste differerenziate
+     * <p>
+     * Dall'unica lista in ingresso, costruisce 4 liste divise per:
+     * namespace 0/14 e title/pageid
+     *
+     * @param lista in ingresso
+     * @return mappa con le quattro liste
+     */
+    public static HashMap<String, ArrayList> getMappaWrap(ArrayList<WrapCat> lista) {
+        HashMap<String, ArrayList> mappa = null;
+        ArrayList<Long> listaVociPageid;
+        ArrayList<String> listaVociTitle;
+        ArrayList<Long> listaCatPageid;
+        ArrayList<String> listaCatTitle;
+
+        if (lista != null && lista.size() > 0) {
+            mappa = new HashMap<String, ArrayList>();
+            listaVociPageid = new ArrayList<Long>();
+            listaVociTitle = new ArrayList<String>();
+            listaCatPageid = new ArrayList<Long>();
+            listaCatTitle = new ArrayList<String>();
+
+            for (WrapCat wrap : lista) {
+                if (wrap.getNs() == 0) {
+                    listaVociPageid.add(wrap.getPageid());
+                    listaVociTitle.add(wrap.getTitle());
+                }// end of if cycle
+                if (wrap.getNs() == 14) {
+                    listaCatPageid.add(wrap.getPageid());
+                    listaCatTitle.add(wrap.getTitle());
+                }// end of if cycle
+            }// end of for cycle
+
+            mappa.put(KEY_VOCE_PAGEID, listaVociPageid);
+            mappa.put(KEY_VOCE_TITLE, listaVociTitle);
+            mappa.put(KEY_CAT_PAGEID, listaCatPageid);
+            mappa.put(KEY_CAT_TITLE, listaCatTitle);
+        }// end of if cycle
+
+        return mappa;
+    } // fine del metodo
+
+    /**
+     * Crea una lista di wrapper dal testo JSON di una pagina per le categorie
+     * <p>
+     * Dal testo della pagina in ingresso, costruisce 4 liste divise per:
+     * namespace 0/14 e title/pageid
+     *
+     * @param textJSON in ingresso
+     * @return mappa con le quattro liste
+     */
+    public static HashMap<String, ArrayList> getMappaWrap(String textJSON) {
+        HashMap<String, ArrayList> mappa = null;
+        ArrayList<WrapCat> lista = null;
+
+        if (textJSON != null && !textJSON.equals("")) {
+            lista = creaListaWrapJson(textJSON);
+        }// end of if cycle
+
+        if (lista != null && lista.size() > 0) {
+            mappa = getMappaWrap(lista);
+        }// end of if cycle
+
+        return mappa;
+    } // fine del metodo
+
     /**
      * Controlla se esiste un warnings nella risposta del server
      *
      * @param textJSON in ingresso
      * @return true se il testo in ingresso contiene un warning
      */
+
     public static boolean isWarnings(String textJSON) {
         boolean status = false;
 
@@ -1232,21 +1368,15 @@ public abstract class LibWiki {
         String textContinue = VUOTA;
         JSONObject allObj;
         JSONObject queryObj = null;
-        JSONObject catObj = null;
 
         allObj = (JSONObject) JSONValue.parse(textJSON);
-        if (allObj != null) {
-            queryObj = (JSONObject) allObj.get(QUERY_CONTINUE);
+        if (allObj != null && allObj.get(CONTINUE) instanceof JSONObject) {
+            queryObj = (JSONObject) allObj.get(CONTINUE);
         }// fine del blocco if
-        if (queryObj != null) {
-            catObj = (JSONObject) queryObj.get(CATEGORY_MEMBERS);
-        }// fine del blocco if
-        if (catObj != null && catObj.size() == 1) {
-            textContinue = catObj.values().toString();
+        if (queryObj != null && queryObj.get(CM_CONTINUE) instanceof String) {
+            textContinue = (String) queryObj.get(CM_CONTINUE);
         }// fine del blocco if
 
-        textContinue = LibText.levaCoda(textContinue, "]");
-        textContinue = LibText.levaTesta(textContinue, "[");
         return textContinue;
     } // fine del metodo
 

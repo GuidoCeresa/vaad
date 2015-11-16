@@ -1,4 +1,4 @@
-package it.algos.vaad;
+package it.algos.vaad.wiki;
 
 import it.algos.vaad.lib.VaadWiki;
 
