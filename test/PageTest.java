@@ -84,7 +84,7 @@ public class PageTest extends VaadTest {
         ottenuto = page.getTitle();
         assertEquals(numOttenuto, numPrevisto);
 
-        numPrevisto = 4124213;
+        numPrevisto = 5706423;
         numOttenuto = page.getPageid();
         assertEquals(numOttenuto, numPrevisto);
 

@@ -328,7 +328,7 @@ public class QueryTest extends VaadTest {
 //        }// end of if cycle
 
         //--circa 2-3 minuti
-        if (true) {
+        if (false) {
             query = new QueryCat(TITOLO_CAT_LUNGHISSIMA, false);
             assertEquals(query.getRisultato(), TipoRisultato.letta);
             assertTrue(query.isValida());

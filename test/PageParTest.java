@@ -30,7 +30,7 @@ public class PageParTest extends VaadTest {
         add(PagePar.pagelanguage, "linguaggio");
         add(PagePar.csrftoken, "token");
         add(PagePar.starttimestamp, LibWiki.getTime());
-        add(PagePar.missing, "missing");
+        add(PagePar.missing, false);
 
         //--parametri wiki revisions
         add(PagePar.revid, 2435L);

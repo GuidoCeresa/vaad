@@ -646,7 +646,7 @@ public class LibWikiTest extends VaadTest {
         risultato = categoria.getContenuto();
         lista = LibWiki.creaListaCatJson(risultato);
         assertNotNull(lista);
-        assertTrue(lista.size() == 2);
+        assertTrue(lista.size() == 14);
     }// end of single test
 
     @Test

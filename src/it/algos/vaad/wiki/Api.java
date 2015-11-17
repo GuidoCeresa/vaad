@@ -443,7 +443,7 @@ public class Api {
      * @param oldText da eliminare
      * @param newText da inserire
      */
-    public static String modificaPagina(String title, String oldText, String newText) {
+    public static boolean modificaPagina(String title, String oldText, String newText) {
         return modificaPagina(title, oldText, newText, null);
     } // fine del metodo
 
@@ -455,7 +455,8 @@ public class Api {
      * @param newText da inserire
      * @param login   for testing purpose
      */
-    public static String modificaPagina(String title, String oldText, String newText, WikiLogin login) {
+    public static boolean modificaPagina(String title, String oldText, String newText, WikiLogin login) {
+        boolean status = false;
         String contenutoModificato = "";
         String oldContenuto;
         String testoTmp;
@@ -466,11 +467,16 @@ public class Api {
         oldContenuto = Api.leggeVoce(title);
         testoTmp = LibText.sostituisce(oldContenuto, oldText, newText);
         query = new QueryWriteTitle(title, testoTmp, summary, login);
-        contenutoModificato = query.getContenuto();
-        pagina = new Page(contenutoModificato);
-        contenutoModificato = pagina.getText();
 
-        return contenutoModificato;
+        if (query.getRisultato() == TipoRisultato.modificaRegistrata) {
+            status = true;
+        }// end of if cycle
+
+//        contenutoModificato = query.getContenuto();
+//        pagina = new Page(contenutoModificato);
+//        contenutoModificato = pagina.getText();
+
+        return status;
     } // fine del metodo
 
 }// end of service class

@@ -278,12 +278,11 @@ public class ApiTest extends VaadTest {
      */
     public void modificaPagina() {
         String titoloPagina = "Utente:Gac/Sandbox4";
-        String oldTxt = "venti";
-        String newTxt = "diciotto senza remore";
+        String oldTxt = "diciotto senza remore";
+        String newTxt = "senza";
 
-        previsto = "diciotto senza remore riga";
-        ottenuto = Api.modificaPagina(titoloPagina, oldTxt, newTxt, loginWiki);
-        assertEquals(ottenuto, previsto);
+        boolOttenuto = Api.modificaPagina(titoloPagina, oldTxt, newTxt, loginWiki);
+        assertFalse(boolOttenuto);
 
     }// end of single test
 

@@ -161,7 +161,7 @@ public enum PagePar {
     },
 
     //--parametri altri
-    missing(true, false, false, false, TypePar.provvisorio, TypeField.string),
+    missing(true, false, false, false, TypePar.provvisorio, TypeField.booleano),
     revisions(false, false, false, false, TypePar.provvisorio, TypeField.string),
     ultimalettura(false, true, false, false, TypePar.sololettura, TypeField.timestamp) {
         @Override
