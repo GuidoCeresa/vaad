@@ -248,13 +248,13 @@ public class ApiTest extends VaadTest {
     public void esiste() {
         boolean status;
 
-        status = Api.isEsiste(TITOLO);
+        status = Api.esiste(TITOLO);
         assertTrue(status);
 
-        status = Api.isEsiste(TITOLO_2);
+        status = Api.esiste(TITOLO_2);
         assertTrue(status);
 
-        status = Api.isEsiste(TITOLO_ERRATO);
+        status = Api.esiste(TITOLO_ERRATO);
         assertFalse(status);
 
     }// end of single test
@@ -276,14 +276,97 @@ public class ApiTest extends VaadTest {
      * @param oldText da eliminare
      * @param newText da inserire
      */
-    public void modificaPagina() {
+    public void scrive() {
         String titoloPagina = "Utente:Gac/Sandbox4";
         String oldTxt = "diciotto senza remore";
         String newTxt = "senza";
 
-        boolOttenuto = Api.modificaPagina(titoloPagina, oldTxt, newTxt, loginWiki);
+        boolOttenuto = Api.scrive(titoloPagina, oldTxt, newTxt, loginWiki);
         assertFalse(boolOttenuto);
-
     }// end of single test
+
+
+    @Test
+    /**
+     * Legge gli elementi appartenenti ad una categoria.
+     * Restituisce una lista (ArrayList) di titoli sia delle voci che delle subcategorie
+     *
+     * @param titleCat della categoria da ricercare
+     * @return lista titoli sia delle voci che delle subcategorie
+     */
+    public void leggeTitlesCategoria() {
+        listaString = Api.leggeTitlesCategoria(TITOLO_CAT_BREVE);
+        assertNotNull(listaString);
+        assertEquals(listaString.size(), 14);
+    }// end of single test
+
+    @Test
+    /**
+     * Legge gli elementi appartenenti ad una categoria.
+     * Restituisce una lista (ArrayList) di pageid sia delle voci che delle subcategorie
+     *
+     * @param titleCat della categoria da ricercare
+     * @return lista pageid sia delle voci che delle subcategorie
+     */
+    public void leggePageidsCategoria() {
+        listaLong = Api.leggePageidsCategoria(TITOLO_CAT_BREVE);
+        assertNotNull(listaLong);
+        assertEquals(listaLong.size(), 14);
+    }// end of single test
+
+    @Test
+    /**
+     * Legge gli elementi appartenenti ad una categoria.
+     * Restituisce una lista (ArrayList) di titoli solo delle voci senza le subcategorie
+     *
+     * @param titleCat della categoria da ricercare
+     * @return lista titoli delle voci
+     */
+    public void leggeTitlesCategoriaOnlyVoci() {
+        listaString = Api.leggeTitlesCategoriaOnlyVoci(TITOLO_CAT_BREVE);
+        assertNotNull(listaString);
+        assertEquals(listaString.size(), 2);
+    }// end of single test
+
+
+    @Test
+    /**
+     * Legge gli elementi appartenenti ad una categoria.
+     * Restituisce una lista (ArrayList) di pageid solo delle voci senza le subcategorie
+     *
+     * @param titleCat della categoria da ricercare
+     * @return lista pageid delle voci
+     */
+    public void leggePageidsCategoriaOnlyVoci() {
+        listaLong = Api.leggePageidsCategoriaOnlyVoci(TITOLO_CAT_BREVE);
+        assertNotNull(listaLong);
+        assertEquals(listaLong.size(), 2);
+    }// end of single test
+
+    @Test
+    /**
+     * Legge le voci che puntano ad una pagina.
+     * Restituisce una lista (ArrayList) di titoli
+     *
+     * @param title della pagina da controllare
+     * @return lista titoli delle voci
+     */
+    public void leggeBacklinks() {
+        listaString = Api.leggeBacklinks("Lago di Ha! Ha!");
+        assertNotNull(listaString);
+        assertEquals(listaString.size(), 6);
+    }// end of single test
+
+//    @Test
+//    /**
+//     * Sposta una pagina (sposta il titolo)
+//     *
+//     * @param oldTitle vecchio titolo della pagina
+//     * @param newTitle nuovo titolo della pagina
+//     */
+//    public void sposta() {
+//        boolOttenuto = Api.sposta(TITOLO_ALTRO, TITOLO_BLOCCATO);
+//        assertTrue(boolOttenuto);
+//    } // fine del metodo
 
 }// end of testing class

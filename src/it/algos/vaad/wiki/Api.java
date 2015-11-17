@@ -1,11 +1,9 @@
 package it.algos.vaad.wiki;
 
-import it.algos.vaad.wiki.query.QueryReadPageid;
-import it.algos.vaad.wiki.query.QueryReadTitle;
-import it.algos.vaad.wiki.query.QueryWiki;
-import it.algos.vaad.wiki.query.QueryWriteTitle;
+import it.algos.vaad.wiki.query.*;
 import it.algos.webbase.web.lib.LibText;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class Api {
@@ -431,7 +429,7 @@ public class Api {
      * @param title della pagina da ricercare
      * @return true se la pagina esiste
      */
-    public static boolean isEsiste(String title) {
+    public static boolean esiste(String title) {
         QueryReadTitle query = new QueryReadTitle(title);
         return query.isLetta();
     } // fine del metodo
@@ -443,8 +441,8 @@ public class Api {
      * @param oldText da eliminare
      * @param newText da inserire
      */
-    public static boolean modificaPagina(String title, String oldText, String newText) {
-        return modificaPagina(title, oldText, newText, null);
+    public static boolean scrive(String title, String oldText, String newText) {
+        return scrive(title, oldText, newText, null);
     } // fine del metodo
 
     /**
@@ -453,9 +451,9 @@ public class Api {
      * @param title   della pagina da ricercare
      * @param oldText da eliminare
      * @param newText da inserire
-     * @param login   for testing purpose
+     * @param login   for testing purpose only
      */
-    public static boolean modificaPagina(String title, String oldText, String newText, WikiLogin login) {
+    public static boolean scrive(String title, String oldText, String newText, WikiLogin login) {
         boolean status = false;
         String contenutoModificato = "";
         String oldContenuto;
@@ -472,9 +470,142 @@ public class Api {
             status = true;
         }// end of if cycle
 
-//        contenutoModificato = query.getContenuto();
-//        pagina = new Page(contenutoModificato);
-//        contenutoModificato = pagina.getText();
+        return status;
+    } // fine del metodo
+
+
+    /**
+     * Esegue la query
+     *
+     * @param titleCat della categoria da ricercare
+     * @return query valida
+     */
+    private static QueryCat getQuey(String titleCat) {
+        QueryCat query = null;
+
+        if (titleCat != null && !titleCat.equals("")) {
+            query = new QueryCat(titleCat);
+        }// end of if cycle
+
+        if (query != null && query.isValida() && query.getRisultato() == TipoRisultato.letta) {
+            return query;
+        } else {
+            return null;
+        }// end of if/else cycle
+    } // fine del metodo
+
+    /**
+     * Legge gli elementi appartenenti ad una categoria.
+     * Restituisce una lista (ArrayList) di titoli sia delle voci che delle subcategorie
+     *
+     * @param titleCat della categoria da ricercare
+     * @return lista titoli sia delle voci che delle subcategorie
+     */
+    public static ArrayList<String> leggeCat(String titleCat) {
+        return leggeTitlesCategoria(titleCat);
+    } // fine del metodo
+
+
+    /**
+     * Legge gli elementi appartenenti ad una categoria.
+     * Restituisce una lista (ArrayList) di titoli sia delle voci che delle subcategorie
+     *
+     * @param titleCat della categoria da ricercare
+     * @return lista titoli sia delle voci che delle subcategorie
+     */
+    public static ArrayList<String> leggeTitlesCategoria(String titleCat) {
+        ArrayList<String> lista = null;
+        QueryCat query = Api.getQuey(titleCat);
+
+        if (query != null) {
+            lista = query.getListaAllTitles();
+        }// end of if cycle
+
+        return lista;
+    } // fine del metodo
+
+    /**
+     * Legge gli elementi appartenenti ad una categoria.
+     * Restituisce una lista (ArrayList) di pageid sia delle voci che delle subcategorie
+     *
+     * @param titleCat della categoria da ricercare
+     * @return lista pageid sia delle voci che delle subcategorie
+     */
+    public static ArrayList<Long> leggePageidsCategoria(String titleCat) {
+        ArrayList<Long> lista = null;
+        QueryCat query = Api.getQuey(titleCat);
+
+        if (query != null) {
+            lista = query.getListaAllPageids();
+        }// end of if cycle
+
+        return lista;
+    } // fine del metodo
+
+    /**
+     * Legge gli elementi appartenenti ad una categoria.
+     * Restituisce una lista (ArrayList) di titoli solo delle voci senza le subcategorie
+     *
+     * @param titleCat della categoria da ricercare
+     * @return lista titoli delle voci
+     */
+    public static ArrayList<String> leggeTitlesCategoriaOnlyVoci(String titleCat) {
+        ArrayList<String> lista = null;
+        QueryCat query = Api.getQuey(titleCat);
+
+        if (query != null) {
+            lista = query.getListaTitles();
+        }// end of if cycle
+
+        return lista;
+    } // fine del metodo
+
+    /**
+     * Legge gli elementi appartenenti ad una categoria.
+     * Restituisce una lista (ArrayList) di pageid solo delle voci senza le subcategorie
+     *
+     * @param titleCat della categoria da ricercare
+     * @return lista pageid delle voci
+     */
+    public static ArrayList<Long> leggePageidsCategoriaOnlyVoci(String titleCat) {
+        ArrayList<Long> lista = null;
+        QueryCat query = Api.getQuey(titleCat);
+
+        if (query != null) {
+            lista = query.getListaPageids();
+        }// end of if cycle
+
+        return lista;
+    } // fine del metodo
+
+    /**
+     * Legge i titoli delle pagine che puntano ad una pagina.
+     * Restituisce una lista (ArrayList) di titoli in tutti i namespaces
+     *
+     * @param title della pagina da controllare
+     * @return lista titoli delle voci
+     */
+    public static ArrayList<String> leggeBacklinks(String title) {
+        ArrayList<String> lista = null;
+        QueryBacklinks query;
+
+        if (title != null && !title.equals("")) {
+            query = new QueryBacklinks(title, false);
+            lista = query.getListaTitles();
+        }// end of if cycle
+
+        return lista;
+    } // fine del metodo
+
+    /**
+     * Sposta una pagina (sposta il titolo)
+     *
+     * @param oldTitle vecchio titolo della pagina
+     * @param newTitle nuovo titolo della pagina
+     */
+    public static boolean sposta(String oldTitle, String newTitle) {
+        boolean status = false;
+
 
         return status;
     } // fine del metodo

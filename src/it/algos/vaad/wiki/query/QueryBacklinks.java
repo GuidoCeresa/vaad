@@ -102,7 +102,7 @@ public class QueryBacklinks extends QueryWiki {
                 valida = true;
             }// end of if cycle
         } else {
-            if (Api.isEsiste(title)) {
+            if (Api.esiste(title)) {
                 risultato = TipoRisultato.letta;
             } else {
                 risultato = TipoRisultato.nonTrovata;

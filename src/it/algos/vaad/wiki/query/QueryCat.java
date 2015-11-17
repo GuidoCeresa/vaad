@@ -181,7 +181,7 @@ public class QueryCat extends QueryWiki {
             }// end of if cycle
 
             if (mappa == null) {
-                if (Api.isEsiste("Category:" + title)) {
+                if (Api.esiste("Category:" + title)) {
                     risultato = TipoRisultato.letta;
                 } else {
                     risultato = TipoRisultato.nonTrovata;
@@ -193,7 +193,7 @@ public class QueryCat extends QueryWiki {
             listaPageidsTmp = LibWiki.creaListaCatJson(risultatoRequest);
 
             if (listaPageidsTmp == null) {
-                if (Api.isEsiste("Category:" + title)) {
+                if (Api.esiste("Category:" + title)) {
                     risultato = TipoRisultato.letta;
                 } else {
                     risultato = TipoRisultato.nonTrovata;

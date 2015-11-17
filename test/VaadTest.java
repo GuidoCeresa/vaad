@@ -2,6 +2,7 @@ import it.algos.vaad.wiki.Page;
 import it.algos.vaad.wiki.PagePar;
 import it.algos.vaad.wiki.TipoRisultato;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -84,5 +85,7 @@ public abstract class VaadTest {
     protected Page pageOttenuta = null;
     protected TipoRisultato risultatoPrevisto = null;
     protected TipoRisultato risultatoOttenuto = null;
+    protected ArrayList<Long> listaLong = null;
+    protected ArrayList<String> listaString = null;
 
 }// end of abstract testing class
