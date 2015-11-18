@@ -16,13 +16,13 @@
 	}
  
  	// loads an URL and puts the content in the content div
-    function loadContent(url){
-		loadInContainer(url,'content');
+    function loadContent(webUrl){
+		loadInContainer(webUrl,'content');
 		scroll(0,0);
     }
 	
 	// loads an URL and puts the content in the specified container
-    function loadInContainer(url, containerId){
+    function loadInContainer(webUrl, containerId){
 	
         xmlhttp=new XMLHttpRequest();
         xmlhttp.onreadystatechange=function()
@@ -32,7 +32,7 @@
 				document.getElementById(containerId).innerHTML=xmlhttp.responseText; 
             }
         }
-        xmlhttp.open("GET",url,true);
+        xmlhttp.open("GET",webUrl,true);
         xmlhttp.send();
     }
 
