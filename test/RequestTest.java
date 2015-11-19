@@ -1,10 +1,14 @@
-import it.algos.vaad.wiki.Page;
-import it.algos.vaad.wiki.PagePar;
-import it.algos.vaad.wiki.TipoRisultato;
+import it.algos.vaad.wiki.*;
+import it.algos.vaad.wiki.query.QueryTimestamp;
 import it.algos.vaad.wiki.query.Request;
 import it.algos.vaad.wiki.query.RequestWeb;
 import it.algos.vaad.wiki.query.RequestWikiRead;
+import it.algos.webbase.web.lib.LibArray;
+import it.algos.webbase.web.lib.LibText;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
@@ -13,6 +17,15 @@ import static org.junit.Assert.*;
  * .
  */
 public class RequestTest extends VaadTest {
+
+
+    private static final String[] listaPageIds = {"3397115", "4452510", "1691379", "3520373", "4956588", "5136975", "2072357", "4700355"};
+    private static final String pipe = "|";
+    private static final String virgola = ",";
+
+    private static String pageIdsPipe;
+    private static String pageIdsVirgola;
+    private static ArrayList<String> arrayPageIds;
 
     @Test
     /**
@@ -132,6 +145,112 @@ public class RequestTest extends VaadTest {
         ottenuto = page.getText();
         assertTrue(ottenuto.startsWith(TAG_INI_VOCE));
         assertTrue(ottenuto.endsWith(TAG_END_VOCE));
+    }// end of single test
+
+    @Before
+    @SuppressWarnings("all")
+    // Setup logic here
+    public void setUp() {
+        pageIdsPipe = "";
+        pageIdsVirgola = "";
+
+        for (String stringa : listaPageIds) {
+            pageIdsPipe += stringa;
+            pageIdsPipe += pipe;
+        } // fine del ciclo for-each
+        pageIdsPipe = LibText.levaCoda(pageIdsPipe, pipe);
+
+        for (String stringa : listaPageIds) {
+            pageIdsVirgola += stringa;
+            pageIdsVirgola += virgola;
+        } // fine del ciclo for-each
+        pageIdsVirgola = LibText.levaCoda(pageIdsVirgola, virgola);
+
+        arrayPageIds = (ArrayList) LibArray.fromString(listaPageIds);
+    } // fine del metodo iniziale
+
+    @Test
+     public void timestamp() {
+        RequestWikiRead request;
+        ArrayList<WrapTime> lista;
+
+        request = new RequestWikiRead(pageIdsPipe);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
+        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
+        lista = request.getListaWrapTime();
+        assertNotNull(lista);
+        assertEquals(lista.size(), 8);
+
+        request = new RequestWikiRead(pageIdsVirgola);
+        assertFalse(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.nonTrovata);
+        lista = request.getListaWrapTime();
+        assertNull(lista);
+
+        request = new RequestWikiRead(pageIdsVirgola, TipoRicerca.listaPageids);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
+        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
+        lista = request.getListaWrapTime();
+        assertNotNull(lista);
+        assertEquals(lista.size(), 8);
+
+        request = new RequestWikiRead(arrayPageIds);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
+        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
+        lista = request.getListaWrapTime();
+        assertNotNull(lista);
+        assertEquals(lista.size(), 8);
+
+        request = new RequestWikiRead(listaPageIds);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
+        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
+        lista = request.getListaWrapTime();
+        assertNotNull(lista);
+        assertEquals(lista.size(), 8);
+
+        request = new RequestWikiRead(arrayPageIds);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
+        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
+        lista = request.getListaWrapTime();
+        assertNotNull(lista);
+        assertEquals(lista.size(), 8);
+
+        request = new RequestWikiRead(arrayPageIds);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
+        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
+        lista = request.getListaWrapTime();
+        assertNotNull(lista);
+        assertEquals(lista.size(), 8);
+
+        request = new RequestWikiRead(TITOLO,TipoRicerca.listaPageids);
+        assertFalse(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.nonTrovata);
+        lista = request.getListaWrapTime();
+        assertNull(lista);
     }// end of single test
 
 }// end of testing class

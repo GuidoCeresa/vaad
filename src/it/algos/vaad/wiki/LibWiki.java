@@ -742,7 +742,7 @@ public abstract class LibWiki {
      * @return mappa con due array: timestamps validi e timestamps non validi
      */
     public static HashMap<String, ArrayList<WrapTime>> creaArrayWrapTime(String textJSON) {
-        HashMap<String, ArrayList<WrapTime>> mappa;
+        HashMap<String, ArrayList<WrapTime>> mappa = null;
         ArrayList<WrapTime> listaPagineValide = null;
         ArrayList<WrapTime> listaPagineMancanti = null;
         WrapTime wrap;
@@ -801,9 +801,13 @@ public abstract class LibWiki {
             } // fine del ciclo for-each
         }// fine del blocco if
 
-        mappa = new HashMap<String, ArrayList<WrapTime>>();
-        mappa.put(KEY_PAGINE_VALIDE, listaPagineValide);
-        mappa.put(KEY_PAGINE_MANCANTI, listaPagineMancanti);
+        if (listaPagineValide.size() == 0 && listaPagineMancanti.size() == 1) {
+        } else {
+            mappa = new HashMap<String, ArrayList<WrapTime>>();
+            mappa.put(KEY_PAGINE_VALIDE, listaPagineValide);
+            mappa.put(KEY_PAGINE_MANCANTI, listaPagineMancanti);
+        }// end of if/else cycle
+
         return mappa;
     } // fine del metodo
 

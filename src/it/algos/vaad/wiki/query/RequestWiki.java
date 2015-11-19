@@ -84,36 +84,6 @@ public abstract class RequestWiki extends Request {
         return API_BASE;
     } // fine del metodo
 
-    /**
-     * Elabora la risposta
-     * <p>
-     * Informazioni, contenuto e validita della risposta
-     * Controllo del contenuto (testo) ricevuto
-     * PUO essere sovrascritto nelle sottoclassi specifiche
-     */
-    @Override
-    protected void elaboraRisposta(String rispostaRequest) {
-        HashMap mappa = null;
-        super.elaboraRisposta(rispostaRequest);
-
-        if (rispostaRequest != null) {
-            mappa = LibWiki.creaMappaQuery(rispostaRequest);
-        }// fine del blocco if
-
-        if (mappa != null) {
-            if (mappa.get(PagePar.missing.toString()) != null && (Boolean) mappa.get(PagePar.missing.toString())) {
-                risultato = TipoRisultato.nonTrovata;
-                valida = false;
-            }// end of if cycle
-
-            if (mappa.get(PagePar.missing.toString()) != null && !(Boolean) mappa.get(PagePar.missing.toString())) {
-                if (mappa.get(PagePar.content.toString()) != null) {
-                    risultato = TipoRisultato.letta;
-                    valida = true;
-                }// end of if cycle
-            }// end of if cycle
-        }// fine del blocco if
-    } // fine del metodo
 
 
 } // fine della classe
