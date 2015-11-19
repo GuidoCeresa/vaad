@@ -21,6 +21,9 @@ public abstract class Cost {
     public static String API_WIKI = ".";
 
     /* azione API generica */
+    public static String API_PHP = ".org/w/api.php?";
+
+    /* azione API generica */
     public static String API_ACTION = ".org/w/api.php?action=";
 
     /* azione API login */

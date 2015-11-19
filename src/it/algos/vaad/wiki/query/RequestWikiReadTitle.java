@@ -9,16 +9,16 @@ import java.net.URLEncoder;
  */
 public class RequestWikiReadTitle extends RequestWikiRead {
 
+    //--titolo della pagina
     private String wikiTitle;
 
 
     /**
      * Costruttore completo
      * <p>
-     * L'istanza di questa classe viene chiamata con il titolo della pagina wiki (indispensabile)
-     * Rinvia al costruttore della superclasse
-     * Dalla superclasse viene chiamato il metodo doSetup() che può essere sovrascritto
-     * Dalla superclasse viene chiamato il metodo doInit() che può essere sovrascritto
+     * Le sottoclassi non invocano il costruttore
+     * Prima regolano alcuni parametri specifici
+     * Poi invocano il metodo doInit() della superclasse astratta
      *
      * @param wikiTitle titolo della pagina wiki su cui operare
      */
@@ -30,17 +30,17 @@ public class RequestWikiReadTitle extends RequestWikiRead {
 
     /**
      * Costruisce la stringa della request
-     * Domain per l'URL dal titolo della pagina o dal pageid (a seconda del costruttore usato)
+     * Domain per l'URL dal titolo della pagina o dal pageid (a seconda della sottoclasse)
      * PUO essere sovrascritto nelle sottoclassi specifiche
      *
      * @return domain
      */
     @Override
     protected String getDomain() {
-        String domain = "";
+        String domain = super.getDomain();
 
         try { // prova ad eseguire il codice
-            domain = API_BASE + TAG_PROP + TAG_TITOLO + URLEncoder.encode(wikiTitle, ENCODE);
+            domain +=  TAG_TITOLO + URLEncoder.encode(wikiTitle, ENCODE);
         } catch (Exception unErrore) { // intercetta l'errore
         }// fine del blocco try-catch
 

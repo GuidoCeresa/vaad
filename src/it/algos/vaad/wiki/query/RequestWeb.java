@@ -16,7 +16,9 @@ public class RequestWeb extends Request {
     /**
      * Costruttore completo
      * <p>
-     * Rinvia al costruttore della superclasse
+     * Le sottoclassi non invocano direttamente il costruttore
+     * Prima regolano alcuni parametri specifici
+     * Poi invocano il metodo doInit() della superclasse astratta
      *
      * @param webUrl indirizzo webUrl completo
      */

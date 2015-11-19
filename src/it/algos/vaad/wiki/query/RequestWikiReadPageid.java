@@ -4,20 +4,36 @@ package it.algos.vaad.wiki.query;
  * Created by gac on 18 nov 2015.
  * .
  */
-    public class RequestWikiReadPageid extends RequestWikiRead {
+public class RequestWikiReadPageid extends RequestWikiRead {
 
-        /**
-         * Costruttore completo
-         * <p>
-         * L'istanza di questa classe viene chiamata con il pageid della pagina wiki (indispensabile)
-         * Rinvia al costruttore della superclasse
-         * Dalla superclasse viene chiamato il metodo doSetup() che può essere sovrascritto
-         * Dalla superclasse viene chiamato il metodo doInit() che può essere sovrascritto
-         *
-         * @param wikiPageid pageid della pagina wiki su cui operare
-         */
-        public RequestWikiReadPageid(long wikiPageid) {
-            super(wikiPageid);
-        }// fine del metodo costruttore completo
+    //--pageid della pagina
+    private long wikiPageid;
 
-    } // fine della classe
+    /**
+     * Costruttore completo
+     * <p>
+     * Le sottoclassi non invocano il costruttore
+     * Prima regolano alcuni parametri specifici
+     * Poi invocano il metodo doInit() della superclasse astratta
+     *
+     * @param wikiPageid pageid della pagina wiki su cui operare
+     */
+    public RequestWikiReadPageid(long wikiPageid) {
+        this.wikiPageid = wikiPageid;
+        super.doInit();
+    }// fine del metodo costruttore completo
+
+
+    /**
+     * Costruisce la stringa della request
+     * Domain per l'URL dal titolo della pagina o dal pageid (a seconda della sottoclasse)
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     *
+     * @return domain
+     */
+    @Override
+    protected String getDomain() {
+        return super.getDomain() + TAG_PAGEID + wikiPageid;
+    } // fine del metodo
+
+} // fine della classe

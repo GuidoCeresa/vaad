@@ -2,7 +2,6 @@ package it.algos.vaad.wiki.query;
 
 import it.algos.vaad.wiki.*;
 
-import java.net.URLEncoder;
 import java.util.HashMap;
 
 /**
@@ -15,6 +14,7 @@ import java.util.HashMap;
  */
 public abstract class RequestWiki extends Request {
 
+
     //--codifica dei caratteri
     protected static String ENCODE = "UTF-8";
 
@@ -24,8 +24,17 @@ public abstract class RequestWiki extends Request {
     //--progetto selezionato (per adesso solo questo)
     protected static String PROJECT = "wikipedia";
 
+    /* suffisso per il formato della risposta */
+    protected static String API_FORMAT = "format=" + Cost.FORMAT.toString() + "&formatversion=2";
+
+    /* azione API generica */
+    protected static String API_ACTION = "&action=";
+
+    /* azione API specifica */
+    protected static String API_QUERY = "query";
+
     //--stringa iniziale (sempre valida) del DOMAIN a cui aggiungere le ulteriori specifiche
-    protected static String API_BASE = Cost.API_HTTP + LANGUAGE + Cost.API_WIKI + PROJECT + Cost.API_QUERY + Cost.API_FORMAT;
+    protected static String API_BASE = Cost.API_HTTP + LANGUAGE + Cost.API_WIKI + PROJECT + Cost.API_PHP + API_FORMAT + API_ACTION;
 
     // tag per la costruzione della stringa della request
     protected static String TAG_PROP = Cost.CONTENT_ALL;
@@ -36,61 +45,9 @@ public abstract class RequestWiki extends Request {
     //--di default il titolo
     protected TipoRicerca tipoRicerca = TipoRicerca.title;
 
-//    protected String title;
-//    protected String pageid;
-
     protected boolean needToken;
     protected boolean needPost;
 
-    /**
-     * Costruttore
-     * <p>
-     * Le sottoclassi non invocano direttamente il costruttore
-     * Prima regolano alcuni parametri specifici
-     * Poi invocano il metodo doInit() della superclasse (questa classe astratta)
-     //     * L'istanza di questa classe viene chiamata con l'indirizzo webUrl (indispensabile)
-     //     * Viene invocato il metodo doSetup() che permette alle sottoclassi di regolare alcuni parametri statici
-     //     * Viene invocato subito dopo il metodo doInit() che esegue la urlRequest()
-     */
-    public RequestWiki() {
-    }// fine del metodo costruttore
-
-    /**
-     * Costruttore completo
-     * <p>
-     * L'istanza di questa classe viene chiamata con il titolo della pagina wiki (indispensabile)
-     * Rinvia al costruttore della superclasse
-     * Dalla superclasse viene chiamato il metodo doSetup() che può essere sovrascritto
-     * Dalla superclasse viene chiamato il metodo doInit() che può essere sovrascritto
-     *
-     * @param wikiTitle titolo della pagina wiki su cui operare
-     */
-    public RequestWiki(String wikiTitle) {
-//        super(wikiTitle);
-        super.doInit();
-    }// fine del metodo costruttore completo
-
-    /**
-     * Costruttore completo
-     * <p>
-     * L'istanza di questa classe viene chiamata con il pageid della pagina wiki (indispensabile)
-     * Rinvia al costruttore della superclasse
-     * Dalla superclasse viene chiamato il metodo doSetup() che può essere sovrascritto
-     * Dalla superclasse viene chiamato il metodo doInit() che può essere sovrascritto
-     *
-     * @param wikiPageid pageid della pagina wiki su cui operare
-     */
-    public RequestWiki(long wikiPageid) {
-//        super(wikiPageid);
-        super.doInit();
-    }// fine del metodo costruttore completo
-
-//    /**
-//     * Metodo iniziale invocato DOPO che la sottoclasse ha regolato alcuni parametri specifici
-//     * PUO essere sovrascritto nelle sottoclassi specifiche
-//     */
-//    protected void doInit() {
-//    } // fine del metodo
 
     /**
      * Metodo iniziale
@@ -98,7 +55,7 @@ public abstract class RequestWiki extends Request {
      */
     @Override
     protected void doRequest() {
-//        preliminaryRequest();
+        preliminaryRequest();
 
         try { // prova ad eseguire il codice
             urlRequest();
@@ -108,32 +65,24 @@ public abstract class RequestWiki extends Request {
         }// fine del blocco try-catch
     } // fine del metodo
 
-//    /**
-//     * Alcune request (su mediawiki) richiedono anche una tokenRequestOnly preliminare
-//     * PUO essere sovrascritto nelle sottoclassi specifiche
-//     */
-//    @Override
-//    protected void preliminaryRequest() {
-//    } // fine del metodo
+    /**
+     * Alcune request (su mediawiki) richiedono anche una tokenRequestOnly preliminare
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     */
+    protected void preliminaryRequest() {
+    } // fine del metodo
 
-//    /**
-//     * Costruisce la stringa della request
-//     * Domain per l'URL dal titolo della pagina o dal pageid (a seconda del costruttore usato)
-//     * PUO essere sovrascritto nelle sottoclassi specifiche
-//     *
-//     * @return domain
-//     */
-//    @Override
-//    protected String getDomain() {
-//        String domain = "";
-//
-//        try { // prova ad eseguire il codice
-//            domain = API_BASE + TAG_PROP + TAG_TITOLO + URLEncoder.encode(webUrl, ENCODE);
-//        } catch (Exception unErrore) { // intercetta l'errore
-//        }// fine del blocco try-catch
-//
-//        return domain;
-//    } // fine del metodo
+    /**
+     * Costruisce la stringa della request
+     * Domain per l'URL dal titolo della pagina o dal pageid (a seconda del costruttore usato)
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     *
+     * @return domain
+     */
+    @Override
+    protected String getDomain() {
+        return API_BASE;
+    } // fine del metodo
 
     /**
      * Elabora la risposta

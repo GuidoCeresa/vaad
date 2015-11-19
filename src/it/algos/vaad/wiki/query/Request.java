@@ -36,12 +36,9 @@ public abstract class Request {
     /**
      * Costruttore
      * <p>
-     * Le sottoclassi non invocano direttamente il costruttore
+     * Le sottoclassi non invocano il costruttore
      * Prima regolano alcuni parametri specifici
      * Poi invocano il metodo doInit() della superclasse (questa classe astratta)
-//     * L'istanza di questa classe viene chiamata con l'indirizzo webUrl (indispensabile)
-//     * Viene invocato il metodo doSetup() che permette alle sottoclassi di regolare alcuni parametri statici
-//     * Viene invocato subito dopo il metodo doInit() che esegue la urlRequest()
      */
     public Request() {
     }// fine del metodo costruttore
@@ -52,7 +49,6 @@ public abstract class Request {
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
     protected void doInit() {
-//        preliminaryRequest();
         doRequest();
     } // fine del metodo
 
@@ -67,13 +63,6 @@ public abstract class Request {
             valida = false;
         }// fine del blocco try-catch
     } // fine del metodo
-
-//    /**
-//     * Alcune request (su mediawiki) richiedono anche una tokenRequestOnly preliminare
-//     * PUO essere sovrascritto nelle sottoclassi specifiche
-//     */
-//    protected void preliminaryRequest() {
-//    } // fine del metodo
 
 
     /**
@@ -170,12 +159,6 @@ public abstract class Request {
     private String getWebUrl() {
         return webUrl;
     }// end of getter method
-
-
-    private void setWebUrl(String webUrl) {
-        this.webUrl = webUrl;
-    }//end of setter method
-
 
     public boolean isValida() {
         return valida;
