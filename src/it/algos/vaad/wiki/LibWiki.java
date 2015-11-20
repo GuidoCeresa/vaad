@@ -1079,8 +1079,161 @@ public abstract class LibWiki {
         return lista;
     }// end of method
 
+
     /**
-     * Crea una lista di pagine (valori pageids) dal testo JSON di una pagina
+     * Crea un array delle categorie dal testo JSON di una pagina
+     *
+     * @param textJSON in ingresso
+     * @return array di oggetti Json
+     */
+    private static JSONArray creaArrayCatJson(String textJSON) {
+        JSONArray catObj = null;
+
+        JSONObject allObj = (JSONObject) JSONValue.parse(textJSON);
+        JSONObject queryObj = (JSONObject) allObj.get(QUERY);
+        catObj = (JSONArray) queryObj.get(CATEGORY_MEMBERS);
+
+        return catObj;
+    } // fine del metodo
+
+    /**
+     * Crea un array delle pagine back dal testo JSON di una pagina
+     *
+     * @param textJSON in ingresso
+     * @return arry di oggetti Json
+     */
+    private static JSONArray creaArrayBackJson(String textJSON) {
+        JSONArray backObj = null;
+
+        JSONObject allObj = (JSONObject) JSONValue.parse(textJSON);
+        JSONObject queryObj = (JSONObject) allObj.get(QUERY);
+        backObj = (JSONArray) queryObj.get(BACK_LINKS);
+
+        return backObj;
+    } // fine del metodo
+
+    /**
+     * Crea una lista di pagine (valori pageids) da un array di oggetti Json
+     *
+     * @param objArray array di oggetti Json
+     * @return lista pageid (valori Long)
+     */
+    private static ArrayList<Long> creaListaBaseLongJson(JSONArray objArray) {
+        return creaListaBaseLongJson(objArray, false);
+    } // fine del metodo
+
+
+    /**
+     * Crea una lista di pagine (valori pageids) da un array di oggetti Json
+     *
+     * @param objArray          array di oggetti Json
+     * @param nameSpaceBaseOnly flag per selezionare solo il namespace=0
+     * @return lista pageid (valori Long)
+     */
+    private static ArrayList<Long> creaListaBaseLongJson(JSONArray objArray, boolean nameSpaceBaseOnly) {
+        ArrayList<Long> lista = null;
+        JSONObject jsonObject = null;
+        Object longPageid = null;
+        long pageid = 0;
+        Object longNs = null;
+        long ns = 0;
+
+        if (objArray != null && objArray.size() > 0) {
+            lista = new ArrayList<Long>();
+            for (Object obj : objArray) {
+                if (obj instanceof JSONObject) {
+                    jsonObject = (JSONObject) obj;
+
+                    longPageid = jsonObject.get(PAGEID);
+                    if (longPageid instanceof Long) {
+                        pageid = ((Long) longPageid).intValue();
+                    }// fine del blocco if
+
+                    if (nameSpaceBaseOnly) {
+                        longNs = jsonObject.get(NS);
+                        if (longNs instanceof Long) {
+                            ns = ((Long) longNs).intValue();
+                            if (ns == 0) {
+                                if (pageid > 0) {
+                                    lista.add(pageid);
+                                }// end of if cycle
+                            }// end of if cycle
+                        }// fine del blocco if
+                    } else {
+                        if (pageid > 0) {
+                            lista.add(pageid);
+                        }// end of if cycle
+                    }// end of if/else cycle
+
+                }// fine del blocco if
+            } // fine del ciclo for-each
+        }// fine del blocco if
+
+        return lista;
+    } // fine del metodo
+
+    /**
+     * Crea una lista di pagine (valori title) da un array di oggetti Json
+     *
+     * @param objArray array di oggetti Json
+     * @return lista title (valori String)
+     */
+    private static ArrayList<String> creaListaBaseTxtJson(JSONArray objArray) {
+        return creaListaBaseTxtJson(objArray, false);
+    } // fine del metodo
+
+
+    /**
+     * Crea una lista di pagine (valori title) da un array di oggetti Json
+     *
+     * @param objArray          array di oggetti Json
+     * @param nameSpaceBaseOnly flag per selezionare solo il namespace=0
+     * @return lista title (valori String)
+     */
+    private static ArrayList<String> creaListaBaseTxtJson(JSONArray objArray, boolean nameSpaceBaseOnly) {
+        ArrayList<String> lista = null;
+        JSONObject jsonObject = null;
+        Object stringTitle = null;
+        String title = "";
+        Object longNs = null;
+        long ns = 0;
+
+        if (objArray != null && objArray.size() > 0) {
+            lista = new ArrayList<String>();
+            for (Object obj : objArray) {
+                if (obj instanceof JSONObject) {
+                    jsonObject = (JSONObject) obj;
+
+                    stringTitle = jsonObject.get(TITLE);
+                    if (stringTitle instanceof String) {
+                        title = stringTitle.toString();
+                    }// fine del blocco if
+
+                    if (nameSpaceBaseOnly) {
+                        longNs = jsonObject.get(NS);
+                        if (longNs instanceof Long) {
+                            ns = ((Long) longNs).intValue();
+                            if (ns == 0) {
+                                if (!title.equals("")) {
+                                    lista.add(title);
+                                }// end of if cycle
+                            }// end of if cycle
+                        }// fine del blocco if
+                    } else {
+                        if (!title.equals("")) {
+                            lista.add(title);
+                        }// end of if cycle
+                    }// end of if/else cycle
+
+                }// fine del blocco if
+            } // fine del ciclo for-each
+        }// fine del blocco if
+
+        return lista;
+    } // fine del metodo
+
+    /**
+     * Crea una lista di pagine (valori pageids) dal testo JSON di una categoria
      *
      * @param textJSON in ingresso
      * @return lista pageid (valori Long)
@@ -1088,19 +1241,17 @@ public abstract class LibWiki {
      */
     public static ArrayList<Long> creaListaCatJson(String textJSON) {
         ArrayList<Long> lista = null;
-        JSONObject jsonObject;
-        Object longPageid;
-        long pageid = 0;
+        JSONArray objArray = creaArrayCatJson(textJSON);
 
-        JSONObject allObj = (JSONObject) JSONValue.parse(textJSON);
-        JSONObject queryObj = (JSONObject) allObj.get(QUERY);
-        JSONArray catObj = (JSONArray) queryObj.get(CATEGORY_MEMBERS);
+        if (objArray != null) {
+            lista = creaListaBaseLongJson(objArray);
+        }// end of if cycle
 
-        return creaListaBaseLongJson(catObj);
+        return lista;
     } // fine del metodo
 
     /**
-     * Crea una lista di pagine (valori title) dal testo JSON di una pagina
+     * Crea una lista di pagine (valori title) dal testo JSON di una categoria
      *
      * @param textJSON in ingresso
      * @return lista title (valori String)
@@ -1108,115 +1259,83 @@ public abstract class LibWiki {
      */
     public static ArrayList<String> creaListaCatTxtJson(String textJSON) {
         ArrayList<String> lista = null;
-        JSONObject jsonObject;
-        Object longPageid;
-        long pageid = 0;
+        JSONArray objArray = creaArrayCatJson(textJSON);
 
-        JSONObject allObj = (JSONObject) JSONValue.parse(textJSON);
-        JSONObject queryObj = (JSONObject) allObj.get(QUERY);
-        JSONArray catObj = (JSONArray) queryObj.get(CATEGORY_MEMBERS);
+        if (objArray != null) {
+            lista = creaListaBaseTxtJson(objArray);
+        }// end of if cycle
 
-        return creaListaBaseTextJson(catObj);
-    } // fine del metodo
-
-    /**
-     * Crea una lista di pagine (valori pageids) dal testo JSON di una pagina
-     *
-     * @param textJSON in ingresso
-     * @return lista pageid (valori Integer)
-     */
-    public static ArrayList<Long> creaListaBackJson(String textJSON) {
-        ArrayList<Long> lista = null;
-
-        JSONObject allObj = (JSONObject) JSONValue.parse(textJSON);
-        JSONObject contObj = (JSONObject) allObj.get(QUERY);
-        JSONObject batchObj = (JSONObject) allObj.get(QUERY);
-        JSONObject queryObj = (JSONObject) allObj.get(QUERY);
-        JSONArray backObj = (JSONArray) queryObj.get(BACK_LINKS);
-
-        lista = creaListaBaseLongJson(backObj);
         return lista;
     } // fine del metodo
 
 
     /**
-     * Crea una lista di pagine (valori pageids) dal testo JSON di una pagina
+     * Crea una lista di pagine back (valori pageids) dal testo JSON di una pagina puntata
      *
      * @param textJSON in ingresso
-     * @return lista pageid (valori Integer)
+     * @return lista pageid (valori Long)
+     */
+    public static ArrayList<Long> creaListaBackLongJson(String textJSON) {
+        ArrayList<Long> lista = null;
+        JSONArray objArray = creaArrayBackJson(textJSON);
+
+        if (objArray != null) {
+            lista = creaListaBaseLongJson(objArray);
+        }// end of if cycle
+
+        return lista;
+    } // fine del metodo
+
+    /**
+     * Crea una lista di voci back (valori pageids) dal testo JSON di una pagina puntata
+     *
+     * @param textJSON in ingresso
+     * @return lista pageid (valori Long) solo delle voci (namespace=0)
+     */
+    public static ArrayList<Long> creaListaBackLongVociJson(String textJSON) {
+        ArrayList<Long> lista = null;
+        JSONArray objArray = creaArrayBackJson(textJSON);
+
+        if (objArray != null) {
+            lista = creaListaBaseLongJson(objArray, true);
+        }// end of if cycle
+
+        return lista;
+    } // fine del metodo
+
+    /**
+     * Crea una lista di pagine back (valori title) dal testo JSON di una pagina puntata
+     *
+     * @param textJSON in ingresso
+     * @return lista title (valori String)
      */
     public static ArrayList<String> creaListaBackTxtJson(String textJSON) {
         ArrayList<String> lista = null;
+        JSONArray objArray = creaArrayBackJson(textJSON);
 
-        JSONObject allObj = (JSONObject) JSONValue.parse(textJSON);
-        JSONObject contObj = (JSONObject) allObj.get(QUERY);
-        JSONObject batchObj = (JSONObject) allObj.get(QUERY);
-        JSONObject queryObj = (JSONObject) allObj.get(QUERY);
-        JSONArray backObj = (JSONArray) queryObj.get(BACK_LINKS);
-
-        lista = creaListaBaseTextJson(backObj);
-        return lista;
-    } // fine del metodo
-
-
-    /**
-     * Crea una lista di pagine (valori pageids) da un JSONArray
-     *
-     * @param objArray in ingresso
-     * @return lista pageid (valori Integer)
-     */
-    private static ArrayList<Long> creaListaBaseLongJson(JSONArray objArray) {
-        ArrayList<Long> lista = null;
-        JSONObject jsonObject = null;
-        Object longPageid = null;
-        long pageid = 0;
-
-        if (objArray != null && objArray.size() > 0) {
-            lista = new ArrayList<Long>();
-            for (Object obj : objArray) {
-                if (obj instanceof JSONObject) {
-                    jsonObject = (JSONObject) obj;
-                    longPageid = jsonObject.get(PAGEID);
-                    if (longPageid instanceof Long) {
-                        pageid = ((Long) longPageid).intValue();
-                        lista.add(pageid);
-                    }// fine del blocco if
-                }// fine del blocco if
-            } // fine del ciclo for-each
-        }// fine del blocco if
+        if (objArray != null) {
+            lista = creaListaBaseTxtJson(objArray);
+        }// end of if cycle
 
         return lista;
     } // fine del metodo
 
     /**
-     * Crea una lista di pagine (valori title) da un JSONArray
+     * Crea una lista di voci back (valori title) dal testo JSON di una pagina puntata
      *
-     * @param objArray in ingresso
-     * @return lista pageid (valori Integer)
+     * @param textJSON in ingresso
+     * @return lista title (valori String) solo delle voci (namespace=0)
      */
-    private static ArrayList<String> creaListaBaseTextJson(JSONArray objArray) {
+    public static ArrayList<String> creaListaBackTxtVociJson(String textJSON) {
         ArrayList<String> lista = null;
-        JSONObject jsonObject = null;
-        Object stringTitle = null;
-        String title = "";
+        JSONArray objArray = creaArrayBackJson(textJSON);
 
-        if (objArray != null && objArray.size() > 0) {
-            lista = new ArrayList<String>();
-            for (Object obj : objArray) {
-                if (obj instanceof JSONObject) {
-                    jsonObject = (JSONObject) obj;
-                    stringTitle = jsonObject.get(TITLE);
-                    if (stringTitle instanceof String) {
-                        title = stringTitle.toString();
-                        lista.add(title);
-                    }// fine del blocco if
-                }// fine del blocco if
-            } // fine del ciclo for-each
-        }// fine del blocco if
+        if (objArray != null) {
+            lista = creaListaBaseTxtJson(objArray, true);
+        }// end of if cycle
 
         return lista;
     } // fine del metodo
-
 
     /**
      * Crea una lista di wrapper dal testo JSON di una pagina per le categorie

@@ -15,6 +15,7 @@ public enum TipoRisultato {
     esistenteNuova("Pagina già esistente."),
 
     noLogin("Manca il login"),
+    noToken("Manca il token"),
     registrata("Pagina registrata."),
     nonRegistrata("Pagina non registrata (probabilmente cancellata)."),
     modificaRegistrata("Registrata modifica alla voce."),

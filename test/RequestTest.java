@@ -168,10 +168,10 @@ public class RequestTest extends VaadTest {
 
     @Test
     public void timestamp() {
-        RequestWikiReadTimestamp request;
+        RequestWikiTimestamp request;
         ArrayList<WrapTime> lista;
 
-        request = new RequestWikiReadTimestamp(pageIdsPipe);
+        request = new RequestWikiTimestamp(pageIdsPipe);
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.letta);
         ottenuto = request.getTestoResponse();
@@ -182,7 +182,7 @@ public class RequestTest extends VaadTest {
         assertNotNull(lista);
         assertEquals(lista.size(), 8);
 
-        request = new RequestWikiReadTimestamp(pageIdsVirgola);
+        request = new RequestWikiTimestamp(pageIdsVirgola);
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.letta);
         ottenuto = request.getTestoResponse();
@@ -193,7 +193,7 @@ public class RequestTest extends VaadTest {
         assertNotNull(lista);
         assertEquals(lista.size(), 8);
 
-        request = new RequestWikiReadTimestamp(arrayPageIds);
+        request = new RequestWikiTimestamp(arrayPageIds);
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.letta);
         ottenuto = request.getTestoResponse();
@@ -204,7 +204,7 @@ public class RequestTest extends VaadTest {
         assertNotNull(lista);
         assertEquals(lista.size(), 8);
 
-        request = new RequestWikiReadTimestamp(listaPageIds);
+        request = new RequestWikiTimestamp(listaPageIds);
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.letta);
         ottenuto = request.getTestoResponse();
@@ -215,7 +215,7 @@ public class RequestTest extends VaadTest {
         assertNotNull(lista);
         assertEquals(lista.size(), 8);
 
-        request = new RequestWikiReadTimestamp(arrayPageIds);
+        request = new RequestWikiTimestamp(arrayPageIds);
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.letta);
         ottenuto = request.getTestoResponse();
@@ -226,7 +226,7 @@ public class RequestTest extends VaadTest {
         assertNotNull(lista);
         assertEquals(lista.size(), 8);
 
-        request = new RequestWikiReadTimestamp(arrayPageIds);
+        request = new RequestWikiTimestamp(arrayPageIds);
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.letta);
         ottenuto = request.getTestoResponse();
@@ -237,13 +237,110 @@ public class RequestTest extends VaadTest {
         assertNotNull(lista);
         assertEquals(lista.size(), 8);
 
-        request = new RequestWikiReadTimestamp(TITOLO);
+        request = new RequestWikiTimestamp(TITOLO);
         assertFalse(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.nonTrovata);
         lista = request.getListaWrapTime();
         assertNull(lista);
     }// end of single test
 
+
+    @Test
+    /**
+     * Created by gac on 08 nov 2015.
+     * <p>
+     * Rif: https://www.mediawiki.org/wiki/API:Backlinks
+     * Lists pages that link to a given page, similar to Special:Whatlinkshere. Ordered by linking page title.
+     * <p>
+     * Parametrs:
+     * bltitle: List pages linking to this title. The title does not need to exist.
+     * blnamespace: Only list pages in these namespaces
+     * blfilterredir: How to filter redirects (Default: all)
+     * - all: List all pages regardless of their redirect flag
+     * - redirects: Only list redirects
+     * - nonredirects: Don't list redirects
+     * bllimit: Maximum amount of pages to list. Maximum limit is halved if blredirect is set. No more than 500 (5000 for bots) allowed. (Default: 10)
+     * blredirect: If set, pages linking to bltitle through a redirect will also be listed. See below for more detailed information.
+     * blcontinue: Used to continue a previous request
+     * <p>
+     * Es:
+     * https://it.wikipedia.org/w/api.php?action=query&list=backlinks&bltitle=Piozzano&format=jsonfm
+     */
+    public void back() {
+        RequestWikiBacklinks request;
+        ArrayList<Long> listaAllPageids;
+        ArrayList<String> listaAllTitles;
+        ArrayList<Long> listaVociPageids;
+        ArrayList<String> listaVociTitles;
+
+        request = new RequestWikiBacklinks(TITOLO_BACK);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        listaAllPageids = request.getListaAllPageids();
+        assertNotNull(listaAllPageids);
+        assertEquals(listaAllPageids.size(), 17);
+        listaAllTitles = request.getListaAllTitles();
+        assertNotNull(listaAllTitles);
+        assertEquals(listaAllTitles.size(), 17);
+        listaVociPageids = request.getListaVociPageids();
+        assertNotNull(listaVociPageids);
+        assertEquals(listaVociPageids.size(), 10);
+        listaVociTitles = request.getListaVociTitles();
+        assertNotNull(listaVociTitles);
+        assertEquals(listaVociTitles.size(), 10);
+
+        request = new RequestWikiBacklinks(TITOLO_2);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        listaAllPageids = request.getListaAllPageids();
+        assertNotNull(listaAllPageids);
+        assertEquals(listaAllPageids.size(), 3);
+        listaAllTitles = request.getListaAllTitles();
+        assertNotNull(listaAllTitles);
+        assertEquals(listaAllTitles.size(), 3);
+        listaVociPageids = request.getListaVociPageids();
+        assertNotNull(listaVociPageids);
+        assertEquals(listaVociPageids.size(), 0);
+        listaVociTitles = request.getListaVociTitles();
+        assertNotNull(listaVociTitles);
+        assertEquals(listaVociTitles.size(), 0);
+
+        request = new RequestWikiBacklinks(TITOLO_ERRATO);
+        assertFalse(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.nonTrovata);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        listaAllPageids = request.getListaAllPageids();
+        assertNull(listaAllPageids);
+        listaAllTitles = request.getListaAllTitles();
+        assertNull(listaAllTitles);
+        listaVociPageids = request.getListaVociPageids();
+        assertNull(listaVociPageids);
+        listaVociTitles = request.getListaVociTitles();
+        assertNull(listaVociTitles);
+
+        request = new RequestWikiBacklinks(TITOLO_ALTRO);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        listaAllPageids = request.getListaAllPageids();
+        assertNotNull(listaAllPageids);
+        assertEquals(listaAllPageids.size(), 1);
+        listaAllTitles = request.getListaAllTitles();
+        assertNotNull(listaAllTitles);
+        assertEquals(listaAllTitles.size(), 1);
+        listaVociPageids = request.getListaVociPageids();
+        assertNotNull(listaVociPageids);
+        assertEquals(listaVociPageids.size(), 0);
+        listaVociTitles = request.getListaVociTitles();
+        assertNotNull(listaVociTitles);
+        assertEquals(listaVociTitles.size(), 0);
+    }// end of single test
 
     @Test
     /**

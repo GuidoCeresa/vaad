@@ -1,8 +1,8 @@
 package it.algos.vaad.wiki.query;
 
-import it.algos.vaad.wiki.*;
-
-import java.util.HashMap;
+import it.algos.vaad.wiki.Cost;
+import it.algos.vaad.wiki.TipoRicerca;
+import it.algos.vaad.wiki.TipoRisultato;
 
 /**
  * Superclasse astratta per le Request sul server di Wikipedia
@@ -45,9 +45,31 @@ public abstract class RequestWiki extends Request {
     //--di default il titolo
     protected TipoRicerca tipoRicerca = TipoRicerca.title;
 
+    protected boolean needLogin;
     protected boolean needToken;
-    protected boolean needPost;
 
+    //--titolo della pagina
+    protected String wikiTitle;
+
+    //--pageid della pagina
+    protected long wikiPageid;
+
+    /**
+     * Metodo iniziale invocato DOPO che la sottoclasse ha regolato alcuni parametri specifici
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     */
+    protected void doInit() {
+        if (needLogin) {
+            if (isLoggato()) {
+                super.doInit();
+            } else {
+                valida = false;
+                risultato = TipoRisultato.noLogin;
+            }// end of if/else cycle
+        } else {
+            super.doInit();
+        }// end of if/else cycle
+    } // fine del metodo
 
     /**
      * Metodo iniziale
@@ -55,21 +77,32 @@ public abstract class RequestWiki extends Request {
      */
     @Override
     protected void doRequest() {
-        preliminaryRequest();
+        if (needToken) {
+            if (preliminaryRequest()) {
+                super.doRequest();
+            } else {
+                valida = false;
+                risultato = TipoRisultato.noToken;
+            }// end of if/else cycle
+        }// end of if cycle
 
-        try { // prova ad eseguire il codice
-            urlRequest();
-        } catch (Exception unErrore) { // intercetta l'errore
-            String errore = unErrore.getClass().getSimpleName();
-            valida = false;
-        }// fine del blocco try-catch
+        super.doRequest();
     } // fine del metodo
 
     /**
      * Alcune request (su mediawiki) richiedono anche una tokenRequestOnly preliminare
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
-    protected void preliminaryRequest() {
+    protected boolean isLoggato() {
+        return true;
+    } // fine del metodo
+
+    /**
+     * Alcune request (su mediawiki) richiedono anche una tokenRequestOnly preliminare
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     */
+    protected boolean preliminaryRequest() {
+        return true;
     } // fine del metodo
 
     /**
@@ -83,7 +116,6 @@ public abstract class RequestWiki extends Request {
     protected String getDomain() {
         return API_BASE;
     } // fine del metodo
-
 
 
 } // fine della classe

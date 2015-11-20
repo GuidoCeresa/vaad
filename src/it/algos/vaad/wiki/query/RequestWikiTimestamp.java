@@ -14,7 +14,7 @@ import java.util.HashMap;
  * Created by gac on 20 nov 2015.
  * .
  */
-public class RequestWikiReadTimestamp extends RequestWikiRead {
+public class RequestWikiTimestamp extends RequestWiki {
 
     //--tag per la costruzione della stringa della request
     protected static String TAG_PROP_PAGEIDS = "&prop=revisions&rvprop=timestamp&pageids=";
@@ -36,7 +36,7 @@ public class RequestWikiReadTimestamp extends RequestWikiRead {
      *
      * @param listaPageIds elenco di pageids
      */
-    public RequestWikiReadTimestamp(String[] listaPageIds) {
+    public RequestWikiTimestamp(String[] listaPageIds) {
         this(LibArray.fromStringToStringaPipe(listaPageIds));
     }// fine del metodo costruttore
 
@@ -49,7 +49,7 @@ public class RequestWikiReadTimestamp extends RequestWikiRead {
      *
      * @param arrayPageIds elenco di pageids
      */
-    public RequestWikiReadTimestamp(ArrayList arrayPageIds) {
+    public RequestWikiTimestamp(ArrayList arrayPageIds) {
         this(LibArray.toStringaPipe(arrayPageIds));
     }// fine del metodo costruttore
 
@@ -62,7 +62,7 @@ public class RequestWikiReadTimestamp extends RequestWikiRead {
      *
      * @param stringaPageIds stringa (separata da pipe oppure da virgola) delle pageids
      */
-    public RequestWikiReadTimestamp(String stringaPageIds) {
+    public RequestWikiTimestamp(String stringaPageIds) {
 
         if (stringaPageIds.contains(",")) {
             stringaPageIds = LibText.sostituisce(stringaPageIds, ",", "|");
@@ -85,9 +85,9 @@ public class RequestWikiReadTimestamp extends RequestWikiRead {
      */
     @Override
     protected String getDomain() {
-        String domain = super.getDomain() + API_QUERY + TAG_PROP;
+        String domain = super.getDomain();
 
-        domain += TAG_PROP_PAGEIDS + stringaPageIds;
+        domain += API_QUERY + TAG_PROP + TAG_PROP_PAGEIDS + stringaPageIds;
 
         return domain;
     } // fine del metodo

@@ -28,6 +28,7 @@ public abstract class VaadTest {
     protected static String TITOLO9 = "Utente:Gac/Sandbox9";
     protected static String TITOLO_ALTRO = "Utente:Gac/Sandbox4";
     protected static String TITOLO_BLOCCATO = "Utente:Rompiballe11";
+    protected static String TITOLO_BACK = "Stefano Corti";
     protected static String SUMMARY = "Sola scrittura";
 
     protected static int PAGEID = 698528;

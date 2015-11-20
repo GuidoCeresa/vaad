@@ -93,7 +93,7 @@ public class QueryBacklinks extends QueryWiki {
     @Override
     protected void regolaRisultato(String risultatoRequest) {
 
-        listaPageids = LibWiki.creaListaBackJson(risultatoRequest);
+        listaPageids = LibWiki.creaListaBackLongJson(risultatoRequest);
         listaTitles = LibWiki.creaListaBackTxtJson(risultatoRequest);
 
         if (listaPageids != null && listaTitles != null) {

@@ -33,6 +33,8 @@ public abstract class Request {
     //--contenuto testuale completo della risposta (la seconda, se ci sono due request)
     private String testoResponse;
 
+    protected boolean needPost;
+
     /**
      * Costruttore
      * <p>
@@ -60,6 +62,7 @@ public abstract class Request {
         try { // prova ad eseguire il codice
             urlRequest();
         } catch (Exception unErrore) { // intercetta l'errore
+            String errore = unErrore.getClass().getSimpleName();
             valida = false;
         }// fine del blocco try-catch
     } // fine del metodo
@@ -84,7 +87,9 @@ public abstract class Request {
         inputReader = new InputStreamReader(input, INPUT);
 
         //--POST
-        this.creaPost(urlConn);
+        if (needPost) {
+            this.creaPost(urlConn);
+        }// end of if cycle
 
         // read the request
         readBuffer = new BufferedReader(inputReader);

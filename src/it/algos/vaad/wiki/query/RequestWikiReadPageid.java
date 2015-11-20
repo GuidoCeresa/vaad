@@ -1,18 +1,11 @@
 package it.algos.vaad.wiki.query;
 
-import it.algos.vaad.wiki.*;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 /**
  * Created by gac on 20 nov 2015.
  * .
  */
 public class RequestWikiReadPageid extends RequestWikiRead {
 
-    //--pageid della pagina
-    private long wikiPageid;
 
     /**
      * Costruttore completo
@@ -25,7 +18,6 @@ public class RequestWikiReadPageid extends RequestWikiRead {
      */
     public RequestWikiReadPageid(long wikiPageid) {
         this.wikiPageid = wikiPageid;
-        tipoRicerca = TipoRicerca.pageid;
         super.doInit();
     }// fine del metodo costruttore completo
 
@@ -38,9 +30,9 @@ public class RequestWikiReadPageid extends RequestWikiRead {
      */
     @Override
     protected String getDomain() {
-        String domain = super.getDomain() + API_QUERY + TAG_PROP;
+        String domain = super.getDomain();
 
-        domain += TAG_PAGEID + wikiPageid;
+        domain += API_QUERY + TAG_PROP + TAG_PAGEID + wikiPageid;
 
         return domain;
     } // fine del metodo

@@ -1,21 +1,13 @@
 package it.algos.vaad.wiki.query;
 
-import it.algos.vaad.wiki.LibWiki;
-import it.algos.vaad.wiki.PagePar;
-import it.algos.vaad.wiki.TipoRicerca;
-import it.algos.vaad.wiki.TipoRisultato;
-
 import java.net.URLEncoder;
-import java.util.HashMap;
 
 /**
  * Created by gac on 20 nov 2015.
  * .
  */
-public class RequestWikiReadTitle extends RequestWikiRead{
+public class RequestWikiReadTitle extends RequestWikiRead {
 
-    //--titolo della pagina
-    private String wikiTitle;
 
     /**
      * Costruttore
@@ -28,7 +20,6 @@ public class RequestWikiReadTitle extends RequestWikiRead{
      */
     public RequestWikiReadTitle(String wikiTitle) {
         this.wikiTitle = wikiTitle;
-        tipoRicerca = TipoRicerca.title;
         super.doInit();
     }// fine del metodo costruttore
 
@@ -42,10 +33,10 @@ public class RequestWikiReadTitle extends RequestWikiRead{
      */
     @Override
     protected String getDomain() {
-        String domain = super.getDomain() + API_QUERY + TAG_PROP;
+        String domain = super.getDomain();
 
         try { // prova ad eseguire il codice
-            domain += TAG_TITOLO + URLEncoder.encode(wikiTitle, ENCODE);
+            domain += API_QUERY + TAG_PROP + TAG_TITOLO + URLEncoder.encode(wikiTitle, ENCODE);
         } catch (Exception unErrore) { // intercetta l'errore
         }// fine del blocco try-catch
 
