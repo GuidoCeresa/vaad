@@ -1,5 +1,4 @@
 import it.algos.vaad.wiki.*;
-import it.algos.vaad.wiki.query.QueryTimestamp;
 import it.algos.vaad.wiki.query.Request;
 import it.algos.vaad.wiki.query.RequestWeb;
 import it.algos.vaad.wiki.query.RequestWikiRead;
@@ -170,7 +169,7 @@ public class RequestTest extends VaadTest {
     } // fine del metodo iniziale
 
     @Test
-     public void timestamp() {
+    public void timestamp() {
         RequestWikiRead request;
         ArrayList<WrapTime> lista;
 
@@ -246,11 +245,45 @@ public class RequestTest extends VaadTest {
         assertNotNull(lista);
         assertEquals(lista.size(), 8);
 
-        request = new RequestWikiRead(TITOLO,TipoRicerca.listaPageids);
+        request = new RequestWikiRead(TITOLO, TipoRicerca.listaPageids);
         assertFalse(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.nonTrovata);
         lista = request.getListaWrapTime();
         assertNull(lista);
+    }// end of single test
+
+
+    @Test
+    /**
+     * Query per recuperare le pagine di una categoria
+     * NON legge le sottocategorie
+     * Non necessita di Login, ma se esiste lo usa
+     * Può essere sovrascritta per leggere anche le sottocategorie
+     */
+    public void cat() {
+//        QueryCat query;
+//        ArrayList<Long> listaPageids;
+//        ArrayList<String> listaTitles;
+//        ArrayList<Long> listaCatPageids;
+//        ArrayList<String> listaCatTitles;
+//        ArrayList<Long> listaAllPageids;
+//        ArrayList<String> listaAllTitles;
+//
+//        query = new QueryCat(TITOLO_CAT_ERRATA);
+//        assertEquals(query.getRisultato(), TipoRisultato.nonTrovata);
+//        assertFalse(query.isValida());
+//        listaPageids = query.getListaPageids();
+//        assertNull(listaPageids);
+//        listaTitles = query.getListaTitles();
+//        assertNull(listaTitles);
+//        listaCatPageids = query.getListaCatPageids();
+//        assertNull(listaCatPageids);
+//        listaCatTitles = query.getListaCatTitles();
+//        assertNull(listaCatTitles);
+//        listaAllPageids = query.getListaAllPageids();
+//        assertNull(listaAllPageids);
+//        listaAllTitles = query.getListaAllTitles();
+//        assertNull(listaAllTitles);
     }// end of single test
 
 }// end of testing class
