@@ -1,7 +1,5 @@
 import it.algos.vaad.wiki.*;
-import it.algos.vaad.wiki.query.Request;
-import it.algos.vaad.wiki.query.RequestWeb;
-import it.algos.vaad.wiki.query.RequestWikiRead;
+import it.algos.vaad.wiki.query.*;
 import it.algos.webbase.web.lib.LibArray;
 import it.algos.webbase.web.lib.LibText;
 import org.junit.Before;
@@ -57,7 +55,7 @@ public class RequestTest extends VaadTest {
     public void read() {
         Request request;
 
-        request = new RequestWikiRead(TITOLO_ERRATO);
+        request = new RequestWikiReadTitle(TITOLO_ERRATO);
         assertFalse(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.nonTrovata);
         ottenuto = request.getTestoResponse();
@@ -65,7 +63,7 @@ public class RequestTest extends VaadTest {
         assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
         assertFalse(ottenuto.endsWith(TAG_END_PAGINA));
 
-        request = new RequestWikiRead(TITOLO);
+        request = new RequestWikiReadTitle(TITOLO);
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.letta);
         ottenuto = request.getTestoResponse();
@@ -73,7 +71,7 @@ public class RequestTest extends VaadTest {
         assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
         assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
 
-        request = new RequestWikiRead(PAGEID_ERRATO);
+        request = new RequestWikiReadPageid(PAGEID_ERRATO);
         assertFalse(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.nonTrovata);
         ottenuto = request.getTestoResponse();
@@ -81,7 +79,7 @@ public class RequestTest extends VaadTest {
         assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
         assertFalse(ottenuto.endsWith(TAG_END_PAGINA));
 
-        request = new RequestWikiRead(PAGEID);
+        request = new RequestWikiReadPageid(PAGEID);
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.letta);
         ottenuto = request.getTestoResponse();
@@ -89,7 +87,7 @@ public class RequestTest extends VaadTest {
         assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
         assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
 
-        request = new RequestWikiRead(PAGEID_UTF8);
+        request = new RequestWikiReadPageid(PAGEID_UTF8);
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.letta);
         ottenuto = request.getTestoResponse();
@@ -106,7 +104,7 @@ public class RequestTest extends VaadTest {
      * titolo, pageid, testo, ns, contentformat, revid, parentid, minor, user, userid, size, comment, timestamp, contentformat, contentmodel
      */
     public void page() {
-        Request request = new RequestWikiRead(TITOLO);
+        Request request = new RequestWikiReadTitle(TITOLO);
         assertEquals(request.getRisultato(), TipoRisultato.letta);
         assertTrue(request.isValida());
 
@@ -170,10 +168,10 @@ public class RequestTest extends VaadTest {
 
     @Test
     public void timestamp() {
-        RequestWikiRead request;
+        RequestWikiReadTimestamp request;
         ArrayList<WrapTime> lista;
 
-        request = new RequestWikiRead(pageIdsPipe);
+        request = new RequestWikiReadTimestamp(pageIdsPipe);
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.letta);
         ottenuto = request.getTestoResponse();
@@ -184,13 +182,7 @@ public class RequestTest extends VaadTest {
         assertNotNull(lista);
         assertEquals(lista.size(), 8);
 
-        request = new RequestWikiRead(pageIdsVirgola);
-        assertFalse(request.isValida());
-        assertEquals(request.getRisultato(), TipoRisultato.nonTrovata);
-        lista = request.getListaWrapTime();
-        assertNull(lista);
-
-        request = new RequestWikiRead(pageIdsVirgola, TipoRicerca.listaPageids);
+        request = new RequestWikiReadTimestamp(pageIdsVirgola);
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.letta);
         ottenuto = request.getTestoResponse();
@@ -201,7 +193,7 @@ public class RequestTest extends VaadTest {
         assertNotNull(lista);
         assertEquals(lista.size(), 8);
 
-        request = new RequestWikiRead(arrayPageIds);
+        request = new RequestWikiReadTimestamp(arrayPageIds);
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.letta);
         ottenuto = request.getTestoResponse();
@@ -212,7 +204,7 @@ public class RequestTest extends VaadTest {
         assertNotNull(lista);
         assertEquals(lista.size(), 8);
 
-        request = new RequestWikiRead(listaPageIds);
+        request = new RequestWikiReadTimestamp(listaPageIds);
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.letta);
         ottenuto = request.getTestoResponse();
@@ -223,7 +215,7 @@ public class RequestTest extends VaadTest {
         assertNotNull(lista);
         assertEquals(lista.size(), 8);
 
-        request = new RequestWikiRead(arrayPageIds);
+        request = new RequestWikiReadTimestamp(arrayPageIds);
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.letta);
         ottenuto = request.getTestoResponse();
@@ -234,7 +226,7 @@ public class RequestTest extends VaadTest {
         assertNotNull(lista);
         assertEquals(lista.size(), 8);
 
-        request = new RequestWikiRead(arrayPageIds);
+        request = new RequestWikiReadTimestamp(arrayPageIds);
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.letta);
         ottenuto = request.getTestoResponse();
@@ -245,7 +237,7 @@ public class RequestTest extends VaadTest {
         assertNotNull(lista);
         assertEquals(lista.size(), 8);
 
-        request = new RequestWikiRead(TITOLO, TipoRicerca.listaPageids);
+        request = new RequestWikiReadTimestamp(TITOLO);
         assertFalse(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.nonTrovata);
         lista = request.getListaWrapTime();
