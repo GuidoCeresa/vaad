@@ -25,6 +25,18 @@ public abstract class RequestWikiRead extends RequestWiki {
     }// fine del metodo costruttore
 
     /**
+     * Metodo iniziale invocato DOPO che la sottoclasse ha regolato alcuni parametri specifici
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     */
+    protected void doInit() {
+        super.needPost = false;
+        super.needLogin = false;
+        super.needToken = false;
+        super.needContinua = false;
+        super.doInit();
+    } // fine del metodo
+
+    /**
      * Elabora la risposta
      * <p>
      * Informazioni, contenuto e validita della risposta

@@ -77,6 +77,18 @@ public class RequestWikiTimestamp extends RequestWiki {
     }// fine del metodo costruttore completo
 
     /**
+     * Metodo iniziale invocato DOPO che la sottoclasse ha regolato alcuni parametri specifici
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     */
+    protected void doInit() {
+        super.needPost = false;
+        super.needLogin = false;
+        super.needToken = false;
+        super.needContinua = false;
+        super.doInit();
+    } // fine del metodo
+
+    /**
      * Costruisce la stringa della request
      * Domain per l'URL dal titolo della pagina o dal pageid (a seconda della sottoclasse)
      * PUO essere sovrascritto nelle sottoclassi specifiche

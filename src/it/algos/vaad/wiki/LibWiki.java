@@ -79,14 +79,13 @@ public abstract class LibWiki {
     public static final String KEY_VOCE_TITLE = "keyvocetitle";
     public static final String KEY_CAT_PAGEID = "keycatpageid";
     public static final String KEY_CAT_TITLE = "keycattitle";
-
+    public static final String WARNINGS = "warnings";
+    public static final String CATEGORY_MEMBERS = "categorymembers";
     private static final String PAGES = "pages";
     private static final String REVISIONS = "revisions";
     private static final String TOKENS = "tokens";
-    private static final String WARNINGS = "warnings";
     private static final String TIMESTAMP = "timestamp";
     private static final String BACK_LINKS = "backlinks";
-    private static final String CATEGORY_MEMBERS = "categorymembers"; // deprecated
     private static final String QUERY_CONTINUE = "query-continue"; // deprecated
     private static final String CONTINUE = "continue";
     private static final String CM_CONTINUE = "cmcontinue";
@@ -870,6 +869,38 @@ public abstract class LibWiki {
         }// end of if cycle
 
         return mappa;
+    } // fine del metodo
+
+    /**
+     * Estrae un (eventuale) messaggio di errore dal testo JSON di una pagina
+     *
+     * @param textJSON in ingresso
+     * @return messaggio di errore
+     */
+    public static String getWarning(String textJSON) {
+        String errore = "";
+        HashMap<String, Object> mappa;
+        JSONObject avviso;
+        JSONObject sottoAvviso;
+
+        if (textJSON != null && !textJSON.equals("")) {
+            mappa = creaMappa(textJSON);
+
+            if (mappa != null) {
+                if (mappa.get(LibWiki.WARNINGS) != null && mappa.get(LibWiki.WARNINGS) instanceof JSONObject) {
+                     avviso = (JSONObject) mappa.get(LibWiki.WARNINGS);
+                    if (avviso.get(LibWiki.CATEGORY_MEMBERS) != null && avviso.get(LibWiki.CATEGORY_MEMBERS) instanceof JSONObject) {
+                         sottoAvviso = (JSONObject) avviso.get(LibWiki.CATEGORY_MEMBERS);
+                        if (sottoAvviso.get(LibWiki.WARNINGS) != null && sottoAvviso.get(LibWiki.WARNINGS) instanceof String) {
+                            errore = (String) sottoAvviso.get(LibWiki.WARNINGS);
+                        }// end of if cycle
+                    }// end of if cycle
+                } // fine del metodo
+            }// end of if cycle
+
+        }// end of if cycle
+
+        return errore;
     } // fine del metodo
 
 

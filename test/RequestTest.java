@@ -24,6 +24,8 @@ public class RequestTest extends VaadTest {
     private static String pageIdsVirgola;
     private static ArrayList<String> arrayPageIds;
 
+    private WikiLogin wikiLogin = null;
+
     @Test
     /**
      * Classe concreta per le Request sul Web
@@ -342,6 +344,16 @@ public class RequestTest extends VaadTest {
         assertEquals(listaVociTitles.size(), 0);
     }// end of single test
 
+    // Login logic here
+    private void setLogin() {
+        String nick = "gacbot";
+        String password = "fulvia";
+
+        if (wikiLogin == null) {
+            wikiLogin = new WikiLogin(nick, password);
+        }// end of if cycle
+    } // fine del metodo iniziale
+
     @Test
     /**
      * Query per recuperare le pagine di una categoria
@@ -350,29 +362,195 @@ public class RequestTest extends VaadTest {
      * Può essere sovrascritta per leggere anche le sottocategorie
      */
     public void cat() {
-//        QueryCat query;
-//        ArrayList<Long> listaPageids;
-//        ArrayList<String> listaTitles;
-//        ArrayList<Long> listaCatPageids;
-//        ArrayList<String> listaCatTitles;
-//        ArrayList<Long> listaAllPageids;
-//        ArrayList<String> listaAllTitles;
-//
-//        query = new QueryCat(TITOLO_CAT_ERRATA);
-//        assertEquals(query.getRisultato(), TipoRisultato.nonTrovata);
-//        assertFalse(query.isValida());
-//        listaPageids = query.getListaPageids();
-//        assertNull(listaPageids);
-//        listaTitles = query.getListaTitles();
-//        assertNull(listaTitles);
-//        listaCatPageids = query.getListaCatPageids();
-//        assertNull(listaCatPageids);
-//        listaCatTitles = query.getListaCatTitles();
-//        assertNull(listaCatTitles);
-//        listaAllPageids = query.getListaAllPageids();
-//        assertNull(listaAllPageids);
-//        listaAllTitles = query.getListaAllTitles();
-//        assertNull(listaAllTitles);
+        RequestWikiCat request;
+        ArrayList<Long> listaVociPageids;
+        ArrayList<String> listaVociTitles;
+        ArrayList<Long> listaCatPageids;
+        ArrayList<String> listaCatTitles;
+        ArrayList<Long> listaAllPageids;
+        ArrayList<String> listaAllTitles;
+
+        request = new RequestWikiCat(TITOLO_CAT_BREVE);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.limitOver);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        listaVociPageids = request.getListaVociPageids();
+        assertNotNull(listaVociPageids);
+        assertEquals(listaVociPageids.size(), 2);
+        listaVociTitles = request.getListaVociTitles();
+        assertNotNull(listaVociTitles);
+        assertEquals(listaVociTitles.size(), 2);
+        listaCatPageids = request.getListaCatPageids();
+        assertNotNull(listaCatPageids);
+        assertEquals(listaCatPageids.size(), 12);
+        listaCatTitles = request.getListaCatTitles();
+        assertNotNull(listaCatTitles);
+        assertEquals(listaCatTitles.size(), 12);
+        listaAllPageids = request.getListaAllPageids();
+        assertNotNull(listaAllPageids);
+        assertEquals(listaAllPageids.size(), 14);
+        listaAllTitles = request.getListaAllTitles();
+        assertNotNull(listaAllTitles);
+        assertEquals(listaAllTitles.size(), 14);
+
+        request = new RequestWikiCat(TITOLO_CAT_BREVE, 500);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        listaVociPageids = request.getListaVociPageids();
+        assertNotNull(listaVociPageids);
+        assertEquals(listaVociPageids.size(), 2);
+        listaVociTitles = request.getListaVociTitles();
+        assertNotNull(listaVociTitles);
+        assertEquals(listaVociTitles.size(), 2);
+        listaCatPageids = request.getListaCatPageids();
+        assertNotNull(listaCatPageids);
+        assertEquals(listaCatPageids.size(), 12);
+        listaCatTitles = request.getListaCatTitles();
+        assertNotNull(listaCatTitles);
+        assertEquals(listaCatTitles.size(), 12);
+        listaAllPageids = request.getListaAllPageids();
+        assertNotNull(listaAllPageids);
+        assertEquals(listaAllPageids.size(), 14);
+        listaAllTitles = request.getListaAllTitles();
+        assertNotNull(listaAllTitles);
+        assertEquals(listaAllTitles.size(), 14);
+
+        request = new RequestWikiCat(TITOLO_CAT_MEDIA, 20);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        listaVociPageids = request.getListaVociPageids();
+        assertNotNull(listaVociPageids);
+        assertEquals(listaVociPageids.size(), 36);
+        listaVociTitles = request.getListaVociTitles();
+        assertNotNull(listaVociTitles);
+        assertEquals(listaVociTitles.size(), 36);
+        listaCatPageids = request.getListaCatPageids();
+        assertNull(listaCatPageids);
+        listaCatTitles = request.getListaCatTitles();
+        assertNull(listaCatTitles);
+        listaAllPageids = request.getListaAllPageids();
+        assertNotNull(listaAllPageids);
+        assertEquals(listaAllPageids.size(), 36);
+        listaAllTitles = request.getListaAllTitles();
+        assertNotNull(listaAllTitles);
+        assertEquals(listaAllTitles.size(), 36);
+
+        request = new RequestWikiCat(TITOLO_CAT_LUNGA, 500);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        listaVociPageids = request.getListaVociPageids();
+        assertNotNull(listaVociPageids);
+        assertEquals(listaVociPageids.size(), 2352);
+        listaVociTitles = request.getListaVociTitles();
+        assertNotNull(listaVociTitles);
+        assertEquals(listaVociTitles.size(), 2352);
+        listaCatPageids = request.getListaCatPageids();
+        assertNotNull(listaCatPageids);
+        assertEquals(listaCatPageids.size(), 16);
+        listaCatTitles = request.getListaCatTitles();
+        assertNotNull(listaCatTitles);
+        assertEquals(listaCatTitles.size(), 16);
+        listaAllPageids = request.getListaAllPageids();
+        assertNotNull(listaAllPageids);
+        assertEquals(listaAllPageids.size(), 2368);
+        listaAllTitles = request.getListaAllTitles();
+        assertNotNull(listaAllTitles);
+        assertEquals(listaAllTitles.size(), 2368);
+
+        request = new RequestWikiCat(TITOLO_CAT_LUNGA);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.limitOver);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        listaVociPageids = request.getListaVociPageids();
+        assertNotNull(listaVociPageids);
+        assertEquals(listaVociPageids.size(), 2352);
+        listaVociTitles = request.getListaVociTitles();
+        assertNotNull(listaVociTitles);
+        assertEquals(listaVociTitles.size(), 2352);
+        listaCatPageids = request.getListaCatPageids();
+        assertNotNull(listaCatPageids);
+        assertEquals(listaCatPageids.size(), 16);
+        listaCatTitles = request.getListaCatTitles();
+        assertNotNull(listaCatTitles);
+        assertEquals(listaCatTitles.size(), 16);
+        listaAllPageids = request.getListaAllPageids();
+        assertNotNull(listaAllPageids);
+        assertEquals(listaAllPageids.size(), 2368);
+        listaAllTitles = request.getListaAllTitles();
+        assertNotNull(listaAllTitles);
+        assertEquals(listaAllTitles.size(), 2368);
+
+        setLogin();
+        request = new RequestWikiCat(TITOLO_CAT_LUNGA, wikiLogin);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        listaVociPageids = request.getListaVociPageids();
+        assertNotNull(listaVociPageids);
+        assertEquals(listaVociPageids.size(), 2352);
+        listaVociTitles = request.getListaVociTitles();
+        assertNotNull(listaVociTitles);
+        assertEquals(listaVociTitles.size(), 2352);
+        listaCatPageids = request.getListaCatPageids();
+        assertNotNull(listaCatPageids);
+        assertEquals(listaCatPageids.size(), 16);
+        listaCatTitles = request.getListaCatTitles();
+        assertNotNull(listaCatTitles);
+        assertEquals(listaCatTitles.size(), 16);
+        listaAllPageids = request.getListaAllPageids();
+        assertNotNull(listaAllPageids);
+        assertEquals(listaAllPageids.size(), 2368);
+        listaAllTitles = request.getListaAllTitles();
+        assertNotNull(listaAllTitles);
+        assertEquals(listaAllTitles.size(), 2368);
+
+    }// end of single test
+
+    /**
+     * Query per recuperare le pagine di una categoria
+     * NON legge le sottocategorie
+     * Non necessita di Login, ma se esiste lo usa
+     * Può essere sovrascritta per leggere anche le sottocategorie
+     */
+    public void cat2() {
+        RequestWikiCat request;
+        ArrayList<Long> listaVociPageids;
+        ArrayList<String> listaVociTitles;
+        ArrayList<Long> listaCatPageids;
+        ArrayList<String> listaCatTitles;
+        ArrayList<Long> listaAllPageids;
+        ArrayList<String> listaAllTitles;
+
+        request = new RequestWikiCat(TITOLO_CAT_LUNGHISSIMA, wikiLogin);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        listaVociPageids = request.getListaVociPageids();
+        assertNotNull(listaVociPageids);
+        assertTrue(listaVociPageids.size() > 290000);
+        listaVociTitles = request.getListaVociTitles();
+        assertNotNull(listaVociTitles);
+        assertTrue(listaVociTitles.size() > 290000);
+        listaCatPageids = request.getListaCatPageids();
+        assertNull(listaCatPageids);
+        listaCatTitles = request.getListaCatTitles();
+        assertNull(listaCatTitles);
+        listaAllPageids = request.getListaAllPageids();
+        assertNotNull(listaAllPageids);
+        assertTrue(listaAllPageids.size() > 290000);
+        listaAllTitles = request.getListaAllTitles();
+        assertNotNull(listaAllTitles);
+        assertTrue(listaAllTitles.size() > 290000);
     }// end of single test
 
 }// end of testing class

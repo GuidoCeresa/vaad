@@ -3,6 +3,10 @@ package it.algos.vaad.wiki.query;
 import it.algos.vaad.wiki.Cost;
 import it.algos.vaad.wiki.TipoRicerca;
 import it.algos.vaad.wiki.TipoRisultato;
+import it.algos.vaad.wiki.WikiLogin;
+import it.algos.webbase.web.lib.LibSession;
+
+import java.net.URLConnection;
 
 /**
  * Superclasse astratta per le Request sul server di Wikipedia
@@ -48,6 +52,9 @@ public abstract class RequestWiki extends Request {
     protected boolean needLogin;
     protected boolean needToken;
 
+    //--login del collegamento
+    protected WikiLogin wikiLogin;
+
     //--titolo della pagina
     protected String wikiTitle;
 
@@ -77,6 +84,16 @@ public abstract class RequestWiki extends Request {
      */
     @Override
     protected void doRequest() {
+        if (wikiLogin == null) {
+            wikiLogin = (WikiLogin) LibSession.getAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION);
+        }// end of if cycle
+
+        if (needLogin) {
+            if (wikiLogin == null) {
+                return;
+            }// end of if cycle
+        }// end of if cycle
+
         if (needToken) {
             if (preliminaryRequest()) {
                 super.doRequest();
@@ -87,6 +104,27 @@ public abstract class RequestWiki extends Request {
         }// end of if cycle
 
         super.doRequest();
+    } // fine del metodo
+
+    /**
+     * Crea la connessione
+     * <p>
+     * Regola i parametri della connessione
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     */
+    @Override
+    protected URLConnection creaConnessione() throws Exception {
+        URLConnection urlConn = super.creaConnessione();
+        String txtCookies = "";
+
+
+        // regola le property
+        if (wikiLogin != null) {
+            txtCookies = wikiLogin.getStringCookies();
+            urlConn.setRequestProperty("Cookie", txtCookies);
+        }// end of if cycle
+
+        return urlConn;
     } // fine del metodo
 
     /**

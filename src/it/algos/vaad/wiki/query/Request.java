@@ -29,11 +29,14 @@ public abstract class Request {
 
     //--indirizzo internet da leggere
     protected String webUrl;
+    protected boolean needContinua;
+    protected boolean needPost;
+
+    //--token per la continuazione della query
+    protected String tokenContinua = "";
 
     //--contenuto testuale completo della risposta (la seconda, se ci sono due request)
     private String testoResponse;
-
-    protected boolean needPost;
 
     /**
      * Costruttore
@@ -65,14 +68,32 @@ public abstract class Request {
             String errore = unErrore.getClass().getSimpleName();
             valida = false;
         }// fine del blocco try-catch
-    } // fine del metodo
 
+        if (needContinua) {
+            try { // prova ad eseguire il codice
+                urlRequest();
+            } catch (Exception unErrore) { // intercetta l'errore
+            }// fine del blocco try-catch
+            while (!tokenContinua.equals("")) {
+                try { // prova ad eseguire il codice
+                    urlRequest();
+                } catch (Exception unErrore) { // intercetta l'errore
+                }// fine del blocco try-catch
+            } // fine del blcco while
+        } else {
+            try { // prova ad eseguire il codice
+                urlRequest();
+            } catch (Exception unErrore) { // intercetta l'errore
+            }// fine del blocco try-catch
+        }// end of if/else cycle
+    } // fine del metodo
 
     /**
      * Request
      * Quella base usa il GET
      * In alcune request (non tutte) è obbligatorio anche il POST
      */
+
     protected void urlRequest() throws Exception {
         URLConnection urlConn;
         InputStream input;
@@ -156,6 +177,7 @@ public abstract class Request {
         if (rispostaRequest != null && !rispostaRequest.equals("")) {
             this.testoResponse = rispostaRequest;
             valida = true;
+            tokenContinua = "";
         }// end of if cycle
 
     } // end of getter method

@@ -8,8 +8,24 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
- * Created by gac on 20 nov 2015.
- * .
+ * Created by gac on 08 nov 2015.
+ * <p>
+ * Rif: https://www.mediawiki.org/wiki/API:Backlinks
+ * Lists pages that link to a given page, similar to Special:Whatlinkshere. Ordered by linking page title.
+ * <p>
+ * Parametrs:
+ * bltitle: List pages linking to this title. The title does not need to exist.
+ * blnamespace: Only list pages in these namespaces
+ * blfilterredir: How to filter redirects (Default: all)
+ * - all: List all pages regardless of their redirect flag
+ * - redirects: Only list redirects
+ * - nonredirects: Don't list redirects
+ * bllimit: Maximum amount of pages to list. Maximum limit is halved if blredirect is set. No more than 500 (5000 for bots) allowed. (Default: 10)
+ * blredirect: If set, pages linking to bltitle through a redirect will also be listed. See below for more detailed information.
+ * blcontinue: Used to continue a previous request
+ * <p>
+ * Es:
+ * https://it.wikipedia.org/w/api.php?action=query&list=backlinks&bltitle=Piozzano&format=jsonfm
  */
 public class RequestWikiBacklinks extends RequestWiki {
 
@@ -41,6 +57,17 @@ public class RequestWikiBacklinks extends RequestWiki {
         super.doInit();
     }// fine del metodo costruttore
 
+    /**
+     * Metodo iniziale invocato DOPO che la sottoclasse ha regolato alcuni parametri specifici
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     */
+    protected void doInit() {
+        super.needPost = false;
+        super.needLogin = false;
+        super.needToken = false;
+        super.needContinua = false;
+        super.doInit();
+    } // fine del metodo
 
     /**
      * Costruisce la stringa della request

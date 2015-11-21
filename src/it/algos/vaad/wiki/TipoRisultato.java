@@ -10,6 +10,7 @@ public enum TipoRisultato {
     nonTrovata("Pagina inesistente."),
     esistente("Pagina esistente."),
     letta("Letta la pagina."),
+    limitOver("cmlimit may not be over"),
 
     creata("Creata nuova pagina."),
     esistenteNuova("Pagina già esistente."),
