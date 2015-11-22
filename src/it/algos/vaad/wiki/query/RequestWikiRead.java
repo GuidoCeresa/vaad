@@ -37,6 +37,18 @@ public abstract class RequestWikiRead extends RequestWiki {
     } // fine del metodo
 
     /**
+     * Costruisce la stringa della request
+     * Domain per l'URL dal titolo della pagina o dal pageid (a seconda della sottoclasse)
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     *
+     * @return domain
+     */
+    @Override
+    protected String getDomain() {
+        return super.getDomain()+API_QUERY + TAG_PROP;
+    } // fine del metodo
+
+    /**
      * Elabora la risposta
      * <p>
      * Informazioni, contenuto e validita della risposta

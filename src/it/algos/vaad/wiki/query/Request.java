@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.LinkedHashMap;
 
 /**
  * Superclasse astratta per le Request sul Web
@@ -31,12 +32,13 @@ public abstract class Request {
     protected String webUrl;
     protected boolean needContinua;
     protected boolean needPost;
+    protected boolean needCookies;
 
     //--token per la continuazione della query
     protected String tokenContinua = "";
 
     //--contenuto testuale completo della risposta (la seconda, se ci sono due request)
-    private String testoResponse;
+    protected String testoResponse;
 
     /**
      * Costruttore
@@ -80,12 +82,7 @@ public abstract class Request {
                 } catch (Exception unErrore) { // intercetta l'errore
                 }// fine del blocco try-catch
             } // fine del blcco while
-        } else {
-            try { // prova ad eseguire il codice
-                urlRequest();
-            } catch (Exception unErrore) { // intercetta l'errore
-            }// fine del blocco try-catch
-        }// end of if/else cycle
+        }// end of if cycle
     } // fine del metodo
 
     /**
@@ -93,7 +90,6 @@ public abstract class Request {
      * Quella base usa il GET
      * In alcune request (non tutte) è obbligatorio anche il POST
      */
-
     protected void urlRequest() throws Exception {
         URLConnection urlConn;
         InputStream input;
@@ -102,15 +98,22 @@ public abstract class Request {
         StringBuilder textBuffer = new StringBuilder();
         String stringa;
 
-        //--GET
+        //--Connessione
         urlConn = creaConnessione();
-        input = urlConn.getInputStream();
-        inputReader = new InputStreamReader(input, INPUT);
+
+        //--rimanda i cookies arrivati con la prima richiesta
+        if (needCookies) {
+            this.uploadCookies(urlConn);
+        }// end of if cycle
 
         //--POST
         if (needPost) {
             this.creaPost(urlConn);
         }// end of if cycle
+
+        //--GET
+        input = urlConn.getInputStream();
+        inputReader = new InputStreamReader(input, INPUT);
 
         // read the request
         readBuffer = new BufferedReader(inputReader);
@@ -153,6 +156,15 @@ public abstract class Request {
         }// end of if cycle
 
         return urlConn;
+    } // fine del metodo
+
+    /**
+     * Allega i cookies alla request (upload)
+     * Serve solo la sessione
+     *
+     * @param urlConn connessione
+     */
+    protected void uploadCookies(URLConnection urlConn) {
     } // fine del metodo
 
     /**

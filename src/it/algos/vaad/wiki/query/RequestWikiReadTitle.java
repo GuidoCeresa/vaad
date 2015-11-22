@@ -36,7 +36,7 @@ public class RequestWikiReadTitle extends RequestWikiRead {
         String domain = super.getDomain();
 
         try { // prova ad eseguire il codice
-            domain += API_QUERY + TAG_PROP + TAG_TITOLO + URLEncoder.encode(wikiTitle, ENCODE);
+            domain +=  TAG_TITOLO + URLEncoder.encode(wikiTitle, ENCODE);
         } catch (Exception unErrore) { // intercetta l'errore
         }// fine del blocco try-catch
 

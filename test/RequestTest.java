@@ -487,6 +487,24 @@ public class RequestTest extends VaadTest {
         listaAllTitles = request.getListaAllTitles();
         assertNotNull(listaAllTitles);
         assertEquals(listaAllTitles.size(), 2368);
+    }// end of single test
+
+
+    @Test
+    /**
+     * Query per recuperare le pagine di una categoria
+     * NON legge le sottocategorie
+     * Non necessita di Login, ma se esiste lo usa
+     * Può essere sovrascritta per leggere anche le sottocategorie
+     */
+    public void cat2() {
+        RequestWikiCat request;
+        ArrayList<Long> listaVociPageids;
+        ArrayList<String> listaVociTitles;
+        ArrayList<Long> listaCatPageids;
+        ArrayList<String> listaCatTitles;
+        ArrayList<Long> listaAllPageids;
+        ArrayList<String> listaAllTitles;
 
         setLogin();
         request = new RequestWikiCat(TITOLO_CAT_LUNGA, wikiLogin);
@@ -512,16 +530,17 @@ public class RequestTest extends VaadTest {
         listaAllTitles = request.getListaAllTitles();
         assertNotNull(listaAllTitles);
         assertEquals(listaAllTitles.size(), 2368);
-
     }// end of single test
 
+
+
     /**
-     * Query per recuperare le pagine di una categoria
-     * NON legge le sottocategorie
-     * Non necessita di Login, ma se esiste lo usa
-     * Può essere sovrascritta per leggere anche le sottocategorie
-     */
-    public void cat2() {
+      * Query per recuperare le pagine di una categoria
+      * NON legge le sottocategorie
+      * Non necessita di Login, ma se esiste lo usa
+      * Può essere sovrascritta per leggere anche le sottocategorie
+      */
+    public void cat3() {
         RequestWikiCat request;
         ArrayList<Long> listaVociPageids;
         ArrayList<String> listaVociTitles;
@@ -551,6 +570,50 @@ public class RequestTest extends VaadTest {
         listaAllTitles = request.getListaAllTitles();
         assertNotNull(listaAllTitles);
         assertTrue(listaAllTitles.size() > 290000);
+    }// end of single test
+
+    @Test
+    public void assertAPI() {
+        RequestWikiAssert request;
+
+        request = new RequestWikiAssertUser();
+        assertFalse(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.assertuserfailed);
+
+        request = new RequestWikiAssertBot();
+        assertFalse(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.assertbotfailed);
+    }// end of single test
+
+    @Test
+    public void login() {
+        RequestWikiLogin request;
+        String nick ;
+        String pass;
+
+        nick = "nomechesicuramentenonesiste";
+        pass = "pippoz";
+        request = new RequestWikiLogin(nick, pass);
+        assertFalse(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.notExists);
+
+        nick = "gac";
+        pass = "pippozbelloz";
+        request = new RequestWikiLogin(nick, pass);
+        assertFalse(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.wrongPass);
+
+        nick = "gac";
+        pass = "alfa";
+        request = new RequestWikiLogin(nick, pass);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.loginUser);
+
+        nick = "biobot";
+        pass = "fulvia";
+        request = new RequestWikiLogin(nick, pass);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.loginBot);
     }// end of single test
 
 }// end of testing class

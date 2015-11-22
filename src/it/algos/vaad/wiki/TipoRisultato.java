@@ -17,6 +17,16 @@ public enum TipoRisultato {
 
     noLogin("Manca il login"),
     noToken("Manca il token"),
+    mustbeposted("The login module requires a POST request"),
+    assertuserfailed("Assertion that the user is logged in failed"),
+    assertbotfailed("Assertion that the user has the bot right failed"),
+    loginUser("Collegato come utente"),
+    loginBot("Collegato come bot"),
+    loginSysop("Collegato come admin"),
+    notExists("The username you provided doesn't exist"),
+    wrongPass("The password you provided is incorrect"),
+    throttled("You've logged in too many times in a short time"),
+
     registrata("Pagina registrata."),
     nonRegistrata("Pagina non registrata (probabilmente cancellata)."),
     modificaRegistrata("Registrata modifica alla voce."),

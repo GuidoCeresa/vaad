@@ -30,11 +30,7 @@ public class RequestWikiReadPageid extends RequestWikiRead {
      */
     @Override
     protected String getDomain() {
-        String domain = super.getDomain();
-
-        domain += API_QUERY + TAG_PROP + TAG_PAGEID + wikiPageid;
-
-        return domain;
+        return super.getDomain() + TAG_PAGEID + wikiPageid;
     } // fine del metodo
 
 

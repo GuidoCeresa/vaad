@@ -60,6 +60,7 @@ public abstract class LibWiki {
     public static final String TOKEN = "csrftoken";
     public static final String EDIT = "edit";
     public static final String RESULT = "result";
+    public static final String SUCCESS = "Success";
     public static final String NOCHANGE = "nochange";
     public static final String OLD_REV_ID = "oldrevid";
     public static final String NEW_REV_ID = "newrevid";
@@ -70,16 +71,17 @@ public abstract class LibWiki {
     public static final String TITLE = "title";
     public static final String BATCH = "batchcomplete";
     public static final String QUERY = "query";
-    public static final String ERROR = "error";
     public static final String CODE = "code";
     public static final String DOCREF = "docref";
     public static final String INFO = "info";
+    public static final String MUST_BE_POSTED = "mustbeposted";
 
     public static final String KEY_VOCE_PAGEID = "keyvocepageid";
     public static final String KEY_VOCE_TITLE = "keyvocetitle";
     public static final String KEY_CAT_PAGEID = "keycatpageid";
     public static final String KEY_CAT_TITLE = "keycattitle";
     public static final String WARNINGS = "warnings";
+    public static final String ERROR = "error";
     public static final String CATEGORY_MEMBERS = "categorymembers";
     private static final String PAGES = "pages";
     private static final String REVISIONS = "revisions";
@@ -898,6 +900,33 @@ public abstract class LibWiki {
                 } // fine del metodo
             }// end of if cycle
 
+        }// end of if cycle
+
+        return errore;
+    } // fine del metodo
+
+    /**
+     * Estrae un (eventuale) messaggio di errore dal testo JSON di un login
+     *
+     * @param textJSON in ingresso
+     * @return messaggio di errore
+     */
+    public static String getError(String textJSON) {
+        String errore = "";
+        HashMap<String, Object> mappa;
+        JSONObject avviso;
+
+        if (textJSON != null && !textJSON.equals("")) {
+            mappa = creaMappa(textJSON);
+
+            if (mappa != null) {
+                if (mappa.get(LibWiki.ERROR) != null && mappa.get(LibWiki.ERROR) instanceof JSONObject) {
+                    avviso = (JSONObject) mappa.get(LibWiki.ERROR);
+                    if (avviso.get(LibWiki.CODE) != null && avviso.get(LibWiki.CODE) instanceof String) {
+                        errore = (String) avviso.get(LibWiki.CODE);
+                    }// end of if cycle
+                } // fine del metodo
+            }// end of if cycle
         }// end of if cycle
 
         return errore;
