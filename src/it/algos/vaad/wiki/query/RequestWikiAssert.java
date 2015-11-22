@@ -18,7 +18,7 @@ import java.util.HashMap;
  * Normally, you will not need to do this. Instead, add the assert=user parameter to all requests that should be made by a logged-in user.
  * <p>
  * Link: https://www.mediawiki.org/wiki/API:Assert
- *
+ * <p>
  * Se si è loggati come bot, si è automaticamente loggati anche come user
  */
 public abstract class RequestWikiAssert extends RequestWiki {
@@ -88,37 +88,39 @@ public abstract class RequestWikiAssert extends RequestWiki {
         String session = "";
         String cookieprefix = "";
 
-        if (mappa.get(RequestWikiLogin.COOKIE_PREFIX)!=null&&mappa.get(RequestWikiLogin.COOKIE_PREFIX) instanceof String) {
-            cookieprefix=(String)mappa.get(RequestWikiLogin.COOKIE_PREFIX);
-        }// end of if cycle
-        if (mappa.get(RequestWikiLogin.USER_NAME)!=null&&mappa.get(RequestWikiLogin.USER_NAME) instanceof String) {
-            userName=(String)mappa.get(RequestWikiLogin.USER_NAME);
-        }// end of if cycle
-        if (mappa.get(RequestWikiLogin.USER_ID)!=null&&mappa.get(RequestWikiLogin.USER_ID) instanceof Long) {
-            userId=(Long)mappa.get(RequestWikiLogin.USER_ID);
-        }// end of if cycle
-        if (mappa.get(RequestWikiLogin.SECOND_TOKEN)!=null&&mappa.get(RequestWikiLogin.SECOND_TOKEN) instanceof String) {
-            token=(String)mappa.get(RequestWikiLogin.SECOND_TOKEN);
-        }// end of if cycle
-        if (mappa.get(RequestWikiLogin.SESSION_ID)!=null&&mappa.get(RequestWikiLogin.SESSION_ID) instanceof String) {
-            session=(String)mappa.get(RequestWikiLogin.SESSION_ID);
-        }// end of if cycle
+        if (mappa != null) {
+            if (mappa.get(RequestWikiLogin.COOKIE_PREFIX) != null && mappa.get(RequestWikiLogin.COOKIE_PREFIX) instanceof String) {
+                cookieprefix = (String) mappa.get(RequestWikiLogin.COOKIE_PREFIX);
+            }// end of if cycle
+            if (mappa.get(RequestWikiLogin.USER_NAME) != null && mappa.get(RequestWikiLogin.USER_NAME) instanceof String) {
+                userName = (String) mappa.get(RequestWikiLogin.USER_NAME);
+            }// end of if cycle
+            if (mappa.get(RequestWikiLogin.USER_ID) != null && mappa.get(RequestWikiLogin.USER_ID) instanceof Long) {
+                userId = (Long) mappa.get(RequestWikiLogin.USER_ID);
+            }// end of if cycle
+            if (mappa.get(RequestWikiLogin.SECOND_TOKEN) != null && mappa.get(RequestWikiLogin.SECOND_TOKEN) instanceof String) {
+                token = (String) mappa.get(RequestWikiLogin.SECOND_TOKEN);
+            }// end of if cycle
+            if (mappa.get(RequestWikiLogin.SESSION_ID) != null && mappa.get(RequestWikiLogin.SESSION_ID) instanceof String) {
+                session = (String) mappa.get(RequestWikiLogin.SESSION_ID);
+            }// end of if cycle
 
-        cookies = cookieprefix;
-        cookies += "UserName=";
-        cookies += userName;
-        cookies += sep;
-        cookies += cookieprefix;
-        cookies += "UserID=";
-        cookies += userId;
-        cookies += sep;
-        cookies += cookieprefix;
-        cookies += "Token=";
-        cookies += token;
-        cookies += sep;
-        cookies += cookieprefix;
-        cookies += "Session=";
-        cookies += session;
+            cookies = cookieprefix;
+            cookies += "UserName=";
+            cookies += userName;
+            cookies += sep;
+            cookies += cookieprefix;
+            cookies += "UserID=";
+            cookies += userId;
+            cookies += sep;
+            cookies += cookieprefix;
+            cookies += "Token=";
+            cookies += token;
+            cookies += sep;
+            cookies += cookieprefix;
+            cookies += "Session=";
+            cookies += session;
+        }// end of if cycle
 
         return cookies;
     } // fine della closure

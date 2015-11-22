@@ -447,10 +447,10 @@ public class RequestTest extends VaadTest {
         assertNotNull(ottenuto);
         listaVociPageids = request.getListaVociPageids();
         assertNotNull(listaVociPageids);
-        assertEquals(listaVociPageids.size(), 2352);
+        assertEquals(listaVociPageids.size(), 2354);
         listaVociTitles = request.getListaVociTitles();
         assertNotNull(listaVociTitles);
-        assertEquals(listaVociTitles.size(), 2352);
+        assertEquals(listaVociTitles.size(), 2354);
         listaCatPageids = request.getListaCatPageids();
         assertNotNull(listaCatPageids);
         assertEquals(listaCatPageids.size(), 16);
@@ -459,10 +459,10 @@ public class RequestTest extends VaadTest {
         assertEquals(listaCatTitles.size(), 16);
         listaAllPageids = request.getListaAllPageids();
         assertNotNull(listaAllPageids);
-        assertEquals(listaAllPageids.size(), 2368);
+        assertEquals(listaAllPageids.size(), 2370);
         listaAllTitles = request.getListaAllTitles();
         assertNotNull(listaAllTitles);
-        assertEquals(listaAllTitles.size(), 2368);
+        assertEquals(listaAllTitles.size(), 2370);
 
         request = new RequestWikiCat(TITOLO_CAT_LUNGA);
         assertTrue(request.isValida());
@@ -471,10 +471,10 @@ public class RequestTest extends VaadTest {
         assertNotNull(ottenuto);
         listaVociPageids = request.getListaVociPageids();
         assertNotNull(listaVociPageids);
-        assertEquals(listaVociPageids.size(), 2352);
+        assertEquals(listaVociPageids.size(), 2354);
         listaVociTitles = request.getListaVociTitles();
         assertNotNull(listaVociTitles);
-        assertEquals(listaVociTitles.size(), 2352);
+        assertEquals(listaVociTitles.size(), 2354);
         listaCatPageids = request.getListaCatPageids();
         assertNotNull(listaCatPageids);
         assertEquals(listaCatPageids.size(), 16);
@@ -483,10 +483,10 @@ public class RequestTest extends VaadTest {
         assertEquals(listaCatTitles.size(), 16);
         listaAllPageids = request.getListaAllPageids();
         assertNotNull(listaAllPageids);
-        assertEquals(listaAllPageids.size(), 2368);
+        assertEquals(listaAllPageids.size(), 2370);
         listaAllTitles = request.getListaAllTitles();
         assertNotNull(listaAllTitles);
-        assertEquals(listaAllTitles.size(), 2368);
+        assertEquals(listaAllTitles.size(), 2370);
     }// end of single test
 
 
@@ -514,10 +514,10 @@ public class RequestTest extends VaadTest {
         assertNotNull(ottenuto);
         listaVociPageids = request.getListaVociPageids();
         assertNotNull(listaVociPageids);
-        assertEquals(listaVociPageids.size(), 2352);
+        assertEquals(listaVociPageids.size(), 2354);
         listaVociTitles = request.getListaVociTitles();
         assertNotNull(listaVociTitles);
-        assertEquals(listaVociTitles.size(), 2352);
+        assertEquals(listaVociTitles.size(), 2354);
         listaCatPageids = request.getListaCatPageids();
         assertNotNull(listaCatPageids);
         assertEquals(listaCatPageids.size(), 16);
@@ -526,10 +526,10 @@ public class RequestTest extends VaadTest {
         assertEquals(listaCatTitles.size(), 16);
         listaAllPageids = request.getListaAllPageids();
         assertNotNull(listaAllPageids);
-        assertEquals(listaAllPageids.size(), 2368);
+        assertEquals(listaAllPageids.size(), 2370);
         listaAllTitles = request.getListaAllTitles();
         assertNotNull(listaAllTitles);
-        assertEquals(listaAllTitles.size(), 2368);
+        assertEquals(listaAllTitles.size(), 2370);
     }// end of single test
 
 
