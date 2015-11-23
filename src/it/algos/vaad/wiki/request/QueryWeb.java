@@ -1,4 +1,4 @@
-package it.algos.vaad.wiki.query;
+package it.algos.vaad.wiki.request;
 
 import it.algos.vaad.wiki.TipoRisultato;
 

@@ -46,9 +46,7 @@ public class ApiTest extends VaadTest {
 
         // pageid CORRETTO, inviato come stringa
         ottenuto = Api.leggePagina(PAGEID_COME_STRINGA);
-        assertNotNull(ottenuto);
-        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
-        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
+        assertEquals(ottenuto, "");
     }// end of single test
 
 
@@ -85,18 +83,9 @@ public class ApiTest extends VaadTest {
         pageOttenuta = Api.leggePage(PAGEID_ERRATO);
         assertNull(pageOttenuta);
 
-        // titolo corretto, ma TipoRicerca errato
-        pageOttenuta = Api.leggePage(TITOLO, TipoRicerca.pageid);
-        assertNull(pageOttenuta);
-
-        // titolo corretto, ma TipoRicerca errato
-        pageOttenuta = Api.leggePage(TITOLO, TipoRicerca.listaPageids);
-        assertNull(pageOttenuta);
-
         // pageid CORRETTO, inviato come stringa
         pageOttenuta = Api.leggePage(PAGEID_COME_STRINGA);
-        assertNotNull(pageOttenuta);
-        assertTrue(pageOttenuta.isValida());
+        assertNull(pageOttenuta);
     }// end of method
 
 
@@ -133,9 +122,7 @@ public class ApiTest extends VaadTest {
 
         // pageid CORRETTO, inviato come stringa
         ottenuto = Api.leggeVoce(PAGEID_COME_STRINGA);
-        assertNotNull(ottenuto);
-        assertTrue(ottenuto.startsWith(TAG_INI_VOCE));
-        assertTrue(ottenuto.endsWith(TAG_END_VOCE));
+        assertEquals(ottenuto, "");
     }// end of single test
 
 

@@ -1,7 +1,7 @@
 import it.algos.vaad.wiki.Page;
 import it.algos.vaad.wiki.PagePar;
-import it.algos.vaad.wiki.query.QueryReadTitle;
-import it.algos.vaad.wiki.query.QueryWiki;
+import it.algos.vaad.wiki.request.QueryReadTitle;
+import it.algos.vaad.wiki.request.QueryWiki;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

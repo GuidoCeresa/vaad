@@ -1,25 +1,28 @@
-package it.algos.vaad.wiki.query;
+package it.algos.vaad.wiki.request;
 
 import it.algos.vaad.wiki.TipoRicerca;
 
-import java.net.URLEncoder;
-
 /**
- * Query standard per leggere il risultato di una pagina
- * NON legge le categorie
- * Usa il titolo della pagina
- * Non necessita di Login
+ * Created by Gac on 15 ago 2015.
+ * .
  */
-public class QueryReadTitle extends QueryPage {
+public class QueryReadPageid extends QueryPage {
 
     /**
      * Costruttore completo
      * Rinvia al costruttore della superclasse
      */
-    public QueryReadTitle(String title) {
-        super(title, TipoRicerca.title);
+    public QueryReadPageid(String titlepageid) {
+        super(titlepageid, TipoRicerca.pageid);
     }// fine del metodo costruttore
 
+    /**
+     * Costruttore completo
+     * Rinvia al costruttore della superclasse
+     */
+    public QueryReadPageid(int pageid) {
+        super(pageid);
+    }// fine del metodo costruttore
 
     /**
      * Costruisce la stringa della request
@@ -32,7 +35,7 @@ public class QueryReadTitle extends QueryPage {
         String domain = "";
 
         try { // prova ad eseguire il codice
-            domain = API_BASE + TAG_PROP + TAG_TITOLO + URLEncoder.encode(title, ENCODE);
+            domain = API_BASE + TAG_PROP + TAG_PAGEID + pageid;
         } catch (Exception unErrore) { // intercetta l'errore
         }// fine del blocco try-catch
 

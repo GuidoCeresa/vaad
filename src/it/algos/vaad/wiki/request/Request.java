@@ -1,4 +1,4 @@
-package it.algos.vaad.wiki.query;
+package it.algos.vaad.wiki.request;
 
 import it.algos.vaad.wiki.TipoRisultato;
 
@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.LinkedHashMap;
 
 /**
  * Superclasse astratta per le Request sul Web

@@ -1,4 +1,4 @@
-package it.algos.vaad.wiki.query;
+package it.algos.vaad.wiki.request;
 
 /**
  * Query standard per scrivere il contenuto di una pagina

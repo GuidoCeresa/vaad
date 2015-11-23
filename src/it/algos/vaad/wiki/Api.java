@@ -1,6 +1,6 @@
 package it.algos.vaad.wiki;
 
-import it.algos.vaad.wiki.query.*;
+import it.algos.vaad.wiki.request.*;
 import it.algos.webbase.web.lib.LibText;
 
 import java.util.ArrayList;
@@ -33,12 +33,12 @@ public class Api {
      * Rimanda al metodo completo
      * Di default suppone il contenuto della Pagina come ritorno
      *
-     * @param titlePageid (title oppure pageid)
+     * @param title       della pagina wiki
      * @param tipoRicerca title o pageId
      * @return risultato della pagina (JSON) oppure della voce (text) oppure del template (text)
      */
-    public static String legge(String titlePageid, TipoRicerca tipoRicerca) {
-        return legge(titlePageid, tipoRicerca, TipoQuery.pagina);
+    public static String legge(String title, TipoRicerca tipoRicerca) {
+        return legge(title, tipoRicerca, TipoQuery.pagina);
     }// end of method
 
     /**
@@ -47,13 +47,13 @@ public class Api {
      * Rimanda al metodo completo
      * Di default suppone il template ''Bio''
      *
-     * @param titlePageid (title oppure pageid)
+     * @param title       della pagina wiki
      * @param tipoRicerca title o pageId
      * @param tipoQuery   (pagina, voce o template)
      * @return risultato della pagina (JSON) oppure della voce (text) oppure del template (text)
      */
-    public static String legge(String titlePageid, TipoRicerca tipoRicerca, TipoQuery tipoQuery) {
-        return legge(titlePageid, tipoRicerca, tipoQuery, TAG_BIO);
+    public static String legge(String title, TipoRicerca tipoRicerca, TipoQuery tipoQuery) {
+        return legge(title, tipoRicerca, tipoQuery, TAG_BIO);
     }// end of method
 
     /**
@@ -61,26 +61,25 @@ public class Api {
      * <p>
      * Mtodo completo
      *
-     * @param titlePageid (title oppure pageid)
+     * @param title       della pagina wiki
      * @param tipoRicerca title o pageId
      * @param tipoQuery   (pagina, voce o template)
      * @param tagTemplate da usare
      * @return risultato della pagina (JSON) oppure della voce (text) oppure del template (text)
      */
-    public static String legge(String titlePageid, TipoRicerca tipoRicerca, TipoQuery tipoQuery, String tagTemplate) {
+    public static String legge(String title, TipoRicerca tipoRicerca, TipoQuery tipoQuery, String tagTemplate) {
         String testo = "";
-        Page pagina;
 
         if (tipoQuery == TipoQuery.pagina) {
-            testo = leggePagina(titlePageid, tipoRicerca);
+            testo = leggePagina(title);
         }// fine del blocco if
 
         if (tipoQuery == TipoQuery.voce) {
-            testo = leggeVoce(titlePageid, tipoRicerca);
+            testo = leggeVoce(title);
         }// fine del blocco if
 
         if (tipoQuery == TipoQuery.template) {
-            testo = leggeTmpl(titlePageid, tipoRicerca, tagTemplate);
+            testo = leggeTmpl(title, tagTemplate);
         }// fine del blocco if
 
         if (tipoQuery == TipoQuery.categoria) {
@@ -94,12 +93,12 @@ public class Api {
      * Legge dal server wiki
      * <p>
      *
-     * @param titlePageid (title oppure pageid)
+     * @param title       della pagina wiki
      * @param tipoRicerca title o pageId
      * @param params      passati
      * @return contenuto del template bio
      */
-    public static String legge(String titlePageid, TipoRicerca tipoRicerca, Map params) {
+    public static String legge(String title, TipoRicerca tipoRicerca, Map params) {
         String testo = "";
         String type = "";
 
@@ -113,15 +112,15 @@ public class Api {
 
         if (!type.equals("")) {
             if (type.equals(TipoQuery.pagina.toString())) {
-                testo = leggePagina(titlePageid, tipoRicerca);
+                testo = leggePagina(title);
             }// fine del blocco if
 
             if (type.equals(TipoQuery.voce.toString())) {
-                testo = leggeVoce(titlePageid, tipoRicerca);
+                testo = leggeVoce(title);
             }// fine del blocco if
 
             if (type.equals(TipoQuery.template.toString())) {
-                testo = leggeTmpl(titlePageid, tipoRicerca, params);
+                testo = leggeTmpl(title, params);
             }// fine del blocco if
         }// fine del blocco if
 
@@ -138,12 +137,15 @@ public class Api {
      */
     @SuppressWarnings("all")
     public static String leggePagina(String title) {
-        try { // prova ad eseguire il codice
-            Integer.decode(title);
-            return leggePagina(title, TipoRicerca.pageid);
-        } catch (Exception unErrore) { // intercetta l'errore
-            return leggePagina(title, TipoRicerca.title);
-        }// fine del blocco try-catch
+        Request request = null;
+
+        request = new RequestWikiReadTitle(title);
+
+        if (request != null && request.getRisultato() == TipoRisultato.letta) {
+            return request.getTestoResponse();
+        } else {
+            return "";
+        }// fine del blocco if-else
     }// end of method
 
     /**
@@ -154,34 +156,42 @@ public class Api {
      * @return contenuto completo (json) della pagina (con i metadati mediawiki)
      */
     public static String leggePagina(long pageId) {
-        return leggePagina("" + pageId, TipoRicerca.pageid);
-    }// end of method
+        Request request = null;
 
-    /**
-     * Legge il contenuto (tutto) di una pagina
-     * <p>
-     *
-     * @param titlePageid (title oppure pageid)
-     * @param tipoRicerca title o pageId
-     * @return contenuto completo (json) della pagina (con i metadati mediawiki)
-     */
-    public static String leggePagina(String titlePageid, TipoRicerca tipoRicerca) {
-        QueryWiki query = null;
+        request = new RequestWikiReadPageid(pageId);
 
-        if (tipoRicerca == TipoRicerca.title) {
-            query = new QueryReadTitle(titlePageid);
-        }// fine del blocco if
-
-        if (tipoRicerca == TipoRicerca.pageid) {
-            query = new QueryReadPageid(titlePageid);
-        }// fine del blocco if
-
-        if (query != null && query.getRisultato() == TipoRisultato.letta) {
-            return query.getContenuto();
+        if (request != null && request.getRisultato() == TipoRisultato.letta) {
+            return request.getTestoResponse();
         } else {
             return "";
         }// fine del blocco if-else
     }// end of method
+
+//    /**
+//     * Legge il contenuto (tutto) di una pagina
+//     * <p>
+//     *
+//     * @param titlePageid (title oppure pageid)
+//     * @param tipoRicerca title o pageId
+//     * @return contenuto completo (json) della pagina (con i metadati mediawiki)
+//     */
+//    public static String leggePagina(String titlePageid, TipoRicerca tipoRicerca) {
+//        Request query = null;
+//
+//        if (tipoRicerca == TipoRicerca.title) {
+//            query = new RequestWikiReadPageid(titlePageid);
+//        }// fine del blocco if
+//
+//        if (tipoRicerca == TipoRicerca.pageid) {
+//            query = new RequestWikiReadTitle(titlePageid);
+//        }// fine del blocco if
+//
+//        if (query != null && query.getRisultato() == TipoRisultato.letta) {
+//            return query.getTestoResponse();
+//        } else {
+//            return "";
+//        }// fine del blocco if-else
+//    }// end of method
 
 
     /**
@@ -191,14 +201,15 @@ public class Api {
      * @param title della pagina
      * @return contenuto completo della pagina (con i metadati mediawiki)
      */
-    @SuppressWarnings("all")
     public static Page leggePage(String title) {
-        try { // prova ad eseguire il codice
-            Integer.decode(title);
-            return leggePage(title, TipoRicerca.pageid);
-        } catch (Exception unErrore) { // intercetta l'errore
-            return leggePage(title, TipoRicerca.title);
-        }// fine del blocco try-catch
+        Page page = null;
+        String contenuto = leggePagina(title);
+
+        if (contenuto != null && !contenuto.equals("")) {
+            page = new Page(contenuto);
+        }// fine del blocco if
+
+        return page;
     }// end of method
 
     /**
@@ -209,20 +220,8 @@ public class Api {
      * @return contenuto completo della pagina (con i metadati mediawiki)
      */
     public static Page leggePage(long pageId) {
-        return leggePage("" + pageId, TipoRicerca.pageid);
-    }// end of method
-
-    /**
-     * Legge una pagina
-     * <p>
-     *
-     * @param titlePageid (title oppure pageid)
-     * @param tipoRicerca title o pageId
-     * @return pagina (con i metadati mediawiki)
-     */
-    public static Page leggePage(String titlePageid, TipoRicerca tipoRicerca) {
         Page page = null;
-        String contenuto = leggePagina(titlePageid, tipoRicerca);
+        String contenuto = leggePagina(pageId);
 
         if (contenuto != null && !contenuto.equals("")) {
             page = new Page(contenuto);
@@ -230,6 +229,25 @@ public class Api {
 
         return page;
     }// end of method
+
+//    /**
+//     * Legge una pagina
+//     * <p>
+//     *
+//     * @param titlePageid (title oppure pageid)
+//     * @param tipoRicerca title o pageId
+//     * @return pagina (con i metadati mediawiki)
+//     */
+//    public static Page leggePage(String titlePageid, TipoRicerca tipoRicerca) {
+//        Page page = null;
+//        String contenuto = leggePagina(titlePageid);
+//
+//        if (contenuto != null && !contenuto.equals("")) {
+//            page = new Page(contenuto);
+//        }// fine del blocco if
+//
+//        return page;
+//    }// end of method
 
 
     /**
@@ -239,26 +257,27 @@ public class Api {
      * @param title della pagina
      * @return contenuto (solo testo) della pagina (senza i metadati mediawiki)
      */
-    @SuppressWarnings("all")
     public static String leggeVoce(String title) {
-        try { // prova ad eseguire il codice
-            Integer.decode(title);
-            return leggeVoce(title, TipoRicerca.pageid);
-        } catch (Exception unErrore) { // intercetta l'errore
-            return leggeVoce(title, TipoRicerca.title);
-        }// fine del blocco try-catch
+        String testo = "";
+        Page pagina = leggePage(title);
+
+        if (pagina != null) {
+            testo = pagina.getText();
+        }// fine del blocco if
+
+        return testo;
     }// end of method
 
-    /**
-     * Legge il contenuto (testo) di una voce
-     * <p>
-     *
-     * @param pageId della pagina
-     * @return contenuto (solo testo) della pagina (senza i metadati mediawiki)
-     */
-    public static String leggeVoce(int pageId) {
-        return leggeVoce("" + pageId, TipoRicerca.pageid);
-    }// end of method
+//    /**
+//     * Legge il contenuto (testo) di una voce
+//     * <p>
+//     *
+//     * @param pageId della pagina
+//     * @return contenuto (solo testo) della pagina (senza i metadati mediawiki)
+//     */
+//    public static String leggeVoce(int pageId) {
+//        return leggeVoce("" + pageId, TipoRicerca.pageid);
+//    }// end of method
 
     /**
      * Legge il contenuto (testo) di una voce
@@ -268,20 +287,8 @@ public class Api {
      * @return contenuto (solo testo) della pagina (senza i metadati mediawiki)
      */
     public static String leggeVoce(long pageId) {
-        return leggeVoce("" + pageId, TipoRicerca.pageid);
-    }// end of method
-
-    /**
-     * Legge il contenuto (testo) di una voce
-     * <p>
-     *
-     * @param titlePageid (title oppure pageid)
-     * @param tipoRicerca title o pageId
-     * @return contenuto (solo testo) della pagina (senza i metadati mediawiki)
-     */
-    public static String leggeVoce(String titlePageid, TipoRicerca tipoRicerca) {
         String testo = "";
-        Page pagina = leggePage(titlePageid, tipoRicerca);
+        Page pagina = leggePage(pageId);
 
         if (pagina != null) {
             testo = pagina.getText();
@@ -289,6 +296,25 @@ public class Api {
 
         return testo;
     }// end of method
+
+//    /**
+//     * Legge il contenuto (testo) di una voce
+//     * <p>
+//     *
+//     * @param titlePageid (title oppure pageid)
+//     * @param tipoRicerca title o pageId
+//     * @return contenuto (solo testo) della pagina (senza i metadati mediawiki)
+//     */
+//    public static String leggeVoce(String titlePageid) {
+//        String testo = "";
+//        Page pagina = leggePage(titlePageid);
+//
+//        if (pagina != null) {
+//            testo = pagina.getText();
+//        }// fine del blocco if
+//
+//        return testo;
+//    }// end of method
 
     /**
      * Legge un template da una voce
@@ -299,7 +325,13 @@ public class Api {
      * @return contenuto del template
      */
     public static String leggeTmpl(String title, String tag) {
-        return leggeTmpl(title, TipoRicerca.title, tag);
+        String tmpl = "";
+        String testo = leggeVoce(title);
+
+        if (!testo.equals("") && !tag.equals("")) {
+            tmpl = LibWiki.estraeTmplCompresi(testo, tag);
+        }// fine del blocco if
+        return tmpl;
     }// end of method
 
     /**
@@ -310,22 +342,9 @@ public class Api {
      * @param tag    nome del template
      * @return contenuto del template
      */
-    public static String leggeTmpl(int pageId, String tag) {
-        return leggeTmpl("" + pageId, TipoRicerca.pageid, tag);
-    }// end of method
-
-    /**
-     * Legge un template da una voce
-     * <p>
-     *
-     * @param titlePageid (title oppure pageid)
-     * @param tipoRicerca title o pageId
-     * @param tag         nome del template
-     * @return contenuto del template
-     */
-    public static String leggeTmpl(String titlePageid, TipoRicerca tipoRicerca, String tag) {
+    public static String leggeTmpl(long pageId, String tag) {
         String tmpl = "";
-        String testo = leggeVoce(titlePageid, tipoRicerca);
+        String testo = leggeVoce(pageId);
 
         if (!testo.equals("") && !tag.equals("")) {
             tmpl = LibWiki.estraeTmplCompresi(testo, tag);
@@ -333,19 +352,37 @@ public class Api {
         return tmpl;
     }// end of method
 
+//    /**
+//     * Legge un template da una voce
+//     * <p>
+//     *
+//     * @param titlePageid (title oppure pageid)
+//     * @param tipoRicerca title o pageId
+//     * @param tag         nome del template
+//     * @return contenuto del template
+//     */
+//    public static String leggeTmpl(String titlePageid, TipoRicerca tipoRicerca, String tag) {
+//        String tmpl = "";
+//        String testo = leggeVoce(titlePageid, tipoRicerca);
+//
+//        if (!testo.equals("") && !tag.equals("")) {
+//            tmpl = LibWiki.estraeTmplCompresi(testo, tag);
+//        }// fine del blocco if
+//        return tmpl;
+//    }// end of method
+
     /**
      * Legge un template di una voce
      * <p>
      *
      * @param titlePageid (title oppure pageid)
-     * @param tipoRicerca title o pageId
      * @param params      passati
      * @return contenuto del template
      */
-    public static String leggeTmpl(String titlePageid, TipoRicerca tipoRicerca, Map params) {
+    public static String leggeTmpl(String titlePageid, Map params) {
         String tmpl = "";
         String tag = "";
-        String testo = leggeVoce(titlePageid, tipoRicerca);
+        String testo = leggeVoce(titlePageid);
 
         if (params != null) {
             if (params.containsKey(MAP_KEY_NOME)) {
@@ -368,7 +405,14 @@ public class Api {
      * @return contenuto del template bio
      */
     public static String leggeTmplBio(String title) {
-        return leggeTmplBio(title, TipoRicerca.title);
+        String testoTemplate = "";
+        String testo = leggeVoce(title);
+
+        if (!testo.equals("")) {
+            testoTemplate = LibWiki.estraeTmplBioCompresi(testo);
+        }// fine del blocco if
+
+        return testoTemplate;
     }// end of method
 
     /**
@@ -378,21 +422,9 @@ public class Api {
      * @param pageId della pagina
      * @return contenuto del template bio
      */
-    public static String leggeTmplBio(int pageId) {
-        return leggeTmplBio("" + pageId, TipoRicerca.pageid);
-    }// end of method
-
-    /**
-     * Legge il template bio di una voce
-     * <p>
-     *
-     * @param titlePageid (title oppure pageid)
-     * @param tipoRicerca title o pageId
-     * @return contenuto del template bio
-     */
-    public static String leggeTmplBio(String titlePageid, TipoRicerca tipoRicerca) {
+    public static String leggeTmplBio(long pageId) {
         String testoTemplate = "";
-        String testo = leggeVoce(titlePageid, tipoRicerca);
+        String testo = leggeVoce(pageId);
 
         if (!testo.equals("")) {
             testoTemplate = LibWiki.estraeTmplBioCompresi(testo);
@@ -400,6 +432,24 @@ public class Api {
 
         return testoTemplate;
     }// end of method
+
+//    /**
+//     * Legge il template bio di una voce
+//     * <p>
+//     *
+//     * @param titlePageid (title oppure pageid)
+//     * @return contenuto del template bio
+//     */
+//    public static String leggeTmplBio(String titlePageid) {
+//        String testoTemplate = "";
+//        String testo = leggeVoce(titlePageid);
+//
+//        if (!testo.equals("")) {
+//            testoTemplate = LibWiki.estraeTmplBioCompresi(testo);
+//        }// fine del blocco if
+//
+//        return testoTemplate;
+//    }// end of method
 
     /**
      * Estrae un template dal testo
@@ -474,25 +524,25 @@ public class Api {
     } // fine del metodo
 
 
-    /**
-     * Esegue la query
-     *
-     * @param titleCat della categoria da ricercare
-     * @return query valida
-     */
-    private static QueryCat getQuey(String titleCat) {
-        QueryCat query = null;
-
-        if (titleCat != null && !titleCat.equals("")) {
-            query = new QueryCat(titleCat);
-        }// end of if cycle
-
-        if (query != null && query.isValida() && query.getRisultato() == TipoRisultato.letta) {
-            return query;
-        } else {
-            return null;
-        }// end of if/else cycle
-    } // fine del metodo
+//    /**
+//     * Esegue la query
+//     *
+//     * @param titleCat della categoria da ricercare
+//     * @return query valida
+//     */
+//    private static QueryCat getQuey(String titleCat) {
+//        QueryCat query = null;
+//
+//        if (titleCat != null && !titleCat.equals("")) {
+//            query = new QueryCat(titleCat);
+//        }// end of if cycle
+//
+//        if (query != null && query.isValida() && query.getRisultato() == TipoRisultato.letta) {
+//            return query;
+//        } else {
+//            return null;
+//        }// end of if/else cycle
+//    } // fine del metodo
 
     /**
      * Legge gli elementi appartenenti ad una categoria.
@@ -505,6 +555,17 @@ public class Api {
         return leggeTitlesCategoria(titleCat);
     } // fine del metodo
 
+    /**
+     * Legge gli elementi appartenenti ad una categoria.
+     * Restituisce una lista (ArrayList) di pageid solo delle voci senza le subcategorie
+     *
+     * @param titleCat della categoria da ricercare
+     * @return lista pageid delle voci
+     */
+    public static ArrayList<Long> leggeCatLong(String titleCat) {
+        return leggePageidsCategoriaOnlyVoci(titleCat);
+    } // fine del metodo
+
 
     /**
      * Legge gli elementi appartenenti ad una categoria.
@@ -515,10 +576,13 @@ public class Api {
      */
     public static ArrayList<String> leggeTitlesCategoria(String titleCat) {
         ArrayList<String> lista = null;
-        QueryCat query = Api.getQuey(titleCat);
+        RequestWikiCat request;
 
-        if (query != null) {
-            lista = query.getListaAllTitles();
+        if (titleCat != null && !titleCat.equals("")) {
+            request = new RequestWikiCat(titleCat);
+            if (request.isValida()) {
+                lista = request.getListaAllTitles();
+            }// end of if cycle
         }// end of if cycle
 
         return lista;
@@ -533,10 +597,13 @@ public class Api {
      */
     public static ArrayList<Long> leggePageidsCategoria(String titleCat) {
         ArrayList<Long> lista = null;
-        QueryCat query = Api.getQuey(titleCat);
+        RequestWikiCat request;
 
-        if (query != null) {
-            lista = query.getListaAllPageids();
+        if (titleCat != null && !titleCat.equals("")) {
+            request = new RequestWikiCat(titleCat);
+            if (request.isValida()) {
+                lista = request.getListaAllPageids();
+            }// end of if cycle
         }// end of if cycle
 
         return lista;
@@ -551,10 +618,13 @@ public class Api {
      */
     public static ArrayList<String> leggeTitlesCategoriaOnlyVoci(String titleCat) {
         ArrayList<String> lista = null;
-        QueryCat query = Api.getQuey(titleCat);
+        RequestWikiCat request;
 
-        if (query != null) {
-            lista = query.getListaTitles();
+        if (titleCat != null && !titleCat.equals("")) {
+            request = new RequestWikiCat(titleCat);
+            if (request.isValida()) {
+                lista = request.getListaVociTitles();
+            }// end of if cycle
         }// end of if cycle
 
         return lista;
@@ -569,10 +639,13 @@ public class Api {
      */
     public static ArrayList<Long> leggePageidsCategoriaOnlyVoci(String titleCat) {
         ArrayList<Long> lista = null;
-        QueryCat query = Api.getQuey(titleCat);
+        RequestWikiCat request;
 
-        if (query != null) {
-            lista = query.getListaPageids();
+        if (titleCat != null && !titleCat.equals("")) {
+            request = new RequestWikiCat(titleCat);
+            if (request.isValida()) {
+                lista = request.getListaVociPageids();
+            }// end of if cycle
         }// end of if cycle
 
         return lista;
@@ -587,11 +660,13 @@ public class Api {
      */
     public static ArrayList<String> leggeBacklinks(String title) {
         ArrayList<String> lista = null;
-        QueryBacklinks query;
+        RequestWikiBacklinks request;
 
         if (title != null && !title.equals("")) {
-            query = new QueryBacklinks(title, false);
-            lista = query.getListaTitles();
+            request = new RequestWikiBacklinks(title);
+            if (request.isValida()) {
+                lista = request.getListaAllTitles();
+            }// end of if cycle
         }// end of if cycle
 
         return lista;

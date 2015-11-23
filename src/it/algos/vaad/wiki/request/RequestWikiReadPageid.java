@@ -1,4 +1,4 @@
-package it.algos.vaad.wiki.query;
+package it.algos.vaad.wiki.request;
 
 /**
  * Created by gac on 20 nov 2015.

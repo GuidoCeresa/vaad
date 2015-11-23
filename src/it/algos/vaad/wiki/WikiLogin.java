@@ -1,7 +1,7 @@
 package it.algos.vaad.wiki;
 
 import com.vaadin.ui.Notification;
-import it.algos.vaad.wiki.query.QueryCat;
+import it.algos.vaad.wiki.request.QueryCat;
 import it.algos.webbase.web.lib.LibSession;
 
 import java.io.BufferedReader;

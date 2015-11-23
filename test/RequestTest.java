@@ -1,5 +1,5 @@
 import it.algos.vaad.wiki.*;
-import it.algos.vaad.wiki.query.*;
+import it.algos.vaad.wiki.request.*;
 import it.algos.webbase.web.lib.LibArray;
 import it.algos.webbase.web.lib.LibText;
 import org.junit.Before;

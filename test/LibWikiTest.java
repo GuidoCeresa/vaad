@@ -1,7 +1,7 @@
 import it.algos.vaad.wiki.LibWiki;
 import it.algos.vaad.wiki.PagePar;
-import it.algos.vaad.wiki.query.QueryCat;
-import it.algos.vaad.wiki.query.QueryReadTitle;
+import it.algos.vaad.wiki.request.QueryCat;
+import it.algos.vaad.wiki.request.QueryReadTitle;
 import it.algos.webbase.web.lib.LibArray;
 import org.json.simple.JSONObject;
 import org.junit.Test;

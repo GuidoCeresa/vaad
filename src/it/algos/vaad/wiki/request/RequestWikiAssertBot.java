@@ -1,4 +1,4 @@
-package it.algos.vaad.wiki.query;
+package it.algos.vaad.wiki.request;
 
 import it.algos.vaad.wiki.LibWiki;
 import it.algos.vaad.wiki.TipoRisultato;
@@ -9,11 +9,11 @@ import java.util.HashMap;
  * Created by gac on 22 nov 2015.
  * .
  */
-public class RequestWikiAssertUser extends RequestWikiAssert {
+public class RequestWikiAssertBot extends RequestWikiAssert {
 
 
     /* parametro API specifico */
-    private static String API_USER = "user";
+    private static String API_BOT = "bot";
 
     /**
      * Costruttore completo
@@ -22,7 +22,7 @@ public class RequestWikiAssertUser extends RequestWikiAssert {
      * Prima regolano alcuni parametri specifici
      * Poi invocano il metodo doInit() della superclasse astratta
      */
-    public RequestWikiAssertUser() {
+    public RequestWikiAssertBot() {
         this.doInit();
     }// fine del metodo costruttore completo
 
@@ -34,10 +34,20 @@ public class RequestWikiAssertUser extends RequestWikiAssert {
      * Prima regolano alcuni parametri specifici
      * Poi invocano il metodo doInit() della superclasse astratta
      */
-    public RequestWikiAssertUser(HashMap<String, Object> cookiesMappa) {
+    public RequestWikiAssertBot(HashMap<String, Object> cookiesMappa) {
         this.cookiesMappa = cookiesMappa;
         this.doInit();
     }// fine del metodo costruttore completo
+
+
+//    /**
+//     * Metodo iniziale invocato DOPO che la sottoclasse ha regolato alcuni parametri specifici
+//     * PUO essere sovrascritto nelle sottoclassi specifiche
+//     */
+//    protected void doInit() {
+//        super.needCookies = true;
+//        super.doInit();
+//    } // fine del metodo
 
     /**
      * Costruisce la stringa della request
@@ -48,9 +58,8 @@ public class RequestWikiAssertUser extends RequestWikiAssert {
      */
     @Override
     protected String getDomain() {
-        return super.getDomain() + API_USER;
+        return super.getDomain() + API_BOT;
     } // fine del metodo
-
 
     /**
      * Elabora la risposta
@@ -63,15 +72,16 @@ public class RequestWikiAssertUser extends RequestWikiAssert {
     protected void elaboraRisposta(String rispostaRequest) {
         String errorMessage = LibWiki.getError(rispostaRequest);
 
-        if (errorMessage.equals(TipoRisultato.assertuserfailed.toString())) {
+        if (errorMessage.equals(TipoRisultato.assertbotfailed.toString())) {
             valida = false;
-            risultato = TipoRisultato.assertuserfailed;
+            risultato = TipoRisultato.assertbotfailed;
         } else {
             valida = true;
-            risultato = TipoRisultato.loginUser;
+            risultato = TipoRisultato.loginBot;
         }// end of if/else cycle
 
         this.testoResponse = rispostaRequest;
     } // end of getter method
+
 
 } // fine della classe
