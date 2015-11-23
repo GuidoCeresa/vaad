@@ -656,7 +656,7 @@ public class Api {
      * Restituisce una lista (ArrayList) di titoli in tutti i namespaces
      *
      * @param title della pagina da controllare
-     * @return lista titoli delle voci
+     * @return lista titoli delle pagine
      */
     public static ArrayList<String> leggeBacklinks(String title) {
         ArrayList<String> lista = null;
@@ -666,6 +666,27 @@ public class Api {
             request = new RequestWikiBacklinks(title);
             if (request.isValida()) {
                 lista = request.getListaAllTitles();
+            }// end of if cycle
+        }// end of if cycle
+
+        return lista;
+    } // fine del metodo
+
+    /**
+     * Legge i titoli delle voci che puntano ad una pagina.
+     * Restituisce una lista (ArrayList) di titoli solo delle voci nel namespace principale
+     *
+     * @param title della pagina da controllare
+     * @return lista titoli delle voci
+     */
+    public static ArrayList<String> leggeBacklinksOnlyVoci(String title) {
+        ArrayList<String> lista = null;
+        RequestWikiBacklinks request;
+
+        if (title != null && !title.equals("")) {
+            request = new RequestWikiBacklinks(title);
+            if (request.isValida()) {
+                lista = request.getListaVociTitles();
             }// end of if cycle
         }// end of if cycle
 
