@@ -1,14 +1,12 @@
 package it.algos.vaad.wiki.request;
 
-import it.algos.vaad.wiki.Cost;
-import it.algos.vaad.wiki.TipoRicerca;
-import it.algos.vaad.wiki.TipoRisultato;
-import it.algos.vaad.wiki.WikiLogin;
+import it.algos.vaad.wiki.*;
 import it.algos.webbase.web.lib.LibSession;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -21,6 +19,14 @@ import java.util.LinkedHashMap;
  * Le request più semplici usano il GET
  * In alcune request (non tutte) è obbligatorio anche il POST
  * Alcune request (su mediawiki) richiedono anche una tokenRequestOnly preliminare
+ * <p>
+ * Gets tokens required by data-modifying actions.
+ * If you request one of these actions without providing a token, the API returns an error code such as notoken.
+ * This module does not use a prefix.
+ * The csrf (cross-site request forgery) token corresponds to the majority of older tokens, like edit and move, that were retrieved using the API action tokens (deprecated in MediaWiki 1.24).
+ * api.php?action=query&meta=tokens
+ * <tokens csrftoken="00112233445566778899aabbccddeeff+\" />
+ * <p>
  */
 public abstract class RequestWiki extends Request {
 
@@ -51,6 +57,7 @@ public abstract class RequestWiki extends Request {
     protected static String TAG_PROP = Cost.CONTENT_ALL;
     protected static String TAG_TITOLO = "&titles=";
     protected static String TAG_PAGEID = "&pageids=";
+    protected static String CSRF_TOKEN = "csrftoken";
 
     //--tipo di ricerca della pagina
     //--di default il titolo
@@ -74,6 +81,9 @@ public abstract class RequestWiki extends Request {
 
     // ci metto tutti i cookies restituiti da URLConnection.responses
     protected HashMap cookies;
+
+    // token ottenuto dalla preliminaryRequest ed usato per Edit e Move
+    protected String csrfToken;
 
     /**
      * Metodo iniziale invocato DOPO che la sottoclasse ha regolato alcuni parametri specifici
@@ -115,7 +125,7 @@ public abstract class RequestWiki extends Request {
                 } else {
                     valida = false;
                     if (risultato != TipoRisultato.mustbeposted) {
-                        risultato = TipoRisultato.noToken;
+                        risultato = TipoRisultato.noPreliminaryToken;
                     }// end of if cycle
                 }// end of if/else cycle
             } catch (Exception unErrore) { // intercetta l'errore
@@ -299,7 +309,15 @@ public abstract class RequestWiki extends Request {
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
     protected boolean elaboraRispostaPreliminary(String rispostaRequest) {
-        return false;
+        String token = LibWiki.getToken(rispostaRequest);
+
+        if (token.equals("")) {
+            return false;
+        } else {
+            csrfToken = token;
+            return true;
+        }// end of if/else cycle
+
     } // end of getter method
 
     /**
@@ -343,5 +361,6 @@ public abstract class RequestWiki extends Request {
             }// fine del blocco if
         }// fine del blocco if
     } // fine del metodo
+
 
 } // fine della classe

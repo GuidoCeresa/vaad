@@ -1,34 +1,56 @@
 package it.algos.vaad.wiki.request;
 
+import it.algos.vaad.wiki.LibWiki;
 import it.algos.vaad.wiki.TipoRisultato;
 import it.algos.vaad.wiki.WikiLogin;
 import it.algos.webbase.web.lib.LibSession;
 
+import java.io.PrintWriter;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 
 /**
  * Created by gac on 27 nov 2015.
  * <p>
+ * Action=move requires POST requests
+ * GET requests will cause an error
+ * <p>
  * Double request
- * First for obtaining movetoken
+ * <p>
+ * <deprecated> First for obtaining movetoken
+ * <deprecated> To move a page, a move token is required.
+ * <deprecated> This token is equal to the edit token and the same for all pages, but changes at every login.
+ * <deprecated> Moves tokens can be obtained via action=tokens with type=move (MW 1.20+), or by using the following method:
+ * <deprecated> Obtaining a move token
+ * <deprecated> api.php?action=query&prop=info&intoken=move&titles=Main%20Page
+ * <p>
+ * Gets tokens required by data-modifying actions.
+ * If you request one of these actions without providing a token, the API returns an error code such as notoken.
+ * This module does not use a prefix.
+ * The csrf (cross-site request forgery) token corresponds to the majority of older tokens, like edit and move, that were retrieved using the API action tokens (deprecated in MediaWiki 1.24).
+ * api.php?action=query&meta=tokens
+ * <tokens csrftoken="00112233445566778899aabbccddeeff+\" />
  * <p>
  * Second with parameters:
- * from: Title of the page you want to move. Cannot be used together with fromid
- * fromid: Page ID of the page you want to move. Cannot be used together with from
- * to: Title you want to rename the page to
- * token: A move token previously retrieved through prop=info. Take care to urlencode the '+' as '%2B'.
- * reason: Reason for the move (optional)
- * movetalk: Move the talk page, if it exists
- * movesubpages: Move subpages, if applicable
- * noredirect: Don't create a redirect. Requires the suppressredirect right, which by default is granted only to bots and sysops
- * watch: Add the page and the redirect to your watchlist. Deprecated. Use the watchlist argument (deprecated in 1.17)
- * unwatch: Remove the page and the redirect from your watchlist. Deprecated. Use the watchlist argument (deprecated in 1.17)
- * watchlist: Unconditionally add or remove the page from your watchlist, use preferences or do not change watch (see API:Edit)
- * ignorewarnings: Ignore any warnings
+ * -    from: Title of the page you want to move. Cannot be used together with fromid
+ * -    fromid: Page ID of the page you want to move. Cannot be used together with from
+ * -    to: Title you want to rename the page to
+ * -    token: A move token previously retrieved through prop=info. Take care to urlencode the '+' as '%2B'.
+ * -    reason: Reason for the move (optional)
+ * -    movetalk: Move the talk page, if it exists
+ * -    movesubpages: Move subpages, if applicable
+ * -    noredirect: Don't create a redirect. Requires the suppressredirect right, which by default is granted only to bots and sysops
+ * -    watch: Add the page and the redirect to your watchlist. Deprecated. Use the watchlist argument (deprecated in 1.17)
+ * -    unwatch: Remove the page and the redirect from your watchlist. Deprecated. Use the watchlist argument (deprecated in 1.17)
+ * -    watchlist: Unconditionally add or remove the page from your watchlist, use preferences or do not change watch (see API:Edit)
+ * -    ignorewarnings: Ignore any warnings
+ * <p>
+ * Link: https://www.mediawiki.org/wiki/API:Move
  */
 public class RequestWikiMove extends RequestWiki {
 
     private static final String TAG_MOVE = "&intoken=move";
+    private static final String TAG_PRELINARY = "&action=query&meta=tokens";
     private static final String FROM = "&from=";
     private static final String TO = "&to=";
     private static final String REASON = "&reason=";
@@ -38,7 +60,6 @@ public class RequestWikiMove extends RequestWiki {
 
     private String oldTitle;
     private String newTitle;
-    private String token;
 
     /**
      * Costruttore
@@ -88,7 +109,7 @@ public class RequestWikiMove extends RequestWiki {
         this.oldTitle = oldTitle;
         this.newTitle = newTitle;
         super.summary = summary;
-        super.needPost = false;
+        super.needPost = true;
         super.needLogin = true;
         super.needToken = true;
         super.needBot = true;
@@ -126,6 +147,15 @@ public class RequestWikiMove extends RequestWiki {
         return domain;
     } // fine del metodo
 
+    /**
+     * Stringa del browser per la request preliminary
+     * <p>
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     */
+    protected String getDomainPreliminary() {
+        return API_BASE + TAG_PRELINARY;
+    } // end of getter method
+
     //--Costruisce il domain per l'URL dal pageid della pagina
     //--@return domain
     protected String getDomain() {
@@ -149,5 +179,68 @@ public class RequestWikiMove extends RequestWiki {
 
         return domain;
     } // fine del metodo
+
+    /**
+     * Crea il POST della request
+     * <p>
+     * In alcune request (non tutte) è obbligatorio anche il POST
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     */
+    @Override
+    protected void creaPost(URLConnection urlConn) throws Exception {
+        PrintWriter out;
+
+        out = new PrintWriter(urlConn.getOutputStream());
+        String testoPost = "";
+
+        if (csrfToken != null && !csrfToken.equals("")) {
+            testoPost += "&token=" + csrfToken;
+        }// end of if cycle
+
+        // now we send the data POST
+        out.print(testoPost);
+        out.close();
+
+    } // fine del metodo
+
+    /**
+     * Elabora la risposta
+     * <p>
+     * Informazioni, contenuto e validita della risposta
+     * Controllo del contenuto (testo) ricevuto
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     */
+    protected void elaboraRisposta(String rispostaRequest) {
+        super.elaboraRisposta(rispostaRequest);
+        String errorMessage = LibWiki.getError(rispostaRequest);
+
+        risultato = TipoRisultato.spostata;
+
+        if (errorMessage.equals(TipoRisultato.noto.toString())) {
+            risultato = TipoRisultato.noto;
+            valida = false;
+        }// end of if cycle
+
+        if (errorMessage.equals(TipoRisultato.invalidtitle.toString())) {
+            risultato = TipoRisultato.invalidtitle;
+            valida = false;
+        }// end of if cycle
+
+        if (errorMessage.equals(TipoRisultato.selfmove.toString())) {
+            risultato = TipoRisultato.selfmove;
+            valida = false;
+        }// end of if cycle
+
+        if (errorMessage.equals(TipoRisultato.articleexists.toString())) {
+            risultato = TipoRisultato.articleexists;
+            valida = false;
+        }// end of if cycle
+
+        if (errorMessage.equals(TipoRisultato.protectedtitle.toString())) {
+            risultato = TipoRisultato.protectedtitle;
+            valida = false;
+        }// end of if cycle
+
+    } // end of getter method
 
 } // fine della classe

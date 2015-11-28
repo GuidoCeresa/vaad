@@ -526,24 +526,6 @@ public class QueryTest extends VaadTest {
 
 
     @Test
-    /**
-     * Double request
-     * First for obtaining movetoken
-     * <p>
-     * Second with parameters:
-     * from: Title of the page you want to move. Cannot be used together with fromid
-     * fromid: Page ID of the page you want to move. Cannot be used together with from
-     * to: Title you want to rename the page to
-     * token: A move token previously retrieved through prop=info. Take care to urlencode the '+' as '%2B'.
-     * reason: Reason for the move (optional)
-     * movetalk: Move the talk page, if it exists
-     * movesubpages: Move subpages, if applicable
-     * noredirect: Don't create a redirect. Requires the suppressredirect right, which by default is granted only to bots and sysops
-     * watch: Add the page and the redirect to your watchlist. Deprecated. Use the watchlist argument (deprecated in 1.17)
-     * unwatch: Remove the page and the redirect from your watchlist. Deprecated. Use the watchlist argument (deprecated in 1.17)
-     * watchlist: Unconditionally add or remove the page from your watchlist, use preferences or do not change watch (see API:Edit)
-     * ignorewarnings: Ignore any warnings
-     */
     public void move() {
         Query query;
         String reason = "test";
@@ -552,36 +534,37 @@ public class QueryTest extends VaadTest {
         setLogin();
 
         query = new QueryMove("", "");
-        assertEquals(query.getRisultato(), TipoRisultato.erroreGenerico);
         assertFalse(query.isValida());
+        assertEquals(query.getRisultato(), TipoRisultato.erroreGenerico);
 
         query = new QueryMove(TITOLO8, TITOLO9);
-        assertEquals(query.getRisultato(), TipoRisultato.noLogin);
         assertFalse(query.isValida());
+        assertEquals(query.getRisultato(), TipoRisultato.noLogin);
 
         query = new QueryMove(TITOLO8, TITOLO9, reason);
-        assertEquals(query.getRisultato(), TipoRisultato.noLogin);
         assertFalse(query.isValida());
+        assertEquals(query.getRisultato(), TipoRisultato.noLogin);
 
         query = new QueryMove("", "", reason, loginWiki);
-        assertEquals(query.getRisultato(), TipoRisultato.erroreGenerico);
         assertFalse(query.isValida());
+        assertEquals(query.getRisultato(), TipoRisultato.erroreGenerico);
 
         query = new QueryMove(TITOLO8, TITOLO8, reason, loginWiki);
-        assertEquals(query.getRisultato(), TipoRisultato.selfmove);
         assertFalse(query.isValida());
+        assertEquals(query.getRisultato(), TipoRisultato.selfmove);
 
         query = new QueryMove(TITOLO8, TITOLO_ALTRO, reason, loginWiki);
-        assertEquals(query.getRisultato(), TipoRisultato.articleexists);
         assertFalse(query.isValida());
+        assertEquals(query.getRisultato(), TipoRisultato.articleexists);
 
         query = new QueryMove(TITOLO8, TITOLO_BLOCCATO, reason, loginWiki);
-        assertEquals(query.getRisultato(), TipoRisultato.protectedtitle);
         assertFalse(query.isValida());
+        assertEquals(query.getRisultato(), TipoRisultato.protectedtitle);
 
         query = new QueryMove(TITOLO8, "", reason, loginWiki);
-        assertEquals(query.getRisultato(), TipoRisultato.erroreGenerico);
         assertFalse(query.isValida());
+        assertEquals(query.getRisultato(), TipoRisultato.erroreGenerico);
     }// end of single test
+
 
 }// end of testing class

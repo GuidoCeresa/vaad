@@ -584,7 +584,7 @@ public class RequestTest extends VaadTest {
         assertEquals(request.getRisultato(), TipoRisultato.assertbotfailed);
     }// end of single test
 
-//        @Test
+    //        @Test
     public void login() {
         RequestWikiLogin request;
         String nick;
@@ -617,26 +617,6 @@ public class RequestTest extends VaadTest {
 
 
     @Test
-    /**
-     * Created by gac on 27 nov 2015.
-     * <p>
-     * Double request
-     * First for obtaining movetoken
-     * <p>
-     * Second with parameters:
-     * from: Title of the page you want to move. Cannot be used together with fromid
-     * fromid: Page ID of the page you want to move. Cannot be used together with from
-     * to: Title you want to rename the page to
-     * token: A move token previously retrieved through prop=info. Take care to urlencode the '+' as '%2B'.
-     * reason: Reason for the move (optional)
-     * movetalk: Move the talk page, if it exists
-     * movesubpages: Move subpages, if applicable
-     * noredirect: Don't create a redirect. Requires the suppressredirect right, which by default is granted only to bots and sysops
-     * watch: Add the page and the redirect to your watchlist. Deprecated. Use the watchlist argument (deprecated in 1.17)
-     * unwatch: Remove the page and the redirect from your watchlist. Deprecated. Use the watchlist argument (deprecated in 1.17)
-     * watchlist: Unconditionally add or remove the page from your watchlist, use preferences or do not change watch (see API:Edit)
-     * ignorewarnings: Ignore any warnings
-     */
     public void move() {
         RequestWikiMove request;
         String reason = "test";
@@ -644,37 +624,54 @@ public class RequestTest extends VaadTest {
         //--login obbligatorio
         setLogin();
 
-        request = new RequestWikiMove("", "", "", wikiLogin);
-        assertEquals(request.getRisultato(), TipoRisultato.erroreGenerico);
+        request = new RequestWikiMove("", "", "");
         assertFalse(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.noLogin);
 
         request = new RequestWikiMove(TITOLO8, TITOLO9);
-        assertEquals(request.getRisultato(), TipoRisultato.noLogin);
         assertFalse(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.noLogin);
 
         request = new RequestWikiMove(TITOLO8, TITOLO9, reason);
-        assertEquals(request.getRisultato(), TipoRisultato.noLogin);
         assertFalse(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.noLogin);
 
         request = new RequestWikiMove("", "", reason, wikiLogin);
-        assertEquals(request.getRisultato(), TipoRisultato.erroreGenerico);
         assertFalse(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.noto);
+
+        request = new RequestWikiMove("", TITOLO8, reason, wikiLogin);
+        assertFalse(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.invalidtitle);
 
         request = new RequestWikiMove(TITOLO8, TITOLO8, reason, wikiLogin);
-        assertEquals(request.getRisultato(), TipoRisultato.selfmove);
         assertFalse(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.selfmove);
 
         request = new RequestWikiMove(TITOLO8, TITOLO_ALTRO, reason, wikiLogin);
-        assertEquals(request.getRisultato(), TipoRisultato.articleexists);
         assertFalse(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.articleexists);
 
         request = new RequestWikiMove(TITOLO8, TITOLO_BLOCCATO, reason, wikiLogin);
-        assertEquals(request.getRisultato(), TipoRisultato.protectedtitle);
         assertFalse(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.protectedtitle);
 
         request = new RequestWikiMove(TITOLO8, "", reason, wikiLogin);
-        assertEquals(request.getRisultato(), TipoRisultato.erroreGenerico);
         assertFalse(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.noto);
+    }// end of single test
+
+    @Test
+    public void moveReal() {
+        RequestWikiMove request;
+        String reason = "test";
+
+        //--login obbligatorio
+        setLogin();
+
+        request = new RequestWikiMove(TITOLO8, "Utente:Gac/testdacancellare", reason, wikiLogin);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.spostata);
 
     }// end of single test
 

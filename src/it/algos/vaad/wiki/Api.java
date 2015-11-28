@@ -700,8 +700,26 @@ public class Api {
      * @param newTitle nuovo titolo della pagina
      */
     public static boolean sposta(String oldTitle, String newTitle) {
-        boolean status = false;
+        return sposta(oldTitle, newTitle, "");
+    } // fine del metodo
 
+    /**
+     * Sposta una pagina (sposta il titolo)
+     *
+     * @param oldTitle vecchio titolo della pagina
+     * @param newTitle nuovo titolo della pagina
+     * @param summary  oggetto della modifica
+     */
+    public static boolean sposta(String oldTitle, String newTitle, String summary) {
+        boolean status = false;
+        RequestWikiMove request;
+
+        if (oldTitle != null && !oldTitle.equals("") && newTitle != null && !newTitle.equals("")) {
+            request = new RequestWikiMove(oldTitle, newTitle, summary);
+            if (request.isValida() && request.getRisultato() == TipoRisultato.spostata) {
+                status = true;
+            }// end of if cycle
+        }// end of if cycle
 
         return status;
     } // fine del metodo

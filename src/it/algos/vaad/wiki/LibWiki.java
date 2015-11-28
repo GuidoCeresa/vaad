@@ -672,36 +672,6 @@ public abstract class LibWiki {
         return mappa;
     } // fine del metodo
 
-    /**
-     * Crea una mappa standard (valori reali) dal testo JSON di una pagina
-     *
-     * @param textJSON in ingresso
-     * @return mappa standard (valori reali)
-     */
-    public static HashMap<String, Object> creaMappa(String textJSON) {
-        HashMap<String, Object> mappa = null;
-        JSONObject objectAll;
-        ArrayList<String> listaKeys;
-
-        //--recupera gli oggetti al livello root del testo
-        objectAll = (JSONObject) JSONValue.parse(textJSON);
-
-        //--controllo
-        if (objectAll == null) {
-            return null;
-        }// fine del blocco if
-
-        listaKeys = LibArray.getKeyFromMap(objectAll);
-
-        if (listaKeys != null) {
-            mappa = new HashMap<String, Object>();
-            for (String key : listaKeys) {
-                mappa.put(key, objectAll.get(key));
-            }// end of for cycle
-        }// end of if cycle
-
-        return mappa;
-    } // fine del metodo
 
     /**
      * Crea una mappa login (valori String) dal testo JSON di una pagina di login
@@ -731,6 +701,81 @@ public abstract class LibWiki {
                 mappa.put((String) key, objectQuery.get(key));
             } // fine del ciclo for-each
         }// fine del blocco if
+
+        return mappa;
+    } // fine del metodo
+
+    /**
+     * Crea una mappa token (valori String) dal testo JSON di una preliminary request
+     *
+     * @param textJSON in ingresso
+     * @return mappa standard (valori String)
+     */
+    public static HashMap<String, Object> creaMappaToken(String textJSON) {
+        HashMap<String, Object> mappa = null;
+        JSONObject objectAll;
+        boolean batchcomplete = false;
+        JSONObject objectQuery = null;
+        JSONObject objectToken = null;
+        String token = "";
+
+        // recupera i due oggetti al livello root del testo (batchcomplete e query)
+        objectAll = (JSONObject) JSONValue.parse(textJSON);
+
+        // controllo
+        if (objectAll == null) {
+            return null;
+        }// fine del blocco if
+
+        //--recupera il valore del parametro di controllo per la gestione dell'ultima versione di mediawiki
+        if (objectAll.get(BATCH) != null && objectAll.get(BATCH) instanceof Boolean) {
+            batchcomplete = (Boolean) objectAll.get(BATCH);
+        }// fine del blocco if
+
+        //--recupera i valori dei parametri pages
+        if (objectAll.get(QUERY) != null && objectAll.get(QUERY) instanceof JSONObject) {
+            objectQuery = (JSONObject) objectAll.get(QUERY);
+            if (objectQuery.get(TOKENS) != null && objectQuery.get(TOKENS) instanceof JSONObject) {
+                objectToken = (JSONObject) objectQuery.get(TOKENS);
+                if (objectToken.get(TOKEN) != null && objectToken.get(TOKEN) instanceof String) {
+                    token = (String) objectToken.get(TOKEN);
+                }// end of if cycle
+            }// fine del blocco if
+        }// fine del blocco if
+
+        //--crea la mappa
+        mappa = mixJSON(batchcomplete, token);
+
+        return mappa;
+    } // fine del metodo
+
+    /**
+     * Crea una mappa standard (valori reali) dal testo JSON di una pagina
+     *
+     * @param textJSON in ingresso
+     * @return mappa standard (valori reali)
+     */
+    public static HashMap<String, Object> creaMappa(String textJSON) {
+        HashMap<String, Object> mappa = null;
+        JSONObject objectAll;
+        ArrayList<String> listaKeys;
+
+        //--recupera gli oggetti al livello root del testo
+        objectAll = (JSONObject) JSONValue.parse(textJSON);
+
+        //--controllo
+        if (objectAll == null) {
+            return null;
+        }// fine del blocco if
+
+        listaKeys = LibArray.getKeyFromMap(objectAll);
+
+        if (listaKeys != null) {
+            mappa = new HashMap<String, Object>();
+            for (String key : listaKeys) {
+                mappa.put(key, objectAll.get(key));
+            }// end of for cycle
+        }// end of if cycle
 
         return mappa;
     } // fine del metodo
@@ -837,6 +882,16 @@ public abstract class LibWiki {
      * Crea una mappa standard (valori String) dalle mappe JSON parziali
      *
      * @param batchcomplete flag di controllo
+     * @return mappa standard (valori String)
+     */
+    public static HashMap<String, Object> mixJSON(boolean batchcomplete, String token) {
+        return mixJSON(batchcomplete, null, null, token);
+    } // fine del metodo
+
+    /**
+     * Crea una mappa standard (valori String) dalle mappe JSON parziali
+     *
+     * @param batchcomplete flag di controllo
      * @param arrayPages    parametri base (3) ed info (1)
      * @param arrayRev      parametri revisions (12)
      * @return mappa standard (valori String)
@@ -851,18 +906,23 @@ public abstract class LibWiki {
         mappa.put(BATCH, batchcomplete);
 
         //--recupera i valori dei parametri info
-        mappaPages = estraeMappaJsonPar(arrayPages);
-        for (String key : mappaPages.keySet()) {
-            value = mappaPages.get(key);
-            mappa.put(key, value);
-        } // fine del ciclo for-each
+        if (arrayPages!=null) {
+            mappaPages = estraeMappaJsonPar(arrayPages);
+            for (String key : mappaPages.keySet()) {
+                value = mappaPages.get(key);
+                mappa.put(key, value);
+            } // fine del ciclo for-each
+        }// end of if cycle
+
 
         //--recupera i valori dei parametri revisions
-        mappaRev = estraeMappaJsonPar(arrayRev);
-        for (String key : mappaRev.keySet()) {
-            value = mappaRev.get(key);
-            mappa.put(key, value);
-        } // fine del ciclo for-each
+        if (arrayRev!=null) {
+            mappaRev = estraeMappaJsonPar(arrayRev);
+            for (String key : mappaRev.keySet()) {
+                value = mappaRev.get(key);
+                mappa.put(key, value);
+            } // fine del ciclo for-each
+        }// end of if cycle
 
         //--recupera i valori dei parametro di controllo token
         if (token != null && !token.equals("")) {
@@ -890,9 +950,9 @@ public abstract class LibWiki {
 
             if (mappa != null) {
                 if (mappa.get(LibWiki.WARNINGS) != null && mappa.get(LibWiki.WARNINGS) instanceof JSONObject) {
-                     avviso = (JSONObject) mappa.get(LibWiki.WARNINGS);
+                    avviso = (JSONObject) mappa.get(LibWiki.WARNINGS);
                     if (avviso.get(LibWiki.CATEGORY_MEMBERS) != null && avviso.get(LibWiki.CATEGORY_MEMBERS) instanceof JSONObject) {
-                         sottoAvviso = (JSONObject) avviso.get(LibWiki.CATEGORY_MEMBERS);
+                        sottoAvviso = (JSONObject) avviso.get(LibWiki.CATEGORY_MEMBERS);
                         if (sottoAvviso.get(LibWiki.WARNINGS) != null && sottoAvviso.get(LibWiki.WARNINGS) instanceof String) {
                             errore = (String) sottoAvviso.get(LibWiki.WARNINGS);
                         }// end of if cycle
@@ -930,6 +990,29 @@ public abstract class LibWiki {
         }// end of if cycle
 
         return errore;
+    } // fine del metodo
+
+    /**
+     * Estrae un (eventuale) token testo JSON di una preliminaryRequest
+     *
+     * @param textJSON in ingresso
+     * @return csrfToken
+     */
+    public static String getToken(String textJSON) {
+        String token = "";
+        HashMap<String, Object> mappa;
+
+        if (textJSON != null && !textJSON.equals("")) {
+            mappa = creaMappaToken(textJSON);
+
+            if (mappa != null) {
+                if (mappa.get(LibWiki.TOKEN) != null && mappa.get(LibWiki.TOKEN) instanceof String) {
+                    token = (String) mappa.get(LibWiki.TOKEN);
+                } // fine del metodo
+            }// end of if cycle
+        }// end of if cycle
+
+        return token;
     } // fine del metodo
 
 

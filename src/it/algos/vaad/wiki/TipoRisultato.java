@@ -16,7 +16,7 @@ public enum TipoRisultato {
     esistenteNuova("Pagina già esistente."),
 
     noLogin("Manca il login"),
-    noToken("Manca il token"),
+    noPreliminaryToken("Manca il token"),
     mustbeposted("The login module requires a POST request"),
     assertuserfailed("Assertion that the user is logged in failed"),
     assertbotfailed("Assertion that the user has the bot right failed"),
@@ -26,6 +26,10 @@ public enum TipoRisultato {
     notExists("The username you provided doesn't exist"),
     wrongPass("The password you provided is incorrect"),
     throttled("You've logged in too many times in a short time"),
+    noto("The to parameter must be set"),
+    notoken("The token parameter must be set"),
+    invalidtitle("Bad title"),
+    selfmove("Source and destination titles are the same; cannot move a page over itself"),
 
     registrata("Pagina registrata."),
     nonRegistrata("Pagina non registrata (probabilmente cancellata)."),
@@ -33,9 +37,8 @@ public enum TipoRisultato {
     modificaInutile("La voce aveva già il testo richiesto."),
 
     spostata("Pagina spostata"),
-    selfmove("Can't move a page to itself"),
-    articleexists("The destination article already exists and is not a redirect to the source article"),
-    protectedtitle("The destination article has been protected from creation");
+    articleexists("A page of that name already exists, or the name you have chosen is not valid. Please choose another name"),
+    protectedtitle("You cannot move a page to this location because the new title has been protected from creation");
 
 
     private String tag;
