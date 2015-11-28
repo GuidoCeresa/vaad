@@ -101,17 +101,6 @@ public class RequestWikiLogin extends RequestWiki {
         super.doInit();
     } // fine del metodo
 
-    /**
-     * Costruisce la stringa della request
-     * Domain per l'URL dal titolo della pagina o dal pageid (a seconda del costruttore usato)
-     * PUO essere sovrascritto nelle sottoclassi specifiche
-     *
-     * @return domain
-     */
-    @Override
-    protected String getDomain() {
-        return super.getDomain() + API_LOGIN;
-    } // fine del metodo
 
     /**
      * Crea la connessione preliminary
@@ -133,6 +122,14 @@ public class RequestWikiLogin extends RequestWiki {
         return urlConn;
     } // fine del metodo
 
+    /**
+     * Stringa del browser per la request preliminary
+     * <p>
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     */
+    protected String getDomainPreliminary() {
+        return super.getDomain() + API_LOGIN;
+    } // end of getter method
 
     /**
      * Crea il POST della request preliminary
@@ -180,6 +177,18 @@ public class RequestWikiLogin extends RequestWiki {
 
         return true;
     } // end of getter method
+
+    /**
+     * Costruisce la stringa della request
+     * Domain per l'URL dal titolo della pagina o dal pageid (a seconda del costruttore usato)
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     *
+     * @return domain
+     */
+    @Override
+    protected String getDomain() {
+        return super.getDomain() + API_LOGIN;
+    } // fine del metodo
 
     /**
      * Crea il POST della request

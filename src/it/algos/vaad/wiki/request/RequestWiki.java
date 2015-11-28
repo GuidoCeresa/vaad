@@ -9,6 +9,7 @@ import it.algos.webbase.web.lib.LibSession;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -67,6 +68,9 @@ public abstract class RequestWiki extends Request {
 
     //--pageid della pagina
     protected long wikiPageid;
+
+    // oggetto della modifica in scrittura
+    protected String summary;
 
     // ci metto tutti i cookies restituiti da URLConnection.responses
     protected HashMap cookies;
@@ -173,7 +177,15 @@ public abstract class RequestWiki extends Request {
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
     protected URLConnection creaConnessionePreliminary() throws Exception {
-        URLConnection urlConn = super.creaConnessione();
+        URLConnection urlConn = null;
+        String domain = this.getDomainPreliminary();
+
+        if (domain != null && !domain.equals("")) {
+            urlConn = new URL(domain).openConnection();
+            urlConn.setDoOutput(true);
+        }// end of if cycle
+
+
         String txtCookies = "";
 
         // regola le property
@@ -184,6 +196,15 @@ public abstract class RequestWiki extends Request {
 
         return urlConn;
     } // fine del metodo
+
+    /**
+     * Stringa del browser per la request preliminary
+     * <p>
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     */
+    protected String getDomainPreliminary() {
+        return "";
+    } // end of getter method
 
     /**
      * Grabs cookies from the URL connection provided.

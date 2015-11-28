@@ -282,10 +282,10 @@ public class RequestTest extends VaadTest {
         assertNotNull(ottenuto);
         listaAllPageids = request.getListaAllPageids();
         assertNotNull(listaAllPageids);
-        assertEquals(listaAllPageids.size(), 17);
+        assertEquals(listaAllPageids.size(), 18);
         listaAllTitles = request.getListaAllTitles();
         assertNotNull(listaAllTitles);
-        assertEquals(listaAllTitles.size(), 17);
+        assertEquals(listaAllTitles.size(), 18);
         listaVociPageids = request.getListaVociPageids();
         assertNotNull(listaVociPageids);
         assertEquals(listaVociPageids.size(), 10);
@@ -447,10 +447,10 @@ public class RequestTest extends VaadTest {
         assertNotNull(ottenuto);
         listaVociPageids = request.getListaVociPageids();
         assertNotNull(listaVociPageids);
-        assertEquals(listaVociPageids.size(), 2354);
+        assertEquals(listaVociPageids.size(), 2355);
         listaVociTitles = request.getListaVociTitles();
         assertNotNull(listaVociTitles);
-        assertEquals(listaVociTitles.size(), 2354);
+        assertEquals(listaVociTitles.size(), 2355);
         listaCatPageids = request.getListaCatPageids();
         assertNotNull(listaCatPageids);
         assertEquals(listaCatPageids.size(), 16);
@@ -459,10 +459,10 @@ public class RequestTest extends VaadTest {
         assertEquals(listaCatTitles.size(), 16);
         listaAllPageids = request.getListaAllPageids();
         assertNotNull(listaAllPageids);
-        assertEquals(listaAllPageids.size(), 2370);
+        assertEquals(listaAllPageids.size(), 2371);
         listaAllTitles = request.getListaAllTitles();
         assertNotNull(listaAllTitles);
-        assertEquals(listaAllTitles.size(), 2370);
+        assertEquals(listaAllTitles.size(), 2371);
 
         request = new RequestWikiCat(TITOLO_CAT_LUNGA);
         assertTrue(request.isValida());
@@ -471,10 +471,10 @@ public class RequestTest extends VaadTest {
         assertNotNull(ottenuto);
         listaVociPageids = request.getListaVociPageids();
         assertNotNull(listaVociPageids);
-        assertEquals(listaVociPageids.size(), 2354);
+        assertEquals(listaVociPageids.size(), 2355);
         listaVociTitles = request.getListaVociTitles();
         assertNotNull(listaVociTitles);
-        assertEquals(listaVociTitles.size(), 2354);
+        assertEquals(listaVociTitles.size(), 2355);
         listaCatPageids = request.getListaCatPageids();
         assertNotNull(listaCatPageids);
         assertEquals(listaCatPageids.size(), 16);
@@ -483,10 +483,10 @@ public class RequestTest extends VaadTest {
         assertEquals(listaCatTitles.size(), 16);
         listaAllPageids = request.getListaAllPageids();
         assertNotNull(listaAllPageids);
-        assertEquals(listaAllPageids.size(), 2370);
+        assertEquals(listaAllPageids.size(), 2371);
         listaAllTitles = request.getListaAllTitles();
         assertNotNull(listaAllTitles);
-        assertEquals(listaAllTitles.size(), 2370);
+        assertEquals(listaAllTitles.size(), 2371);
     }// end of single test
 
 
@@ -514,10 +514,10 @@ public class RequestTest extends VaadTest {
         assertNotNull(ottenuto);
         listaVociPageids = request.getListaVociPageids();
         assertNotNull(listaVociPageids);
-        assertEquals(listaVociPageids.size(), 2354);
+        assertEquals(listaVociPageids.size(), 2355);
         listaVociTitles = request.getListaVociTitles();
         assertNotNull(listaVociTitles);
-        assertEquals(listaVociTitles.size(), 2354);
+        assertEquals(listaVociTitles.size(), 2355);
         listaCatPageids = request.getListaCatPageids();
         assertNotNull(listaCatPageids);
         assertEquals(listaCatPageids.size(), 16);
@@ -526,20 +526,19 @@ public class RequestTest extends VaadTest {
         assertEquals(listaCatTitles.size(), 16);
         listaAllPageids = request.getListaAllPageids();
         assertNotNull(listaAllPageids);
-        assertEquals(listaAllPageids.size(), 2370);
+        assertEquals(listaAllPageids.size(), 2371);
         listaAllTitles = request.getListaAllTitles();
         assertNotNull(listaAllTitles);
-        assertEquals(listaAllTitles.size(), 2370);
+        assertEquals(listaAllTitles.size(), 2371);
     }// end of single test
 
 
-
     /**
-      * Query per recuperare le pagine di una categoria
-      * NON legge le sottocategorie
-      * Non necessita di Login, ma se esiste lo usa
-      * Può essere sovrascritta per leggere anche le sottocategorie
-      */
+     * Query per recuperare le pagine di una categoria
+     * NON legge le sottocategorie
+     * Non necessita di Login, ma se esiste lo usa
+     * Può essere sovrascritta per leggere anche le sottocategorie
+     */
     public void cat3() {
         RequestWikiCat request;
         ArrayList<Long> listaVociPageids;
@@ -585,10 +584,10 @@ public class RequestTest extends VaadTest {
         assertEquals(request.getRisultato(), TipoRisultato.assertbotfailed);
     }// end of single test
 
-    @Test
+//        @Test
     public void login() {
         RequestWikiLogin request;
-        String nick ;
+        String nick;
         String pass;
 
         nick = "nomechesicuramentenonesiste";
@@ -614,6 +613,69 @@ public class RequestTest extends VaadTest {
         request = new RequestWikiLogin(nick, pass);
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.loginBot);
+    }// end of single test
+
+
+    @Test
+    /**
+     * Created by gac on 27 nov 2015.
+     * <p>
+     * Double request
+     * First for obtaining movetoken
+     * <p>
+     * Second with parameters:
+     * from: Title of the page you want to move. Cannot be used together with fromid
+     * fromid: Page ID of the page you want to move. Cannot be used together with from
+     * to: Title you want to rename the page to
+     * token: A move token previously retrieved through prop=info. Take care to urlencode the '+' as '%2B'.
+     * reason: Reason for the move (optional)
+     * movetalk: Move the talk page, if it exists
+     * movesubpages: Move subpages, if applicable
+     * noredirect: Don't create a redirect. Requires the suppressredirect right, which by default is granted only to bots and sysops
+     * watch: Add the page and the redirect to your watchlist. Deprecated. Use the watchlist argument (deprecated in 1.17)
+     * unwatch: Remove the page and the redirect from your watchlist. Deprecated. Use the watchlist argument (deprecated in 1.17)
+     * watchlist: Unconditionally add or remove the page from your watchlist, use preferences or do not change watch (see API:Edit)
+     * ignorewarnings: Ignore any warnings
+     */
+    public void move() {
+        RequestWikiMove request;
+        String reason = "test";
+
+        //--login obbligatorio
+        setLogin();
+
+        request = new RequestWikiMove("", "", "", wikiLogin);
+        assertEquals(request.getRisultato(), TipoRisultato.erroreGenerico);
+        assertFalse(request.isValida());
+
+        request = new RequestWikiMove(TITOLO8, TITOLO9);
+        assertEquals(request.getRisultato(), TipoRisultato.noLogin);
+        assertFalse(request.isValida());
+
+        request = new RequestWikiMove(TITOLO8, TITOLO9, reason);
+        assertEquals(request.getRisultato(), TipoRisultato.noLogin);
+        assertFalse(request.isValida());
+
+        request = new RequestWikiMove("", "", reason, wikiLogin);
+        assertEquals(request.getRisultato(), TipoRisultato.erroreGenerico);
+        assertFalse(request.isValida());
+
+        request = new RequestWikiMove(TITOLO8, TITOLO8, reason, wikiLogin);
+        assertEquals(request.getRisultato(), TipoRisultato.selfmove);
+        assertFalse(request.isValida());
+
+        request = new RequestWikiMove(TITOLO8, TITOLO_ALTRO, reason, wikiLogin);
+        assertEquals(request.getRisultato(), TipoRisultato.articleexists);
+        assertFalse(request.isValida());
+
+        request = new RequestWikiMove(TITOLO8, TITOLO_BLOCCATO, reason, wikiLogin);
+        assertEquals(request.getRisultato(), TipoRisultato.protectedtitle);
+        assertFalse(request.isValida());
+
+        request = new RequestWikiMove(TITOLO8, "", reason, wikiLogin);
+        assertEquals(request.getRisultato(), TipoRisultato.erroreGenerico);
+        assertFalse(request.isValida());
+
     }// end of single test
 
 }// end of testing class
