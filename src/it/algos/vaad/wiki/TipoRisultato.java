@@ -30,6 +30,7 @@ public enum TipoRisultato {
     notoken("The token parameter must be set"),
     invalidtitle("Bad title"),
     selfmove("Source and destination titles are the same; cannot move a page over itself"),
+    missingtitle("The page you requested doesn't exist"),
 
     registrata("Pagina registrata."),
     nonRegistrata("Pagina non registrata (probabilmente cancellata)."),

@@ -241,6 +241,11 @@ public class RequestWikiMove extends RequestWiki {
             valida = false;
         }// end of if cycle
 
+        if (errorMessage.equals(TipoRisultato.missingtitle.toString())) {
+            risultato = TipoRisultato.missingtitle;
+            valida = false;
+        }// end of if cycle
+
     } // end of getter method
 
 } // fine della classe
