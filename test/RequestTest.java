@@ -16,13 +16,15 @@ import static org.junit.Assert.*;
 public class RequestTest extends VaadTest {
 
 
-    private static final String[] listaPageIds = {"3397115", "4452510", "1691379", "3520373", "4956588", "5136975", "2072357", "4700355"};
+    //    private static final String[] listaPageIds = {"3397115", "4452510", "1691379", "3520373", "4956588", "5136975", "2072357", "4700355"};
+    private static final Long[] listaPageIdsForArray = {3397115L, 4452510L, 1691379L, 3520373L, 4956588L, 5136975L, 2072357L, 4700355L};
+    private static final long[] listaPageIds = {3397115L, 4452510L, 1691379L, 3520373L, 4956588L, 5136975L, 2072357L, 4700355L};
     private static final String pipe = "|";
     private static final String virgola = ",";
 
     private static String pageIdsPipe;
     private static String pageIdsVirgola;
-    private static ArrayList<String> arrayPageIds;
+    private static ArrayList<Long> arrayPageIds;
 
     private WikiLogin wikiLogin = null;
 
@@ -153,19 +155,19 @@ public class RequestTest extends VaadTest {
         pageIdsPipe = "";
         pageIdsVirgola = "";
 
-        for (String stringa : listaPageIds) {
-            pageIdsPipe += stringa;
+        for (Long lungo : listaPageIds) {
+            pageIdsPipe += lungo;
             pageIdsPipe += pipe;
         } // fine del ciclo for-each
         pageIdsPipe = LibText.levaCoda(pageIdsPipe, pipe);
 
-        for (String stringa : listaPageIds) {
-            pageIdsVirgola += stringa;
+        for (Long lungo : listaPageIds) {
+            pageIdsVirgola += lungo;
             pageIdsVirgola += virgola;
         } // fine del ciclo for-each
         pageIdsVirgola = LibText.levaCoda(pageIdsVirgola, virgola);
 
-        arrayPageIds = (ArrayList) LibArray.fromString(listaPageIds);
+        arrayPageIds = (ArrayList) LibArray.fromLong(listaPageIds);
     } // fine del metodo iniziale
 
     @Test
@@ -665,7 +667,7 @@ public class RequestTest extends VaadTest {
         assertEquals(request.getRisultato(), TipoRisultato.missingtitle);
     }// end of single test
 
-//    @Test
+    //    @Test
     public void moveReal() {
         RequestWikiMove request;
         String reason = "test";

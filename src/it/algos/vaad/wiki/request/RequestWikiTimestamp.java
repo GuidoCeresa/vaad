@@ -1,11 +1,8 @@
 package it.algos.vaad.wiki.request;
 
 import it.algos.vaad.wiki.LibWiki;
-import it.algos.vaad.wiki.TipoRicerca;
 import it.algos.vaad.wiki.TipoRisultato;
 import it.algos.vaad.wiki.WrapTime;
-import it.algos.webbase.web.lib.LibArray;
-import it.algos.webbase.web.lib.LibText;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,13 +11,10 @@ import java.util.HashMap;
  * Created by gac on 20 nov 2015.
  * .
  */
-public class RequestWikiTimestamp extends RequestWiki {
+public class RequestWikiTimestamp extends RequestWikiReadMulti {
 
     //--tag per la costruzione della stringa della request
     protected static String TAG_PROP_PAGEIDS = "&prop=revisions&rvprop=timestamp&pageids=";
-
-    //--stringa (separata da pipe oppure da virgola) delle pageids
-    private String stringaPageIds;
 
     //--lista di wrapper con pagesid e timestamp
     private ArrayList<WrapTime> listaWrapTime;
@@ -34,10 +28,10 @@ public class RequestWikiTimestamp extends RequestWiki {
      * Prima regolano alcuni parametri specifici
      * Poi invocano il metodo doInit() della superclasse astratta
      *
-     * @param listaPageIds elenco di pageids
+     * @param listaPageIds elenco di pageids (long)
      */
-    public RequestWikiTimestamp(String[] listaPageIds) {
-        this(LibArray.fromStringToStringaPipe(listaPageIds));
+    public RequestWikiTimestamp(long[] listaPageIds) {
+        super(listaPageIds);
     }// fine del metodo costruttore
 
     /**
@@ -47,10 +41,10 @@ public class RequestWikiTimestamp extends RequestWiki {
      * Prima regolano alcuni parametri specifici
      * Poi invocano il metodo doInit() della superclasse astratta
      *
-     * @param arrayPageIds elenco di pageids
+     * @param arrayPageIds elenco di pageids (ArrayList)
      */
-    public RequestWikiTimestamp(ArrayList arrayPageIds) {
-        this(LibArray.toStringaPipe(arrayPageIds));
+    public RequestWikiTimestamp(ArrayList<Long> arrayPageIds) {
+        super(arrayPageIds);
     }// fine del metodo costruttore
 
     /**
@@ -63,30 +57,9 @@ public class RequestWikiTimestamp extends RequestWiki {
      * @param stringaPageIds stringa (separata da pipe oppure da virgola) delle pageids
      */
     public RequestWikiTimestamp(String stringaPageIds) {
-
-        if (stringaPageIds.contains(",")) {
-            stringaPageIds = LibText.sostituisce(stringaPageIds, ",", "|");
-        }// end of if/else cycle
-
-        if (stringaPageIds.contains("|")) {
-            this.stringaPageIds = stringaPageIds;
-            tipoRicerca = TipoRicerca.listaPageids;
-        }// end of if/else cycle
-
-        super.doInit();
+        super(stringaPageIds);
     }// fine del metodo costruttore completo
 
-    /**
-     * Metodo iniziale invocato DOPO che la sottoclasse ha regolato alcuni parametri specifici
-     * PUO essere sovrascritto nelle sottoclassi specifiche
-     */
-    protected void doInit() {
-        super.needPost = false;
-        super.needLogin = false;
-        super.needToken = false;
-        super.needContinua = false;
-        super.doInit();
-    } // fine del metodo
 
     /**
      * Costruisce la stringa della request
