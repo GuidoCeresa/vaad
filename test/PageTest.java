@@ -2,6 +2,8 @@ import it.algos.vaad.wiki.Page;
 import it.algos.vaad.wiki.PagePar;
 import it.algos.vaad.wiki.request.QueryReadTitle;
 import it.algos.vaad.wiki.request.QueryWiki;
+import it.algos.vaad.wiki.request.Request;
+import it.algos.vaad.wiki.request.RequestWikiReadTitle;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -19,11 +21,10 @@ public class PageTest extends VaadTest {
 
     @Test
     public void page() {
-        String contenuto;
-        QueryWiki query = new QueryReadTitle(TITOLO);
+        Request request = new RequestWikiReadTitle(TITOLO);
 
-        assertNotNull(query);
-        contenuto = query.getContenuto();
+        assertNotNull(request);
+        contenuto = request.getTestoResponse();
         assertNotNull(contenuto);
         page = new Page(contenuto);
         assertNotNull(page);
@@ -59,44 +60,6 @@ public class PageTest extends VaadTest {
         assertTrue(ottenuto.endsWith(TAG_END_VOCE));
     }// end of single test
 
-    @Test
-    public void page2() {
-        String contenuto;
-        QueryWiki query = new QueryReadTitle(TITOLO8);
-
-        assertNotNull(query);
-        contenuto = query.getContenuto();
-        assertNotNull(contenuto);
-        page = new Page(contenuto);
-        assertNotNull(page);
-
-        mappaTxt = page.getMappaReadTxt();
-        assertNotNull(mappaTxt);
-        LibWikiTest.isMappaReadTxtValida(mappaTxt);
-
-        mappaObj = page.getMappaReadObj();
-        LibWikiTest.isMappaReadObjValida(mappaObj);
-
-        mappaDB = page.getMappaDB();
-        LibWikiTest.isMappaDBValida(mappaDB);
-
-        previsto = TITOLO8;
-        ottenuto = page.getTitle();
-        assertEquals(numOttenuto, numPrevisto);
-
-        numPrevisto = 5706423;
-        numOttenuto = page.getPageid();
-        assertEquals(numOttenuto, numPrevisto);
-
-        boolOttenuto = (boolean) mappaObj.get(PagePar.minor.toString());
-        assertEquals(boolOttenuto, false);
-
-        boolOttenuto = (boolean) mappaObj.get(PagePar.anon.toString());
-        assertEquals(boolOttenuto, false);
-
-        ottenuto = page.getText();
-        assertNotNull(ottenuto);
-    }// end of single test
 
 }// end of testing class
 

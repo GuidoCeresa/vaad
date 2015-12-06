@@ -175,27 +175,6 @@ public class RequestTest extends VaadTest {
         RequestWikiTimestamp request;
         ArrayList<WrapTime> lista;
 
-        request = new RequestWikiTimestamp(pageIdsPipe);
-        assertTrue(request.isValida());
-        assertEquals(request.getRisultato(), TipoRisultato.letta);
-        ottenuto = request.getTestoResponse();
-        assertNotNull(ottenuto);
-        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
-        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
-        lista = request.getListaWrapTime();
-        assertNotNull(lista);
-        assertEquals(lista.size(), 8);
-
-        request = new RequestWikiTimestamp(pageIdsVirgola);
-        assertTrue(request.isValida());
-        assertEquals(request.getRisultato(), TipoRisultato.letta);
-        ottenuto = request.getTestoResponse();
-        assertNotNull(ottenuto);
-        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
-        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
-        lista = request.getListaWrapTime();
-        assertNotNull(lista);
-        assertEquals(lista.size(), 8);
 
         request = new RequestWikiTimestamp(arrayPageIds);
         assertTrue(request.isValida());
@@ -240,12 +219,6 @@ public class RequestTest extends VaadTest {
         lista = request.getListaWrapTime();
         assertNotNull(lista);
         assertEquals(lista.size(), 8);
-
-        request = new RequestWikiTimestamp(TITOLO);
-        assertFalse(request.isValida());
-        assertEquals(request.getRisultato(), TipoRisultato.nonTrovata);
-        lista = request.getListaWrapTime();
-        assertNull(lista);
     }// end of single test
 
 
@@ -679,6 +652,21 @@ public class RequestTest extends VaadTest {
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.spostata);
 
+    }// end of single test
+
+    @Test
+    public void multiPages() {
+        RequestWikiReadMultiPages request;
+        ArrayList<Page> lista;
+
+        request = new RequestWikiReadMultiPages(arrayPageIds);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        lista = request.getListaPages();
+        assertNotNull(lista);
+        assertEquals(lista.size(), 8);
     }// end of single test
 
 }// end of testing class

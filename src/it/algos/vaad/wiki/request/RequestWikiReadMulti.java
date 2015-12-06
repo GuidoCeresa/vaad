@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Created by gac on 03 dic 2015.
  * .
  */
-public class RequestWikiReadMulti extends RequestWikiRead{
+public class RequestWikiReadMulti extends RequestWiki{
 
 
     //--stringa (separata da pipe oppure da virgola) delle pageids
@@ -78,5 +78,6 @@ public class RequestWikiReadMulti extends RequestWikiRead{
         super.needContinua = false;
         super.doInit();
     } // fine del metodo
+
 
 } // fine della classe

@@ -1,24 +1,27 @@
 package it.algos.vaad.wiki.request;
 
 import it.algos.vaad.wiki.LibWiki;
+import it.algos.vaad.wiki.Page;
 import it.algos.vaad.wiki.TipoRisultato;
 import it.algos.vaad.wiki.WrapTime;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by gac on 20 nov 2015.
+ * Created by gac on 04 dic 2015.
  * .
  */
-public class RequestWikiTimestamp extends RequestWikiReadMulti {
+public class RequestWikiReadMultiPages extends RequestWikiReadMulti {
+
 
     //--tag per la costruzione della stringa della request
-    private final static String TAG_PROP_PAGEIDS = "&prop=revisions&rvprop=timestamp&pageids=";
+    protected static String TAG_MULTIPAGES = TAG_PROP + "&pageids=";
 
-    //--lista di wrapper con pagesid e timestamp
-    private ArrayList<WrapTime> listaWrapTime;
-    private ArrayList<WrapTime> listaWrapTimeMissing;
+    //--lista delle pagine costruite con la risposta
+    private ArrayList<Page> listaPages;
 
 
     /**
@@ -30,7 +33,7 @@ public class RequestWikiTimestamp extends RequestWikiReadMulti {
      *
      * @param listaPageIds elenco di pageids (long)
      */
-    public RequestWikiTimestamp(long[] listaPageIds) {
+    public RequestWikiReadMultiPages(long[] listaPageIds) {
         super(listaPageIds);
     }// fine del metodo costruttore
 
@@ -43,9 +46,10 @@ public class RequestWikiTimestamp extends RequestWikiReadMulti {
      *
      * @param arrayPageIds elenco di pageids (ArrayList)
      */
-    public RequestWikiTimestamp(ArrayList<Long> arrayPageIds) {
+    public RequestWikiReadMultiPages(ArrayList<Long> arrayPageIds) {
         super(arrayPageIds);
     }// fine del metodo costruttore
+
 
     /**
      * Costruisce la stringa della request
@@ -58,7 +62,7 @@ public class RequestWikiTimestamp extends RequestWikiReadMulti {
     protected String getDomain() {
         String domain = super.getDomain();
 
-        domain += API_QUERY+TAG_PROP_PAGEIDS + stringaPageIds;
+        domain += API_QUERY + TAG_MULTIPAGES + stringaPageIds;
 
         return domain;
     } // fine del metodo
@@ -75,27 +79,27 @@ public class RequestWikiTimestamp extends RequestWikiReadMulti {
     protected void elaboraRisposta(String rispostaRequest) {
         HashMap<String, ArrayList<WrapTime>> mappa;
         super.elaboraRisposta(rispostaRequest);
+        JSONArray arrayPages = LibWiki.getArrayPagesJSON(rispostaRequest);
+        Page page;
 
-        mappa = LibWiki.creaArrayWrapTime(rispostaRequest);
-        if (mappa != null) {
-            listaWrapTime = mappa.get(LibWiki.KEY_PAGINE_VALIDE);
-            listaWrapTimeMissing = mappa.get(LibWiki.KEY_PAGINE_MANCANTI);
-            risultato = TipoRisultato.letta;
-            valida = true;
-        } else {
-            risultato = TipoRisultato.nonTrovata;
-            valida = false;
-        }// end of if/else cycle
+        //--recupera i valori dei parametri info
+        if (arrayPages != null) {
+            risultato= TipoRisultato.letta;
+            listaPages = new ArrayList<Page>();
+            for (int k = 0; k < arrayPages.size(); k++) {
+                page = new Page((JSONObject)arrayPages.get(k));
+                listaPages.add(page);
+            }// end of for cycle
+        }// end of if cycle
 
     } // fine del metodo
 
-    public ArrayList<WrapTime> getListaWrapTime() {
-        return listaWrapTime;
+    public ArrayList<Page> getListaPages() {
+        return listaPages;
     }// end of getter method
 
-
-    public ArrayList<WrapTime> getListaWrapTimeMissing() {
-        return listaWrapTimeMissing;
-    }// end of getter method
+    public void setListaPages(ArrayList<Page> listaPages) {
+        this.listaPages = listaPages;
+    }//end of setter method
 
 } // fine della classe

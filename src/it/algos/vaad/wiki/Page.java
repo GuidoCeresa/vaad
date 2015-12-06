@@ -1,5 +1,8 @@
 package it.algos.vaad.wiki;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -40,6 +43,14 @@ public class Page implements Serializable {
 
     public Page(String testoPagina) {
         this(testoPagina, TipoRequest.read);
+    }// fine del metodo costruttore
+
+    public Page(JSONObject paginaJSON) {
+        this.tipoRequest = TipoRequest.read;
+        mappaReadTxt = LibWiki.creaMappaJSON(paginaJSON);
+        mappaReadObj = LibWiki.converteMappa(mappaReadTxt);
+        mappaDB = creaMappaDB(mappaReadObj);
+        valida = PagePar.isParValidiRead(mappaReadObj);
     }// fine del metodo costruttore
 
 

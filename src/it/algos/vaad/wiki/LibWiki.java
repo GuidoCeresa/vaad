@@ -490,6 +490,16 @@ public abstract class LibWiki {
      * @return mappa query (valori reali)
      */
     public static HashMap<String, Object> creaMappaQuery(String textJSON) {
+        return creaMappaQuery(textJSON, 0);
+    }// fine del metodo
+
+    /**
+     * Crea una mappa standard (valori reali) dal testo JSON di una pagina action=query
+     *
+     * @param textJSON in ingresso
+     * @return mappa query (valori reali)
+     */
+    public static HashMap<String, Object> creaMappaQuery(String textJSON, int pos) {
         HashMap<String, Object> mappa = null;
         JSONObject objectAll;
         boolean batchcomplete = false;
@@ -528,8 +538,8 @@ public abstract class LibWiki {
         }// fine del blocco if
 
         //--recupera i valori dei parametri revisions
-        if (arrayPages != null && arrayPages.get(0) != null && arrayPages.get(0) instanceof JSONObject) {
-            objectRev = (JSONObject) arrayPages.get(0);
+        if (arrayPages != null && arrayPages.get(pos) != null && arrayPages.get(pos) instanceof JSONObject) {
+            objectRev = (JSONObject) arrayPages.get(pos);
             if (objectRev != null) {
                 arrayRev = (JSONArray) objectRev.get(REVISIONS);
                 int a = 87;
@@ -897,6 +907,18 @@ public abstract class LibWiki {
      * @return mappa standard (valori String)
      */
     public static HashMap<String, Object> mixJSON(boolean batchcomplete, JSONArray arrayPages, JSONArray arrayRev, String token) {
+        return mixJSON(batchcomplete, arrayPages, arrayRev, token, 0);
+    } // fine del metodo
+
+    /**
+     * Crea una mappa standard (valori String) dalle mappe JSON parziali
+     *
+     * @param batchcomplete flag di controllo
+     * @param arrayPages    parametri base (3) ed info (1)
+     * @param arrayRev      parametri revisions (12)
+     * @return mappa standard (valori String)
+     */
+    public static HashMap<String, Object> mixJSON(boolean batchcomplete, JSONArray arrayPages, JSONArray arrayRev, String token, int pos) {
         HashMap<String, Object> mappa = new HashMap<String, Object>();
         HashMap<String, Object> mappaPages = null;
         HashMap<String, Object> mappaRev = null;
@@ -906,8 +928,8 @@ public abstract class LibWiki {
         mappa.put(BATCH, batchcomplete);
 
         //--recupera i valori dei parametri info
-        if (arrayPages!=null) {
-            mappaPages = estraeMappaJsonPar(arrayPages);
+        if (arrayPages != null) {
+            mappaPages = estraeMappaJsonPar(arrayPages, pos);
             for (String key : mappaPages.keySet()) {
                 value = mappaPages.get(key);
                 mappa.put(key, value);
@@ -916,8 +938,8 @@ public abstract class LibWiki {
 
 
         //--recupera i valori dei parametri revisions
-        if (arrayRev!=null) {
-            mappaRev = estraeMappaJsonPar(arrayRev);
+        if (arrayRev != null) {
+            mappaRev = estraeMappaJsonPar(arrayRev, pos);
             for (String key : mappaRev.keySet()) {
                 value = mappaRev.get(key);
                 mappa.put(key, value);
@@ -1139,14 +1161,26 @@ public abstract class LibWiki {
      * @return mappa standard (valori String)
      */
     private static HashMap<String, Object> estraeMappaJsonPar(JSONArray arrayJson) {
+        return estraeMappaJsonPar(arrayJson, 0);
+    } // fine del metodo
+
+    /**
+     * Estrae una mappa standard da un JSONArray
+     * Considera SOLO i valori della Enumeration PagePar
+     *
+     * @param arrayJson JSONArray in ingresso
+     * @param pos       elemento da estrarre
+     * @return mappa standard (valori String)
+     */
+    public static HashMap<String, Object> estraeMappaJsonPar(JSONArray arrayJson, int pos) {
         HashMap<String, Object> mappaOut = new HashMap<String, Object>();
         JSONObject mappaJSON = null;
         String key;
         Object value;
 
-        if (arrayJson != null && arrayJson.size() == 1) {
-            if (arrayJson.get(0) != null && arrayJson.get(0) instanceof JSONObject) {
-                mappaJSON = (JSONObject) arrayJson.get(0);
+        if (arrayJson != null && arrayJson.size() > pos) {
+            if (arrayJson.get(pos) != null && arrayJson.get(pos) instanceof JSONObject) {
+                mappaJSON = (JSONObject) arrayJson.get(pos);
             }// fine del blocco if
         }// fine del blocco if
 
@@ -1599,6 +1633,76 @@ public abstract class LibWiki {
 
         if (lista != null && lista.size() > 0) {
             mappa = getMappaWrap(lista);
+        }// end of if cycle
+
+        return mappa;
+    } // fine del metodo
+
+
+    /**
+     * Crea un array delle pagine wikimedia dal testo JSON di una risposta multiPagine action=query
+     *
+     * @param textJSON in ingresso
+     * @return array delle singole pagine
+     */
+    public static JSONArray getArrayPagesJSON(String textJSON) {
+        JSONArray arrayPages = null;
+        JSONObject objectAll;
+        JSONObject objectQuery;
+
+        //--recupera i due oggetti al livello root del testo (batchcomplete e query)
+        objectAll = (JSONObject) JSONValue.parse(textJSON);
+
+        //--controllo
+        if (objectAll == null) {
+            return null;
+        }// fine del blocco if
+
+        //--recupera i valori dei parametri pages
+        if (objectAll.get(QUERY) != null && objectAll.get(QUERY) instanceof JSONObject) {
+            objectQuery = (JSONObject) objectAll.get(QUERY);
+            if (objectQuery.get(PAGES) != null && objectQuery.get(PAGES) instanceof JSONArray) {
+                arrayPages = (JSONArray) objectQuery.get(PAGES);
+            }// fine del blocco if
+        }// fine del blocco if
+
+        return arrayPages;
+    } // fine del metodo
+
+    /**
+     * Crea una mappa standard (valori reali) da una singola page JSON di una multi-pagina action=query
+     *
+     * @param paginaJSON in ingresso
+     * @return mappa query (valori reali)
+     */
+    public static HashMap<String, Object> creaMappaJSON(JSONObject paginaJSON) {
+        HashMap<String, Object> mappa = new HashMap<String, Object>();
+        HashMap<String, Object> mappaRev;
+        JSONArray arrayRev ;
+        String keyPage;
+        Object value;
+
+        if (paginaJSON == null) {
+            return null;
+        }// fine del blocco if
+
+        //--recupera i valori dei parametri info
+        for (PagePar par : PagePar.getRead()) {
+            keyPage = par.toString();
+            if (paginaJSON.get(keyPage) != null) {
+                value = paginaJSON.get(keyPage);
+                mappa.put(keyPage, value);
+            }// fine del blocco if
+        } // fine del ciclo for-each
+
+        //--recupera i valori dei parametri revisions
+        arrayRev = (JSONArray) paginaJSON.get(REVISIONS);
+        if (arrayRev != null) {
+            mappaRev = estraeMappaJsonPar(arrayRev);
+            for (String key : mappaRev.keySet()) {
+                value = mappaRev.get(key);
+                mappa.put(key, value);
+            } // fine del ciclo for-each
         }// end of if cycle
 
         return mappa;
