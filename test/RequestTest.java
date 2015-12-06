@@ -28,6 +28,28 @@ public class RequestTest extends VaadTest {
 
     private WikiLogin wikiLogin = null;
 
+    @Before
+    @SuppressWarnings("all")
+    // Setup logic here
+    public void setUp() {
+        pageIdsPipe = "";
+        pageIdsVirgola = "";
+
+        for (Long lungo : listaPageIds) {
+            pageIdsPipe += lungo;
+            pageIdsPipe += pipe;
+        } // fine del ciclo for-each
+        pageIdsPipe = LibText.levaCoda(pageIdsPipe, pipe);
+
+        for (Long lungo : listaPageIds) {
+            pageIdsVirgola += lungo;
+            pageIdsVirgola += virgola;
+        } // fine del ciclo for-each
+        pageIdsVirgola = LibText.levaCoda(pageIdsVirgola, virgola);
+
+        arrayPageIds = (ArrayList) LibArray.fromLong(listaPageIds);
+    } // fine del metodo iniziale
+
     @Test
     /**
      * Classe concreta per le Request sul Web
@@ -148,27 +170,6 @@ public class RequestTest extends VaadTest {
         assertTrue(ottenuto.endsWith(TAG_END_VOCE));
     }// end of single test
 
-    @Before
-    @SuppressWarnings("all")
-    // Setup logic here
-    public void setUp() {
-        pageIdsPipe = "";
-        pageIdsVirgola = "";
-
-        for (Long lungo : listaPageIds) {
-            pageIdsPipe += lungo;
-            pageIdsPipe += pipe;
-        } // fine del ciclo for-each
-        pageIdsPipe = LibText.levaCoda(pageIdsPipe, pipe);
-
-        for (Long lungo : listaPageIds) {
-            pageIdsVirgola += lungo;
-            pageIdsVirgola += virgola;
-        } // fine del ciclo for-each
-        pageIdsVirgola = LibText.levaCoda(pageIdsVirgola, virgola);
-
-        arrayPageIds = (ArrayList) LibArray.fromLong(listaPageIds);
-    } // fine del metodo iniziale
 
     @Test
     public void timestamp() {

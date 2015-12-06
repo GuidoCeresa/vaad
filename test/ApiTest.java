@@ -1,8 +1,11 @@
 import it.algos.vaad.wiki.Api;
-import it.algos.vaad.wiki.TipoRicerca;
 import it.algos.vaad.wiki.WikiLogin;
+import it.algos.vaad.wiki.WrapTime;
+import it.algos.webbase.web.lib.LibArray;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
@@ -12,7 +15,19 @@ import static org.junit.Assert.*;
  */
 public class ApiTest extends VaadTest {
 
+    private static final long[] listaPageIds = {3397115L, 4452510L, 1691379L, 3520373L, 4956588L, 5136975L, 2072357L, 4700355L};
+    private static ArrayList<Long> arrayPageIds;
     private WikiLogin loginWiki;
+
+    @Before
+    // Setup logic here
+    public void setUp() {
+        String nick = "biobot";
+        String password = "fulvia";
+
+        loginWiki = new WikiLogin(nick, password);
+        arrayPageIds = (ArrayList) LibArray.fromLong(listaPageIds);
+    } // fine del metodo iniziale
 
     @Test
     /**
@@ -246,14 +261,6 @@ public class ApiTest extends VaadTest {
 
     }// end of single test
 
-    @Before
-    // Setup logic here
-    public void setUp() {
-        String nick = "biobot";
-        String password = "fulvia";
-
-        loginWiki = new WikiLogin(nick, password);
-    } // fine del metodo iniziale
 
     @Test
     /**
@@ -342,6 +349,24 @@ public class ApiTest extends VaadTest {
         listaString = Api.leggeBacklinks("Lago di Ha! Ha!");
         assertNotNull(listaString);
         assertEquals(listaString.size(), 6);
+    }// end of single test
+
+
+    @Test
+    /**
+     * Legge una lista di pageids per costruire una lista di WrapTime
+     * <p>
+     *
+     * @param bloccoPageids elenco di pageids delle pagine da controllare
+     * @return lista di WrapTime (wrapper)
+     */
+    public void leggeWrapTime() {
+        ArrayList<WrapTime> lista;
+
+        lista = Api.leggeWrapTime(arrayPageIds);
+        assertNotNull(lista);
+        assertEquals(lista.size(), 8);
+
     }// end of single test
 
 //    @Test

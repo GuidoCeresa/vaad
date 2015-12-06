@@ -137,9 +137,7 @@ public class Api {
      */
     @SuppressWarnings("all")
     public static String leggePagina(String title) {
-        Request request = null;
-
-        request = new RequestWikiReadTitle(title);
+        Request request = new RequestWikiReadTitle(title);
 
         if (request != null && request.getRisultato() == TipoRisultato.letta) {
             return request.getTestoResponse();
@@ -156,9 +154,7 @@ public class Api {
      * @return contenuto completo (json) della pagina (con i metadati mediawiki)
      */
     public static String leggePagina(long pageId) {
-        Request request = null;
-
-        request = new RequestWikiReadPageid(pageId);
+        Request request = new RequestWikiReadPageid(pageId);
 
         if (request != null && request.getRisultato() == TipoRisultato.letta) {
             return request.getTestoResponse();
@@ -230,24 +226,23 @@ public class Api {
         return page;
     }// end of method
 
-//    /**
-//     * Legge una pagina
-//     * <p>
-//     *
-//     * @param titlePageid (title oppure pageid)
-//     * @param tipoRicerca title o pageId
-//     * @return pagina (con i metadati mediawiki)
-//     */
-//    public static Page leggePage(String titlePageid, TipoRicerca tipoRicerca) {
-//        Page page = null;
-//        String contenuto = leggePagina(titlePageid);
-//
-//        if (contenuto != null && !contenuto.equals("")) {
-//            page = new Page(contenuto);
-//        }// fine del blocco if
-//
-//        return page;
-//    }// end of method
+    /**
+     * Legge una serie di pagine
+     * <p>
+     *
+     * @param arrayPageIds elenco di pageids (ArrayList)
+     * @return pagina (con i metadati mediawiki)
+     */
+    public static ArrayList<Page> leggePages(ArrayList<Long> arrayPageIds) {
+        ArrayList<Page> listaPages = null;
+        RequestWikiReadMultiPages request = new RequestWikiReadMultiPages(arrayPageIds);
+
+        if (request.getRisultato() == TipoRisultato.letta) {
+            return request.getListaPages();
+        } else {
+            return null;
+        }// fine del blocco if-else
+    }// end of method
 
 
     /**
@@ -450,6 +445,27 @@ public class Api {
 //
 //        return testoTemplate;
 //    }// end of method
+
+
+    /**
+     * Legge una lista di pageids per costruire una lista di WrapTime
+     * <p>
+     *
+     * @param bloccoPageids elenco di pageids delle pagine da controllare
+     * @return lista di WrapTime (wrapper)
+     */
+    public static ArrayList<WrapTime> leggeWrapTime(ArrayList<Long> bloccoPageids) {
+        ArrayList<WrapTime> listaWrapTime = null;
+        RequestWikiTimestamp request;
+
+        if (bloccoPageids != null) {
+            request = new RequestWikiTimestamp(bloccoPageids);
+            listaWrapTime = request.getListaWrapTime();
+        }// end of if cycle
+
+        return listaWrapTime;
+    }// end of method
+
 
     /**
      * Estrae un template dal testo
