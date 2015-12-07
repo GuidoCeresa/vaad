@@ -36,6 +36,7 @@ public enum TipoRisultato {
     nonRegistrata("Pagina non registrata (probabilmente cancellata)."),
     modificaRegistrata("Registrata modifica alla voce."),
     modificaInutile("La voce aveva già il testo richiesto."),
+    nochange("La pagina non è stata modificata"),
 
     spostata("Pagina spostata"),
     articleexists("A page of that name already exists, or the name you have chosen is not valid. Please choose another name"),

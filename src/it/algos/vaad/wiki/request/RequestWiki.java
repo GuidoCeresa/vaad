@@ -59,6 +59,8 @@ public abstract class RequestWiki extends Request {
     protected static String TAG_PAGEID = "&pageids=";
     protected static String CSRF_TOKEN = "csrftoken";
 
+    private static final String TAG_PRELINARY = "&action=query&meta=tokens";
+
     //--tipo di ricerca della pagina
     //--di default il titolo
     protected TipoRicerca tipoRicerca = TipoRicerca.title;
@@ -213,7 +215,7 @@ public abstract class RequestWiki extends Request {
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
     protected String getDomainPreliminary() {
-        return "";
+        return API_BASE + TAG_PRELINARY;
     } // end of getter method
 
     /**

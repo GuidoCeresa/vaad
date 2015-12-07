@@ -50,7 +50,6 @@ import java.net.URLEncoder;
 public class RequestWikiMove extends RequestWiki {
 
     private static final String TAG_MOVE = "&intoken=move";
-    private static final String TAG_PRELINARY = "&action=query&meta=tokens";
     private static final String FROM = "&from=";
     private static final String TO = "&to=";
     private static final String REASON = "&reason=";
@@ -81,7 +80,7 @@ public class RequestWikiMove extends RequestWiki {
      * @param summary  oggetto della modifica
      */
     public RequestWikiMove(String oldTitle, String newTitle, String summary) {
-        this(oldTitle, newTitle, summary, null);
+        this.doInit(oldTitle, newTitle, summary, null);
     }// fine del metodo costruttore completo
 
     /**
@@ -95,6 +94,7 @@ public class RequestWikiMove extends RequestWiki {
      * @param newTitle  definitivo della pagina
      * @param summary   oggetto della modifica
      * @param loginTest del collegamento
+     * @deprecated
      */
     public RequestWikiMove(String oldTitle, String newTitle, String summary, WikiLogin loginTest) {
         this.doInit(oldTitle, newTitle, summary, loginTest);
@@ -130,31 +130,23 @@ public class RequestWikiMove extends RequestWiki {
         super.doInit();
     } // fine del metodo
 
-    /**
-     * Costruisce la stringa della request
-     * Domain per l'URL dal titolo della pagina o dal pageid (a seconda della sottoclasse)
-     * PUO essere sovrascritto nelle sottoclassi specifiche
-     *
-     * @return domain
-     */
-    protected String getDomain2() {
-        String domain;
-        String tag = "&prop=info&movetalk";
+//    /**
+//     * Costruisce la stringa della request
+//     * Domain per l'URL dal titolo della pagina o dal pageid (a seconda della sottoclasse)
+//     * PUO essere sovrascritto nelle sottoclassi specifiche
+//     *
+//     * @return domain
+//     */
+//    protected String getDomain2() {
+//        String domain;
+//        String tag = "&prop=info&movetalk";
+//
+//        //@todo NON serve il titolo per ottenere il token
+//        domain = API_BASE + tag;
+//
+//        return domain;
+//    } // fine del metodo
 
-        //@todo NON serve il titolo per ottenere il token
-        domain = API_BASE + tag;
-
-        return domain;
-    } // fine del metodo
-
-    /**
-     * Stringa del browser per la request preliminary
-     * <p>
-     * PUO essere sovrascritto nelle sottoclassi specifiche
-     */
-    protected String getDomainPreliminary() {
-        return API_BASE + TAG_PRELINARY;
-    } // end of getter method
 
     //--Costruisce il domain per l'URL dal pageid della pagina
     //--@return domain

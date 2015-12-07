@@ -567,7 +567,7 @@ public abstract class LibWiki {
         String contentmodel;
         long pageid;
         String title;
-        String change;
+        boolean noChange = false;
         long oldrevid;
         long newrevid;
         String newtimestamp;
@@ -607,11 +607,12 @@ public abstract class LibWiki {
                 mappa.put(TITLE, title);
             }// end of if cycle
 
+            if (objectEdit.get(NOCHANGE) != null && objectEdit.get(NOCHANGE) instanceof Boolean) {
+                noChange = (Boolean) objectEdit.get(NOCHANGE);
+                mappa.put(NOCHANGE, noChange);
+            }// end of if cycle
 
-            change = (String) objectEdit.get(NOCHANGE);
-            if (change == null || !change.equals("")) {
-                mappa.put(NOCHANGE, false);
-
+            if (!noChange) {
                 if (objectEdit.get(OLD_REV_ID) != null && objectEdit.get(OLD_REV_ID) instanceof Long) {
                     oldrevid = (Long) objectEdit.get(OLD_REV_ID);
                     mappa.put(OLD_REV_ID, oldrevid);
@@ -626,9 +627,7 @@ public abstract class LibWiki {
                     newtimestamp = (String) objectEdit.get(NEW_TIME_STAMP);
                     mappa.put(NEW_TIME_STAMP, newtimestamp);
                 }// end of if cycle
-            } else {
-                mappa.put(NOCHANGE, true);
-            }// end of if/else cycle
+            }// end of if cycle
         }// fine del blocco if
 
         return mappa;
@@ -1678,7 +1677,7 @@ public abstract class LibWiki {
     public static HashMap<String, Object> creaMappaJSON(JSONObject paginaJSON) {
         HashMap<String, Object> mappa = new HashMap<String, Object>();
         HashMap<String, Object> mappaRev;
-        JSONArray arrayRev ;
+        JSONArray arrayRev;
         String keyPage;
         Object value;
 

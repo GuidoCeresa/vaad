@@ -503,41 +503,77 @@ public class Api {
     /**
      * Modifica il contenuto di una pagina.
      *
-     * @param title   della pagina da ricercare
-     * @param oldText da eliminare
-     * @param newText da inserire
+     * @param wikiTitle titolo della pagina wiki su cui scrivere
+     * @param oldText   da eliminare
+     * @param newText   da inserire
      */
-    public static boolean scrive(String title, String oldText, String newText) {
-        return scrive(title, oldText, newText, null);
+    public static boolean modificaVoce(String wikiTitle, String oldText, String newText) {
+        return modificaVoce(wikiTitle, oldText, newText, null);
     } // fine del metodo
 
     /**
      * Modifica il contenuto di una pagina.
      *
-     * @param title   della pagina da ricercare
-     * @param oldText da eliminare
-     * @param newText da inserire
-     * @param login   for testing purpose only
+     * @param wikiTitle titolo della pagina wiki su cui scrivere
+     * @param oldText   da eliminare
+     * @param newText   da inserire
+     * @param login     for testing purpose only
      */
-    public static boolean scrive(String title, String oldText, String newText, WikiLogin login) {
+    public static boolean modificaVoce(String wikiTitle, String oldText, String newText, WikiLogin login) {
         boolean status = false;
-        String contenutoModificato = "";
         String oldContenuto;
         String testoTmp;
         String summary = oldText + " -> " + newText;
-        QueryWriteTitle query;
-        Page pagina;
+        Request request;
 
-        oldContenuto = Api.leggeVoce(title);
+        if (wikiTitle.equals("")) {
+            return false;
+        }// end of if cycle
+
+        oldContenuto = Api.leggeVoce(wikiTitle);
         testoTmp = LibText.sostituisce(oldContenuto, oldText, newText);
-        query = new QueryWriteTitle(title, testoTmp, summary, login);
+        request = new RequestWikiWrite(wikiTitle, testoTmp, summary, login);
 
-        if (query.getRisultato() == TipoRisultato.modificaRegistrata) {
+        if (request.getRisultato() == TipoRisultato.modificaRegistrata) {
             status = true;
         }// end of if cycle
 
         return status;
     } // fine del metodo
+
+
+    /**
+     * Scrive una pagina
+     *
+     * @param wikiTitle titolo della pagina wiki su cui scrivere
+     * @param newText   da inserire
+     */
+    public static boolean scriveVoce(String wikiTitle, String newText) {
+        return scriveVoce(wikiTitle, newText, "");
+    }// fine del metodo costruttore completo
+
+    /**
+     * Scrive una pagina
+     *
+     * @param wikiTitle titolo della pagina wiki su cui scrivere
+     * @param newText   da inserire
+     * @param summary   oggetto della modifica
+     */
+    public static boolean scriveVoce(String wikiTitle, String newText, String summary) {
+        boolean status = false;
+        Request request;
+
+        if (wikiTitle.equals("") || newText.equals("")) {
+            return false;
+        }// end of if cycle
+
+        request = new RequestWikiWrite(wikiTitle, newText, summary);
+        if (request.getRisultato() == TipoRisultato.modificaRegistrata | request.getRisultato() == TipoRisultato.nochange) {
+            status = true;
+        }// end of if cycle
+
+        return status;
+    }// fine del metodo costruttore completo
 
 
 //    /**

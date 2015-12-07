@@ -270,12 +270,12 @@ public class ApiTest extends VaadTest {
      * @param oldText da eliminare
      * @param newText da inserire
      */
-    public void scrive() {
+    public void modificaVoce() {
         String titoloPagina = "Utente:Gac/Sandbox4";
         String oldTxt = "diciotto senza remore";
         String newTxt = "senza";
 
-        boolOttenuto = Api.scrive(titoloPagina, oldTxt, newTxt, loginWiki);
+        boolOttenuto = Api.modificaVoce(titoloPagina, oldTxt, newTxt, loginWiki);
         assertFalse(boolOttenuto);
     }// end of single test
 
