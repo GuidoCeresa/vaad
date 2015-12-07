@@ -508,7 +508,7 @@ public class Api {
      * @param newText   da inserire
      */
     public static boolean modificaVoce(String wikiTitle, String oldText, String newText) {
-        return modificaVoce(wikiTitle, oldText, newText, null);
+        return modificaVoce(wikiTitle, oldText, newText, "", null);
     } // fine del metodo
 
     /**
@@ -517,17 +517,37 @@ public class Api {
      * @param wikiTitle titolo della pagina wiki su cui scrivere
      * @param oldText   da eliminare
      * @param newText   da inserire
+     * @param summary   oggetto della modifica
+     */
+    public static boolean modificaVoce(String wikiTitle, String oldText, String newText, String summary) {
+        return modificaVoce(wikiTitle, oldText, newText, summary, null);
+    } // fine del metodo
+
+    /**
+     * Modifica il contenuto di una pagina.
+     *
+     * @param wikiTitle titolo della pagina wiki su cui scrivere
+     * @param oldText   da eliminare
+     * @param newText   da inserire
+     * @param summary   oggetto della modifica
      * @param login     for testing purpose only
      */
-    public static boolean modificaVoce(String wikiTitle, String oldText, String newText, WikiLogin login) {
+    public static boolean modificaVoce(String wikiTitle, String oldText, String newText, String summary, WikiLogin login) {
         boolean status = false;
         String oldContenuto;
         String testoTmp;
-        String summary = oldText + " -> " + newText;
         Request request;
 
         if (wikiTitle.equals("")) {
             return false;
+        }// end of if cycle
+
+        if (summary.equals("")) {
+            if (oldText.length() < 10 && newText.length() < 10) {
+                summary = oldText + " -> " + newText;
+            } else {
+                summary = "subst";
+            }// end of if/else cycle
         }// end of if cycle
 
         oldContenuto = Api.leggeVoce(wikiTitle);

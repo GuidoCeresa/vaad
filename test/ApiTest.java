@@ -262,23 +262,44 @@ public class ApiTest extends VaadTest {
     }// end of single test
 
 
+//    @Test
+
+    /**
+     * Modifica il contenuto di una pagina.
+     *
+     * @param wikiTitle titolo della pagina wiki su cui scrivere
+     * @param oldText   da eliminare
+     * @param newText   da inserire
+     * @param summary   oggetto della modifica
+     * @param login     for testing purpose only
+     */
+    public void modificaVoce() {
+        String wikiTitle = "Utente:Gac/Sandbox4";
+        String oldTxt = "diciotto senza remore";
+        String newTxt = "senza";
+
+        boolOttenuto = Api.modificaVoce(wikiTitle, oldTxt, newTxt, "", loginWiki);
+        assertFalse(boolOttenuto);
+    }// end of single test
+
     @Test
     /**
      * Modifica il contenuto di una pagina.
      *
-     * @param title   della pagina da ricercare
-     * @param oldText da eliminare
-     * @param newText da inserire
+     * @param wikiTitle titolo della pagina wiki su cui scrivere
+     * @param oldText   da eliminare
+     * @param newText   da inserire
+     * @param summary   oggetto della modifica
+     * @param login     for testing purpose only
      */
-    public void modificaVoce() {
-        String titoloPagina = "Utente:Gac/Sandbox4";
-        String oldTxt = "diciotto senza remore";
-        String newTxt = "senza";
+    public void modificaVoce2() {
+        String wikiTitle = "Utente:Biobot/6";
+        String oldTxt = "quarta";
+        String newTxt = "prima";
 
-        boolOttenuto = Api.modificaVoce(titoloPagina, oldTxt, newTxt, loginWiki);
-        assertFalse(boolOttenuto);
+        boolOttenuto = Api.modificaVoce(wikiTitle, oldTxt, newTxt, "", loginWiki);
+        assertTrue(boolOttenuto);
     }// end of single test
-
 
     @Test
     /**
@@ -368,6 +389,7 @@ public class ApiTest extends VaadTest {
         assertEquals(lista.size(), 8);
 
     }// end of single test
+
 
 //    @Test
 //    /**

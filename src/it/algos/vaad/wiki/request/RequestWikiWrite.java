@@ -83,7 +83,7 @@ public class RequestWikiWrite extends RequestWiki {
      * Poi invocano il metodo doInit() della superclasse
      *
      * @param wikiTitle titolo della pagina wiki su cui scrivere
-     * @param newText  da inserire
+     * @param newText   da inserire
      */
     public RequestWikiWrite(String wikiTitle, String newText) {
         this(wikiTitle, newText, SUMMARY);
@@ -97,7 +97,7 @@ public class RequestWikiWrite extends RequestWiki {
      * Poi invocano il metodo doInit() della superclasse
      *
      * @param wikiTitle titolo della pagina wiki su cui scrivere
-     * @param newText  da inserire
+     * @param newText   da inserire
      * @param summary   oggetto della modifica
      */
     public RequestWikiWrite(String wikiTitle, String newText, String summary) {
@@ -112,7 +112,7 @@ public class RequestWikiWrite extends RequestWiki {
      * Poi invocano il metodo doInit() della superclasse astratta
      *
      * @param wikiTitle titolo della pagina wiki su cui scrivere
-     * @param newText  da inserire
+     * @param newText   da inserire
      * @param summary   oggetto della modifica
      * @param loginTest del collegamento
      * @deprecated
@@ -177,13 +177,36 @@ public class RequestWikiWrite extends RequestWiki {
     protected void creaPost(URLConnection urlConn) throws Exception {
         PrintWriter out;
         String testoPost = "";
+        String testoVoce = "";
+        String testoSummary = "";
+
+        if (newText.equals("")) {
+            return;
+        }// end of if cycle
 
         out = new PrintWriter(urlConn.getOutputStream());
 
-        testoPost = "text=" + newText;
+        if (newText != null && !newText.equals("")) {
+            try { // prova ad eseguire il codice
+                testoVoce = URLEncoder.encode(newText, "UTF-8");
+            } catch (Exception unErrore) { // intercetta l'errore
+            }// fine del blocco try-catch
+        }// fine del blocco if
+
+        if (summary != null && !summary.equals("")) {
+            try { // prova ad eseguire il codice
+                testoSummary = URLEncoder.encode(summary, "UTF-8");
+            } catch (Exception unErrore) { // intercetta l'errore
+            }// fine del blocco try-catch
+        }// fine del blocco if
+
+        testoPost = "text=" + testoVoce;
         testoPost += "&bot=true";
         testoPost += "&minor=true";
-        testoPost += "&summary=" + summary;
+        if (!testoSummary.equals("")) {
+            testoPost += "&summary=" + testoSummary;
+        }// end of if cycle
+
         if (csrfToken != null && !csrfToken.equals("")) {
             testoPost += "&token=" + csrfToken;
         }// end of if cycle
@@ -218,10 +241,10 @@ public class RequestWikiWrite extends RequestWiki {
                 if (noChange) {
                     risultato = TipoRisultato.nochange;
                 } else {
-                    risultato = TipoRisultato.registrata;
+                    risultato = TipoRisultato.modificaRegistrata;
                 }// end of if/else cycle
             } else {
-                risultato = TipoRisultato.registrata;
+                risultato = TipoRisultato.modificaRegistrata;
             }// end of if/else cycle
         }// end of if cycle
 
