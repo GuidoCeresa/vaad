@@ -2288,5 +2288,92 @@ public abstract class LibWiki {
         return getSummary() + " " + dettaglio;
     } // fine del metodo
 
+    /**
+     * Legge il modulo dal testo della pagina
+     *
+     * @param testo da cui recuperare il modulo
+     * @return testo del modulo
+     */
+    public static String estraeTestoModulo(String testo) {
+        String testoModulo = "";
+        String tagIni = "return {";
+        String tagEnd = "}";
+        int posIni = 0;
+        int posEnd = 0;
+
+        if (!testo.equals("")) {
+            posIni = testo.indexOf(tagIni);
+            posIni += tagIni.length();
+            posEnd = testo.lastIndexOf(tagEnd);
+        }// fine del blocco if
+
+        if ((posIni != -1 && posEnd != -1)) {
+            testoModulo = testo.substring(posIni, posEnd);
+        }// fine del blocco if
+
+        return testoModulo.trim();
+    } // fine del metodo
+
+    /**
+     * Legge il modulo dalla pagina
+     *
+     * @param titolo della pagina da cui recuperare il modulo
+     * @return testo del modulo
+     */
+    public static String leggeModulo(String titolo) {
+        String testoModulo = "";
+        String testoPagina;
+
+        if (!titolo.equals("")) {
+            testoPagina = Api.leggeVoce(titolo);
+            if (!testoPagina.equals("")) {
+                testoModulo = estraeTestoModulo(testoPagina);
+            }// fine del blocco if
+        }// fine del blocco if
+
+        return testoModulo.trim();
+    } // fine del metodo
+
+    /**
+     * Legge la mappa del modulo della pagina
+     *
+     * @param titolo della pagina da cui recuperare la mappa
+     * @return mappa chiave/valore dei campi singolare/plurale
+     */
+    public static LinkedHashMap<String,String> leggeMappaModulo(String titolo) {
+        LinkedHashMap<String,String> mappa = null;
+        String testoModulo = "";
+        String[] righe;
+        String chiave;
+        String valore;
+        String tagUgu = "=";
+        String[] partiDellaRiga;
+
+        if (!titolo.equals("")) {
+            testoModulo = leggeModulo(titolo);
+        }// fine del blocco if
+
+        if (!testoModulo.equals("")) {
+            mappa = new LinkedHashMap<String,String>();
+            righe = testoModulo.split("\n");
+            for (String riga : righe) {
+                partiDellaRiga = riga.split(tagUgu);
+                if (partiDellaRiga.length == 2) {
+                    chiave = partiDellaRiga[0].trim();
+                    chiave = LibText.levaTesta(chiave, "[");
+                    chiave = LibText.levaCoda(chiave, "]");
+                    chiave = LibText.levaTesta(chiave, "\"");
+                    chiave = LibText.levaCoda(chiave, "\"");
+                    valore = partiDellaRiga[1];
+                    valore = LibText.levaTesta(valore, "\"");
+                    valore = LibText.levaCoda(valore, ",");
+                    valore = LibText.levaCoda(valore, "\"");
+                    mappa.put(chiave, valore);
+                }// fine del blocco if
+            }// end of for cycle
+        }// fine del blocco if
+
+        return mappa;
+    } // fine del metodo
 
 } // fine della classe astratta

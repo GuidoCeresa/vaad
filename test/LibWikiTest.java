@@ -7,10 +7,7 @@ import org.json.simple.JSONObject;
 import org.junit.Test;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -947,7 +944,6 @@ public class LibWikiTest extends VaadTest {
         mappaPrevista.put(LibWiki.OLD_REV_ID, 76121198L);
         mappaPrevista.put(LibWiki.NEW_REV_ID, 76469856L);
         mappaPrevista.put(LibWiki.NEW_TIME_STAMP, "2015-11-12T14:57:22Z");
-        mappaPrevista.put(LibWiki.NOCHANGE, false);
 
         mappaOttenuta = LibWiki.creaMappaEdit(sorgente);
         boolOttenuto = LibArray.isMapEquals(mappaOttenuta, mappaPrevista);
@@ -992,6 +988,20 @@ public class LibWikiTest extends VaadTest {
         mappa = LibWiki.creaMappaMove(sorgente);
         assertNotNull(mappa);
         assertEquals(mappa.get(LibWiki.CODE), "selfmove");
+    }// end of single test
+
+    @Test
+    /**
+     * Legge il modulo dalla pagina
+     *
+     * @param titolo della pagina da cui recuperare il modulo
+     * @return testo del modulo
+     */
+    public void leggeModulo() {
+        ottenuto = LibWiki.leggeModulo(TITOLO_MODULO);
+
+        HashMap<String,String> mappa = LibWiki.leggeMappaModulo(TITOLO_MODULO);
+        int a=87;
     }// end of single test
 
 }// end of testing class

@@ -479,6 +479,18 @@ public class Api {
     }// end of method
 
     /**
+     * Estrae il template bio dalla pagina
+     * <p>
+     *
+     * @param page completa
+     * @return contenuto del template bio
+     */
+    public static String estraeTmplBio(Page page) {
+        String testo = page.getText();
+        return LibWiki.estraeTmplBioCompresi(testo);
+    }// end of method
+
+    /**
      * Estrae il template bio dal testo
      * <p>
      *
@@ -537,16 +549,22 @@ public class Api {
         String oldContenuto;
         String testoTmp;
         Request request;
+        String botName;
 
         if (wikiTitle.equals("")) {
             return false;
         }// end of if cycle
 
         if (summary.equals("")) {
+            if (login != null) {
+                botName = login.getLgusername();
+                summary = "[[Utente:" + botName + "|" + botName + "]]: ";
+            }// end of if cycle
+
             if (oldText.length() < 10 && newText.length() < 10) {
-                summary = oldText + " -> " + newText;
+                summary += oldText + " -> " + newText;
             } else {
-                summary = "subst";
+                summary += "subst";
             }// end of if/else cycle
         }// end of if cycle
 
