@@ -148,7 +148,7 @@ public abstract class VaadAlgosUI extends AlgosUI {
         String address = "";
 
         if (modulo instanceof ModulePop) {
-            address = ((ModulePop) modulo).getMenuAddress();
+            address = ((ModulePop) modulo).getMenuLabel();
         } else {
             address = LibPath.getClassName(modulo.getEntityClass());
         }// fine del blocco if-else

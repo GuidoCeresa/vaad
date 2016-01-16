@@ -96,12 +96,18 @@ public abstract class LibWiki {
     private static final String VIR = ",";
     private static final String APICI = "\"";
     private static final String PUNTI = ":";
+    private static final String SPAZIO = " ";
+    private static final String PIPE = "|";
+    private static final String A_CAPO = "\n";
     public static Date DATA_NULLA = new Date(70, 0, 1);
     /* caratteri finali per la stringa di edittoken da rinviare al server */
     public static String END_TOKEN = "%2B%5C";
     // patch per la key del parametro testo
     private static String PATCH_OLD = "*";
     private static String PATCH_NEW = "text";
+    private static String GRIGIO_SCURO = "style=\"background-color:#EFEFEF;\"";
+    private static String GRIGIO_MEDIO = "style=\"background-color:#CCC;\"";
+
 
 //    /**
 //     * Converte il valore stringa nel tipo previsto dal parametro PagePar
@@ -2340,8 +2346,8 @@ public abstract class LibWiki {
      * @param titolo della pagina da cui recuperare la mappa
      * @return mappa chiave/valore dei campi singolare/plurale
      */
-    public static LinkedHashMap<String,String> leggeMappaModulo(String titolo) {
-        LinkedHashMap<String,String> mappa = null;
+    public static LinkedHashMap<String, String> leggeMappaModulo(String titolo) {
+        LinkedHashMap<String, String> mappa = null;
         String testoModulo = "";
         String[] righe;
         String chiave;
@@ -2354,7 +2360,7 @@ public abstract class LibWiki {
         }// fine del blocco if
 
         if (!testoModulo.equals("")) {
-            mappa = new LinkedHashMap<String,String>();
+            mappa = new LinkedHashMap<String, String>();
             righe = testoModulo.split("\n");
             for (String riga : righe) {
                 partiDellaRiga = riga.split(tagUgu);
@@ -2375,5 +2381,361 @@ public abstract class LibWiki {
 
         return mappa;
     } // fine del metodo
+
+    /**
+     * Suddivide la lista in due colonne.
+     *
+     * @param testoIn in ingresso
+     * @return listaOut in uscita
+     */
+    public static String listaDueColonne(String testoIn) {
+        String testoOut = "";
+
+        if (!testoIn.equals("")) {
+            testoOut = "{{Div col}}";
+            testoOut += A_CAPO;
+            testoOut += testoIn;
+            testoOut += A_CAPO;
+            testoOut += "{{Div col end}}";
+        }// fine del blocco if
+
+        return testoOut;
+    }// fine della closure
+
+
+    /**
+     * Crea una table
+     * <p>
+     * default:
+     * width=50%
+     * align=center
+     * text-align=right
+     * font-size=100%
+     * background:#FFF
+     * bgcolor="#EFEFEF"
+     *
+     * @param mappa da costruire
+     * @return testo
+     */
+    public static String creaTable(HashMap mappa) {
+        String testo = VUOTA;
+        String header;
+        String titoli = VUOTA;
+        String body = VUOTA;
+        String bottom;
+
+        // controllo esistenza della mappa
+        if (mappa == null) {
+            return "";
+        }// fine del blocco if
+
+        if (mappa.size() < 1) {
+            return "";
+        }// fine del blocco if
+
+        // controllo congruità base della mappa
+        if (!isTableValida(mappa)) {
+            return testo;
+        }// fine del blocco if
+
+        // inizio tabella
+        header = creaTableHeader(mappa);
+        header += A_CAPO;
+
+        // titoli
+        titoli = creaTableTitoli(mappa);
+        titoli += A_CAPO;
+
+        // body
+        body = creaTableBody(mappa);
+        body += A_CAPO;
+
+        // chiusura
+        bottom = "|}";
+
+        // impacchetta tutto
+        testo = header + titoli + body + bottom;
+
+        return testo.trim();
+    }// fine del metodo
+
+
+    @SuppressWarnings("all")
+    private static boolean isTableValida(HashMap mappa) {
+        ArrayList<String> listaTitoli = getTitoli(mappa);
+        ArrayList<ArrayList> listaRighe = null;
+        int numColonneTitoli = 0;
+        int numColonneRighe = 0;
+        ArrayList<String> primaRiga = null;
+
+        // controllo parametri essenziali della mappa
+        if (listaTitoli != null && listaTitoli.size() > 0) {
+            numColonneTitoli = listaTitoli.size();
+        } else {
+            return false;
+        }// end of if/else cycle
+
+        // controllo congruità base della mappa
+        if (listaRighe != null && listaRighe.size() > 0) {
+            if (listaRighe.get(0) instanceof ArrayList) {
+                numColonneRighe = listaRighe.get(0).size();
+            }// fine del blocco if
+        } else {
+            return true;
+        }// end of if/else cycle
+
+        if (numColonneTitoli != numColonneRighe) {
+            return false;
+        }// fine del blocco if
+
+        return true;
+    }// fine del metodo
+
+
+    private static String creaTableHeader(HashMap mappa) {
+        String caption = VUOTA;
+        String header;
+        boolean sortable = true;
+        boolean coloriScuri = true;
+        String tagTitolo = "";
+        String bgColorBody = GRIGIO_SCURO;
+
+        // controllo parametri della mappa
+        if (mappa.get(Cost.KEY_MAPPA_CAPTION) instanceof String) {
+            caption = (String) mappa.get(Cost.KEY_MAPPA_CAPTION);
+        }// fine del blocco if
+        if (mappa.get(Cost.KEY_MAPPA_SORTABLE) instanceof Boolean) {
+            sortable = (Boolean) mappa.get(Cost.KEY_MAPPA_SORTABLE);
+        }// fine del blocco if
+        if (mappa.get(Cost.KEY_MAPPA_TITOLI_SCURI) instanceof Boolean) {
+            coloriScuri = (Boolean) mappa.get(Cost.KEY_MAPPA_TITOLI_SCURI);
+        }// fine del blocco if
+
+        // inizio tabella
+        if (sortable) {
+            header = "{|class=\"wikitable sortable\"";
+        } else {
+            header = "{|class=\"wikitable\"";
+        }// fine del blocco if-else
+
+        if (coloriScuri) {
+            header += SPAZIO;
+            header += bgColorBody;
+        }// fine del blocco if
+
+        if (!caption.equals("")) {
+            header += A_CAPO;
+            header += tagTitolo + caption;
+        }// fine del blocco if
+
+        return header;
+    }// fine del metodo
+
+    //    @SuppressWarnings("all")
+    private static String creaTableTitoli(HashMap mappa) {
+        String titoli = VUOTA;
+        ArrayList<String> listaTitoli = getTitoli(mappa);
+        boolean numerazioneProgressiva = true;
+        String titoloColonnaProgressivo = "#";
+        boolean coloriScuri = true;
+
+//        if (mappa[MAPPA_NUMERAZIONE_PROGRESSIVA] in Boolean){
+//            numerazioneProgressiva = mappa[MAPPA_NUMERAZIONE_PROGRESSIVA]
+//        }// fine del blocco if
+//
+//        if (mappa[MAPPA_TITOLI_SCURI] in Boolean){
+//            coloriScuri = mappa[MAPPA_TITOLI_SCURI]
+//        }// fine del blocco if
+
+        if (listaTitoli != null && listaTitoli.size() > 0) {
+            if (numerazioneProgressiva) {
+                titoli += creaTableSingoloTitolo(mappa, titoloColonnaProgressivo, false, coloriScuri);
+            }// fine del blocco if
+
+            for (String titolo : listaTitoli) {
+                titoli += creaTableSingoloTitolo(mappa, titolo, true, coloriScuri);
+            }// end of for cycle
+        }// fine del blocco if
+
+        return titoli.trim();
+    }// fine del metodo
+
+    @SuppressWarnings("all")
+    private static ArrayList<String> getTitoli(HashMap mappa) {
+        ArrayList<String> listaTitoli = null;
+
+        if (mappa.get(Cost.KEY_MAPPA_TITOLI) != null) {
+            if (mappa.get(Cost.KEY_MAPPA_TITOLI) instanceof ArrayList) {
+                listaTitoli = (ArrayList) mappa.get(Cost.KEY_MAPPA_TITOLI);
+            }// fine del blocco if
+            if (mappa.get(Cost.KEY_MAPPA_TITOLI) instanceof String) {
+                listaTitoli = LibArray.fromStringaVirgola((String) mappa.get(Cost.KEY_MAPPA_TITOLI));
+            }// fine del blocco if
+        }// fine del blocco if
+
+        return listaTitoli;
+    }// fine del metodo
+
+
+    private static String creaTableSingoloTitolo(HashMap mappa, String nome, boolean colonnaSortable, boolean coloriScuri) {
+        String titolo = VUOTA;
+        String tagNormale = "|";
+        String tagSortable = "!";
+        String tag = tagNormale;
+        String tagColonnaUnSortable = "class=\"unsortable\"";
+        boolean tableSortable = true;
+        boolean creaSpazi = false;
+        String parametri = "";
+        String bgColorTitle = GRIGIO_MEDIO;
+
+        // controllo parametri della mappa
+        if (true) {
+//            if (mappa[MAPPA_SORTABLE] in Boolean) {
+            if (false) {
+//                if (mappa[MAPPA_SORTABLE]) {
+                tag = tagSortable;
+                tableSortable = true;
+            } else {
+                tag = "|";
+                tableSortable = false;
+            }// fine del blocco if-else
+        } else {
+            tag = tagSortable;
+            tableSortable = true;
+        }// fine del blocco if-else
+
+        titolo += tag;
+        if (tableSortable && !colonnaSortable) {
+            parametri += SPAZIO + tagColonnaUnSortable;
+        }// fine del blocco if
+        if (coloriScuri) {
+            parametri += SPAZIO + bgColorTitle;
+        }// fine del blocco if
+        if (!parametri.equals("")) {
+            titolo += parametri + SPAZIO + tagNormale;
+        }// fine del blocco if
+
+        // spazio per leggere il codice sorgente
+        titolo += SPAZIO;
+
+        // spazio visibile a video
+        if (creaSpazi) {
+            titolo += SPAZIO;
+        }// fine del blocco if
+        titolo += LibWiki.setBold(nome);
+        if (creaSpazi) {
+            titolo += SPAZIO;
+        }// fine del blocco if
+        titolo += A_CAPO;
+
+        return titolo;
+    }// fine del metodo
+
+    private static String creaTableBody(HashMap mappa) {
+        String body = VUOTA;
+        ArrayList<ArrayList> listaRighe = null;
+        String tagRiga = "|-";
+        String tagCampo = PIPE;
+        int pos = 0;
+
+        if (mappa.get(Cost.KEY_MAPPA_LISTA) != null) {
+            if (mappa.get(Cost.KEY_MAPPA_LISTA) instanceof ArrayList) {
+                listaRighe = (ArrayList) mappa.get(Cost.KEY_MAPPA_LISTA);
+            }// fine del blocco if
+        }// fine del blocco if
+
+        if (listaRighe != null && listaRighe.size() > 0) {
+            for (ArrayList singolaRiga : (ArrayList<ArrayList>) listaRighe) {
+                pos++;
+                body += tagRiga;
+                body += A_CAPO;
+                body += creaTableRiga(mappa, singolaRiga, pos);
+                body = LibText.levaCoda(body, tagCampo);
+                body += A_CAPO;
+            }// end of for cycle
+        }// fine del blocco if
+
+        return body.trim();
+    }// fine del metodo
+
+
+    private static String creaTableRiga(HashMap mappa, ArrayList singolaRiga, int pos) {
+        String body = VUOTA;
+        String tagCampo = PIPE;
+        String value;
+        boolean numerazioneProgressiva = true;
+        boolean numero = false;
+        boolean numeriFormattati = true;
+        boolean allineatoADestra = false;
+
+//        if (mappa[MAPPA_NUMERAZIONE_PROGRESSIVA] in Boolean) {
+//            numerazioneProgressiva = mappa[MAPPA_NUMERAZIONE_PROGRESSIVA]
+//        }// fine del blocco if
+//
+//        if (mappa[MAPPA_NUMERI_FORMATTATI] in Boolean) {
+//            numeriFormattati = mappa[MAPPA_NUMERI_FORMATTATI]
+//        }// fine del blocco if
+
+        if (numerazioneProgressiva) {
+            body += SPAZIO;
+            body += tagCampo;
+            body += SPAZIO;
+            body += pos;
+            body += SPAZIO;
+            body += SPAZIO;
+            body += tagCampo;
+        }// fine del blocco if
+
+        for (Object obj : singolaRiga) {
+            if (obj instanceof String) {
+                numero = false;
+                value = (String) obj;
+
+                body += tagCampo;
+                body += SPAZIO;
+                body += value;
+                body += SPAZIO;
+                body += tagCampo;
+
+            }// end of if cycle
+        }// end of for cycle
+        body = LibText.levaCoda(body, tagCampo);
+        body += A_CAPO;
+
+//        singolaRiga?.each {
+//            numero = false
+//            value = it
+//            if (value in Number) {
+//                allineatoADestra = true
+//            }// fine del blocco if
+//
+//            if (value in Number && numeriFormattati) {
+//                value = '{{formatnum:' + value + '}}'
+//            }// fine del blocco if
+//            if (value in String && value.startsWith('{{formatnum')) {
+//                allineatoADestra = true
+//                numero = true
+//            }// fine del blocco if
+//            if (allineatoADestra) {
+//                body += txtAlign + aSpazio
+//            }// fine del blocco if
+//
+//            body += tagCampo
+//            body += aSpazio
+//            if (value in String) {
+//                body += SPAZIO
+//            }// fine del blocco if
+//            body += value
+//            if (numero) {
+//                body += SPAZIO
+//            }// fine del blocco if
+//            body += aSpazio
+//            body += tagCampo
+//        } // fine del ciclo each
+//        body = LibTesto.levaCoda(body, tagCampo)
+//        body += ACAPO
+
+        return body.trim();
+    }// fine del metodo
 
 } // fine della classe astratta

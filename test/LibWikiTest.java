@@ -1000,8 +1000,120 @@ public class LibWikiTest extends VaadTest {
     public void leggeModulo() {
         ottenuto = LibWiki.leggeModulo(TITOLO_MODULO);
 
-        HashMap<String,String> mappa = LibWiki.leggeMappaModulo(TITOLO_MODULO);
-        int a=87;
+        HashMap<String, String> mappa = LibWiki.leggeMappaModulo(TITOLO_MODULO);
+        int a = 87;
+    }// end of single test
+
+
+    @Test
+    /**
+     * Differenza tra due array
+     *
+     * @param primo   array
+     * @param secondo array
+     * @return differenza
+     */
+    public void delta() {
+        long inizio;
+        long fine;
+        long durata;
+        int dim = 300000;
+        ArrayList<Integer> listaUno = new ArrayList<Integer>();
+        ArrayList<Integer> listaDue = new ArrayList<Integer>();
+        ArrayList<Integer> listaDifferenza;
+
+        for (int k = 0; k < dim; k = k + 2) {
+            listaUno.add(k);
+        }// end of for cycle
+
+        for (int k = 0; k < dim; k = k + 3) {
+            listaDue.add(k);
+        }// end of for cycle
+
+        inizio = System.currentTimeMillis();
+        listaDifferenza = LibWiki.delta(listaUno, listaDue);
+        fine = System.currentTimeMillis();
+        durata = fine - inizio;
+
+        int a = 87;
+    }// end of single test
+
+
+    @Test
+    /**
+     * Differenza tra due array
+     *
+     * @param primo   array
+     * @param secondo array
+     * @return differenza
+     */
+    public void delta2() {
+        long inizio;
+        long fine;
+        long durata;
+        int dim = 300000;
+        ArrayList<Long> listaUno = new ArrayList<Long>();
+        ArrayList<Long> listaDue = new ArrayList<Long>();
+        ArrayList<Long> listaDifferenza;
+
+        for (int k = 0; k < dim; k = k + 2) {
+            listaUno.add((long) k);
+        }// end of for cycle
+
+        for (int k = 0; k < dim; k = k + 3) {
+            listaDue.add((long) k);
+        }// end of for cycle
+
+        inizio = System.currentTimeMillis();
+        listaDifferenza = LibWiki.delta(listaUno, listaDue);
+        fine = System.currentTimeMillis();
+        durata = fine - inizio;
+
+        int a = 87;
+    }// end of single test
+
+    @Test
+    /**
+     * Differenza tra due array
+     *
+     * @param primo   array
+     * @param secondo array
+     * @return differenza
+     */
+    public void delta3() {
+        long inizio;
+        long fine;
+        long durata;
+        int dim = 300000;
+        ArrayList<Long> listaUno = new ArrayList<Long>();
+        ArrayList<Long> listaDue = new ArrayList<Long>();
+        ArrayList<Long> listaDifferenza;
+
+        for (int k = 0; k < dim; k = k + 2) {
+            listaUno.add((long) k);
+        }// end of for cycle
+
+        for (int k = 0; k < dim; k = k + 3) {
+            listaDue.add((long) k);
+        }// end of for cycle
+
+        inizio = System.currentTimeMillis();
+
+        List set_a;
+        List set_b;
+
+        ArrayList<Long> listaTmp = (ArrayList<Long>) listaUno.clone();
+        listaTmp.retainAll(listaDue);
+        listaUno.removeAll(listaTmp);
+
+//        temp_set.retainAll(set_b); //it finds out the common elements between two sets.
+//        set_a.removeAll(temp_set); //now the final desired set is ready
+
+//        listaDifferenza = LibWiki.delta(listaUno, listaDue);
+        fine = System.currentTimeMillis();
+        durata = fine - inizio;
+
+        int a = 87;
     }// end of single test
 
 }// end of testing class
