@@ -11,10 +11,20 @@ public abstract class Cost {
 
     // campi di una mappa per la table
     public static final String KEY_MAPPA_TITOLI = "mappaTableListaTitoli";
-    public static final String KEY_MAPPA_LISTA = "mappaTableListaRighe";
-    public static final String KEY_MAPPA_SORTABLE = "mappaTableSortable";
-    public static final String KEY_MAPPA_CAPTION = "mappaTableCaption";
     public static final String KEY_MAPPA_TITOLI_SCURI = "mappaTableTitoliScuri";
+    public static final String KEY_MAPPA_RIGHE_LISTA = "mappaTableRigheLista";
+    public static final String KEY_MAPPA_CAPTION = "mappaTableCaption";
+    public static final String KEY_MAPPA_SORTABLE_BOOLEAN = "mappaTableSortableBoolean";
+    public static final String KEY_MAPPA_SORTABLE_LISTA = "mappaTableSortableLista";
+    public static final String KEY_MAPPA_DESTRA_LISTA = "mappaTableDestraLista";
+    public static final String KEY_MAPPA_FONT_SIZE = "mappaTableFontSize";
+    public static final String KEY_MAPPA_COLOR_TITOLI = "mappaTableColorTitoli";
+    public static final String KEY_MAPPA_COLOR_RIGHE = "mappaTableColorRighe";
+    public static final String KEY_MAPPA_BACKGROUND_TITOLI = "mappaTableBackgroundTitoli";
+    public static final String KEY_MAPPA_BACKGROUND_RIGHE = "mappaTableBackgroundRighe";
+    public static final String KEY_MAPPA_NUMERI_FORMATTATI = "mappaTableNumeriFormattati";
+    public static final String KEY_MAPPA_NUMERAZIONE_PROGRESSIVA = "mappaTableNumerazioneProgressiva";
+
 
     /* Formato dati selezionato per la risposta alla Request */
     public static WikiFormat FORMAT = WikiFormat.json;

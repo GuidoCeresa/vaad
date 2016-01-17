@@ -26,7 +26,6 @@ public class RequestTest extends VaadTest {
     private static String pageIdsVirgola;
     private static ArrayList<Long> arrayPageIds;
 
-    private WikiLogin wikiLogin = null;
 
     @Before
     @SuppressWarnings("all")
@@ -320,15 +319,6 @@ public class RequestTest extends VaadTest {
         assertEquals(listaVociTitles.size(), 0);
     }// end of single test
 
-    // Login logic here
-    private void setLogin() {
-        String nick = "gacbot";
-        String password = "fulvia";
-
-        if (wikiLogin == null) {
-            wikiLogin = new WikiLogin(nick, password);
-        }// end of if cycle
-    } // fine del metodo iniziale
 
     @Test
     /**

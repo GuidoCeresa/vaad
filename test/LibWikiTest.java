@@ -1,7 +1,9 @@
+import it.algos.vaad.wiki.Cost;
 import it.algos.vaad.wiki.LibWiki;
 import it.algos.vaad.wiki.PagePar;
 import it.algos.vaad.wiki.request.QueryCat;
 import it.algos.vaad.wiki.request.QueryReadTitle;
+import it.algos.vaad.wiki.request.RequestWikiWrite;
 import it.algos.webbase.web.lib.LibArray;
 import org.json.simple.JSONObject;
 import org.junit.Test;
@@ -16,6 +18,8 @@ import static org.junit.Assert.*;
  * Using specific Templates (Entity, Domain, Modulo)
  */
 public class LibWikiTest extends VaadTest {
+
+    private static String PAGINA_PROVA = "Utente:Biobot/2";
 
     // alcuni valori di riferimento
     private static String SPAZI_MULTIPLI = "Abc    def ghi   lmn";
@@ -1116,4 +1120,118 @@ public class LibWikiTest extends VaadTest {
         int a = 87;
     }// end of single test
 
+    @Test
+    /**
+     * Crea una table di classe wikitable
+     * <p>
+     * default:
+     * width=50%
+     * align=center
+     * text-align=right
+     * font-size=100%
+     * background:#FFF
+     * bgcolor="#EFEFEF"
+     * <p>
+     * Facoltativi:
+     * Cost.KEY_MAPPA_LISTA_SORTABLE
+     * Cost.KEY_MAPPA_CAPTION
+     * Cost.KEY_MAPPA_TITOLI_SCURI
+     *
+     * @param mappa con i vari parametri e valori
+     * @return testo
+     */
+    public void creaTable() {
+        HashMap mappa = new HashMap();
+        String testoPagina = "";
+        super.setLogin();
+        ArrayList<String> titoli = new ArrayList<>();
+        ArrayList<ArrayList> righe = new ArrayList<>();
+        ArrayList<Boolean> colonne = new ArrayList<>();
+        ArrayList lista;
+        testoPagina += LibWiki.creaTable(mappa);
+        assertEquals(testoPagina, "");
+
+        testoPagina += "Tavola base. Solo i titoli sono obbligatori. Default numeri progressivi a sinistra.";
+        mappa.put(Cost.KEY_MAPPA_TITOLI, "Solo,Titoli,Stringa");
+        testoPagina += A_CAPO;
+        testoPagina += LibWiki.creaTable(mappa);
+        assertTrue("Manca il testo della table", testoPagina.length() > 0);
+        new RequestWikiWrite(PAGINA_PROVA, testoPagina, "", wikiLogin);
+
+        testoPagina += "Tavola base. Titolo sotto forma di array.";
+        titoli.add("Altri");
+        titoli.add("Titoli");
+        titoli.add("Come");
+        titoli.add("Array");
+        mappa.put(Cost.KEY_MAPPA_TITOLI, titoli);
+        testoPagina += A_CAPO;
+        testoPagina += LibWiki.creaTable(mappa);
+        new RequestWikiWrite(PAGINA_PROVA, testoPagina, "", wikiLogin);
+
+        testoPagina += "Tavola normale di default con alcune righe.";
+        lista = new ArrayList();
+        lista.add("Prima");
+        lista.add(27);
+        righe.add(lista);
+        lista = new ArrayList();
+        lista.add("Seconda");
+        lista.add(51);
+        righe.add(lista);
+        lista = new ArrayList();
+        lista.add("Terza");
+        lista.add(1250);
+        righe.add(lista);
+        mappa.put(Cost.KEY_MAPPA_TITOLI, "Testo,Numeri");
+        mappa.put(Cost.KEY_MAPPA_RIGHE_LISTA, righe);
+        testoPagina += A_CAPO;
+        testoPagina += LibWiki.creaTable(mappa);
+        new RequestWikiWrite(PAGINA_PROVA, testoPagina, "", wikiLogin);
+
+        testoPagina += "Tavola senza i progressivi.";
+        mappa.put(Cost.KEY_MAPPA_NUMERAZIONE_PROGRESSIVA, false);
+        testoPagina += A_CAPO;
+        testoPagina += LibWiki.creaTable(mappa);
+        new RequestWikiWrite(PAGINA_PROVA, testoPagina, "", wikiLogin);
+
+        testoPagina += "Tavola tutta sortable.";
+        mappa.put(Cost.KEY_MAPPA_NUMERAZIONE_PROGRESSIVA, true);
+        mappa.put(Cost.KEY_MAPPA_SORTABLE_BOOLEAN, true);
+        testoPagina += A_CAPO;
+        testoPagina += LibWiki.creaTable(mappa);
+        new RequestWikiWrite(PAGINA_PROVA, testoPagina, "", wikiLogin);
+
+        testoPagina += "Tavola mista.";
+        mappa = new HashMap();
+        righe = new ArrayList<>();
+        lista = new ArrayList();
+        mappa.put(Cost.KEY_MAPPA_TITOLI, "TestoFix,TestoSort,NumSort,NumFix");
+        lista.add("Primo");
+        lista.add("Beta");
+        lista.add(825);
+        lista.add(34820);
+        righe.add(lista);
+        lista = new ArrayList();
+        lista.add("Seconda");
+        lista.add("Gamma");
+        lista.add(37);
+        lista.add(51);
+        righe.add(lista);
+        lista = new ArrayList();
+        lista.add("Terza");
+        lista.add("Alfa");
+        lista.add(231000);
+        lista.add(1250);
+        righe.add(lista);
+        mappa.put(Cost.KEY_MAPPA_RIGHE_LISTA, righe);
+        colonne.add(false);
+        colonne.add(true);
+        colonne.add(true);
+        colonne.add(false);
+        mappa.put(Cost.KEY_MAPPA_SORTABLE_LISTA, colonne);
+        testoPagina += A_CAPO;
+        testoPagina += LibWiki.creaTable(mappa);
+        new RequestWikiWrite(PAGINA_PROVA, testoPagina, "", wikiLogin);
+
+
+    }// end of single test
 }// end of testing class

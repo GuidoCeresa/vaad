@@ -1,6 +1,7 @@
 import it.algos.vaad.wiki.Page;
 import it.algos.vaad.wiki.PagePar;
 import it.algos.vaad.wiki.TipoRisultato;
+import it.algos.vaad.wiki.WikiLogin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,5 +90,18 @@ public abstract class VaadTest {
     protected TipoRisultato risultatoOttenuto = null;
     protected ArrayList<Long> listaLong = null;
     protected ArrayList<String> listaString = null;
+
+    protected final static String A_CAPO= "\n";
+    protected WikiLogin wikiLogin = null;
+
+    // Login logic here
+    protected void setLogin() {
+        String nick = "gacbot";
+        String password = "fulvia";
+
+        if (wikiLogin == null) {
+            wikiLogin = new WikiLogin(nick, password);
+        }// end of if cycle
+    } // fine del metodo iniziale
 
 }// end of abstract testing class

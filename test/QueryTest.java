@@ -26,15 +26,6 @@ public class QueryTest extends VaadTest {
 
     private WikiLogin loginWiki = null;
 
-    // Login logic here
-    private void setLogin() {
-        String nick = "gacbot";
-        String password = "fulvia";
-
-        if (loginWiki == null) {
-            loginWiki = new WikiLogin(nick, password);
-        }// end of if cycle
-    } // fine del metodo iniziale
 
     @Before
     @SuppressWarnings("all")
