@@ -78,6 +78,7 @@ public abstract class VaadTest {
     protected String sorgente = "";
     protected String previsto = "";
     protected String ottenuto = "";
+    protected String modificato = "";
     protected String tag = "";
     protected HashMap mappaTxt;
     protected HashMap mappaObj;
@@ -92,6 +93,7 @@ public abstract class VaadTest {
     protected ArrayList<String> listaString = null;
 
     protected final static String A_CAPO= "\n";
+    protected final static String SPAZIO= " ";
     protected WikiLogin wikiLogin = null;
 
     // Login logic here

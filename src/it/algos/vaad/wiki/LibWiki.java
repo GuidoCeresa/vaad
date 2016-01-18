@@ -2721,7 +2721,7 @@ public abstract class LibWiki {
                 if (numProg) {
                     body += rigaProg(pos, tagCampo);
                 }// fine del blocco if
-                body += creaTableRiga(singolaRiga, pos,listaColonneSort);
+                body += creaTableRiga(singolaRiga, pos, listaColonneSort);
                 body = LibText.levaCoda(body, tagCampo);
                 body += A_CAPO;
             }// end of for cycle
@@ -2750,7 +2750,7 @@ public abstract class LibWiki {
      * I numeri sono sempre allineati a destra
      * Sono formattati se la colonna NON è sortable
      */
-    private static String creaTableRiga(ArrayList singolaRiga, int pos,ArrayList<Boolean> listaColonneSort) {
+    private static String creaTableRiga(ArrayList singolaRiga, int pos, ArrayList<Boolean> listaColonneSort) {
         String body = VUOTA;
         String tagCampo = PIPE;
         String value = "";
@@ -2767,7 +2767,8 @@ public abstract class LibWiki {
 
         for (int k = 0; k < singolaRiga.size(); k++) {
             cella = singolaRiga.get(k);
-            colonnaSortable=listaColonneSort.get(k);
+            colonnaSortable = listaColonneSort.get(k);
+            allineatoADestra = false;
             if (cella instanceof Number) {
                 numero = true;
                 allineatoADestra = true;
@@ -2803,40 +2804,131 @@ public abstract class LibWiki {
         }// end of if/else cycle
         body += A_CAPO;
 
-//        singolaRiga?.each {
-//            numero = false
-//            value = it
-//            if (value in Number) {
-//                allineatoADestra = true
-//            }// fine del blocco if
-//
-//            if (value in Number && numeriFormattati) {
-//                value = '{{formatnum:' + value + '}}'
-//            }// fine del blocco if
-//            if (value in String && value.startsWith('{{formatnum')) {
-//                allineatoADestra = true
-//                numero = true
-//            }// fine del blocco if
-//            if (allineatoADestra) {
-//                body += txtAlign + aSpazio
-//            }// fine del blocco if
-//
-//            body += tagCampo
-//            body += aSpazio
-//            if (value in String) {
-//                body += SPAZIO
-//            }// fine del blocco if
-//            body += value
-//            if (numero) {
-//                body += SPAZIO
-//            }// fine del blocco if
-//            body += aSpazio
-//            body += tagCampo
-//        } // fine del ciclo each
-//        body = LibTesto.levaCoda(body, tagCampo)
-//        body += ACAPO
-
         return body.trim();
     }// fine del metodo
+
+//    public static String modificaLink(String testoIn, String oldTitle, String newTitle) {
+//        Pattern pattern;
+//        Matcher matcher;
+//        String testoOut = testoIn;
+//        String tagRegex = "\\[\\[";
+//        String tagStx = "[[";
+//        String pipe = "|";
+//        String patternString = tagRegex + oldTitle;
+//        String newLink;
+//        int posIni;
+//        int posEnd;
+//        String carattereSuccessivo;
+//        String estratto;
+//        ArrayList listaIni = new ArrayList();
+//        ArrayList listaEnd = new ArrayList();
+//        int delta=0;
+//
+//        pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
+//        matcher = pattern.matcher(testoOut);
+//
+//        while (matcher.find()) {
+//            posIni = matcher.start();
+//            posEnd = matcher.end();
+//            listaIni.add(matcher.start());
+//            listaEnd.add(matcher.end());
+//            estratto = testoOut.substring(posIni, posEnd);
+//            int a = 87;
+////            carattereSuccessivo = testoOut.substring(posEnd, posEnd + 1);
+////            if (carattereSuccessivo.equals(pipe)) {
+////                testoOut = LibText.sostituisce(testoOut, posIni, posEnd, tagStx + newTitle);
+////            } else {
+////                testoOut = LibText.sostituisce(testoOut, posIni, posEnd, tagStx + modificaLink(newTitle));
+////            }// end of if/else cycle
+//        }// end of for cycle
+//
+//        for (int k = 0; k < listaIni.size(); k++) {
+//            posIni = (int) listaIni.get(k)+delta;
+//            posEnd = (int) listaEnd.get(k)+delta;
+//            estratto = testoOut.substring(posIni, posEnd);
+//            carattereSuccessivo = testoOut.substring(posEnd, posEnd + 1);
+//            if (carattereSuccessivo.equals(pipe)) {
+//                newLink = tagStx + newTitle;
+//            } else {
+//                newLink = tagStx + modificaLink(newTitle);
+//            }// end of if/else cycle
+//            testoOut = LibText.sostituisce(testoOut, posIni, posEnd, newLink);
+//            delta =   newLink.length()-estratto.length();
+//        }// end of for cycle
+//
+//
+//        return testoOut;
+//    }// end of method
+
+    /**
+     * Sostituzione ragionata
+     * Viene esaminata ogni singola evenienze e la regolazione è specifica
+     * Non uso regex perché non ci riesco
+     */
+    public static String modificaLink(String testoIn, String oldTitle, String newTitle) {
+        String testoOut = "";
+        String tagStx = "[[";
+        String pipe = "|";
+        String par = " (";
+        String oldLink = tagStx + oldTitle;
+        String newLink = tagStx + newTitle;
+        String newSub = "";
+        int posIni = 0;
+        int posEnd = 0;
+        String nextCar;
+        String nextNext2Car;
+        String prima ;
+        String estratto;
+        String dopo = testoIn;
+        int k = 0;
+
+        posIni = dopo.indexOf(oldLink);
+        while (posIni != -1) {
+            k++;
+            posEnd = posIni + oldLink.length();
+            prima = dopo.substring(0, posIni);
+            estratto = dopo.substring(posIni, posEnd);
+            nextCar = dopo.substring(posEnd, posEnd +1);
+            if (nextCar.equals(pipe)) {
+                newSub = newLink;
+            } else {
+                nextNext2Car = dopo.substring(posEnd, posEnd + 2);
+                if (nextNext2Car.equals(par)) {
+                    newSub = estratto;
+                } else {
+                    newSub = tagStx + modificaLink(newTitle);
+                }// end of if/else cycle
+            }// end of if/else cycle
+            dopo = dopo.substring(posEnd);
+            testoOut += prima + newSub;
+            posIni = dopo.indexOf(oldLink);
+        }// end of for cycle
+        testoOut += dopo;
+
+        return testoOut;
+    }// end of method
+
+
+    public static String modificaLink(String newLinkIn) {
+        String newLinkInOut = "";
+        String tagParIni = "(";
+        String tagParEnd = ")";
+        String tagPipe = "|";
+        int pos;
+        String prima;
+
+        if (newLinkIn == null || newLinkIn.equals("")) {
+            return "";
+        }// end of if cycle
+
+        newLinkIn = newLinkIn.trim();
+        if (newLinkIn.endsWith(tagParEnd)) {
+            pos = newLinkIn.indexOf(tagParIni);
+            prima = newLinkIn.substring(0, pos).trim();
+            newLinkInOut = newLinkIn + tagPipe + prima;
+        }// end of if cycle
+
+        return newLinkInOut;
+    }// end of method
 
 } // fine della classe astratta

@@ -5,6 +5,7 @@ import it.algos.vaad.wiki.request.QueryCat;
 import it.algos.vaad.wiki.request.QueryReadTitle;
 import it.algos.vaad.wiki.request.RequestWikiWrite;
 import it.algos.webbase.web.lib.LibArray;
+import it.algos.webbase.web.lib.LibTime;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 
@@ -1120,6 +1121,106 @@ public class LibWikiTest extends VaadTest {
         int a = 87;
     }// end of single test
 
+    /**
+     * Titoli della tabella di sintesi
+     */
+    private ArrayList<String> getCaption() {
+        ArrayList<String> titoli = new ArrayList<String>();
+        String statistiche = "Statistiche";
+        Date oldDate = LibTime.adesso();
+        String vecchiaData = LibTime.getGioMeseAnnoLungo(oldDate);
+        String nuovaData = LibTime.getGioMeseAnnoLungo(new Date());
+        String differenze = "&nbsp;&nbsp;&nbsp;&nbsp;diff.";
+
+        statistiche = SPAZIO + statistiche + SPAZIO;
+        vecchiaData = SPAZIO + vecchiaData + SPAZIO;
+        nuovaData = SPAZIO + nuovaData + SPAZIO;
+        differenze = SPAZIO + differenze + SPAZIO;
+
+        titoli.add(statistiche);
+        titoli.add(vecchiaData);
+        titoli.add(nuovaData);
+        titoli.add(differenze);
+
+        return titoli;
+    }// fine del metodo
+
+    /**
+     * Riga col numero di voci
+     */
+    private ArrayList getRigaVoci() {
+        String prefCode = "Non usato in questo test";
+        String descrizione = ":Categoria:BioBot|Template bio";
+        int oldValue = 250000;
+        int newValue = 299999;
+        String nota = "Una differenza di '''poche unità''' tra le pagine della categoria e le voci gestite dal bot è '''fisiologica''' e dovuta ad imprecisioni nella redazione del tmpl Bio";
+
+        return getRigaBase(true, descrizione, nota, oldValue, newValue, prefCode);
+    }// fine del metodo
+
+    /**
+     * Riga base
+     *
+     * @param wikiLink      collegamento a pagina wiki con doppie quadre
+     * @param descrizione   della riga
+     * @param eventualeNota a piè pagina
+     * @param oldValue      stringa del valore precedente
+     * @param newValue      stringa del valore attuale
+     * @param prefCode      codice della preferenza da aggiornare
+     */
+    private ArrayList getRigaBase(boolean wikiLink, String descrizione, String eventualeNota, int oldValue, int newValue, String prefCode) {
+        ArrayList riga = new ArrayList();
+        int diff = newValue - oldValue;
+
+        if (wikiLink) {
+            descrizione = LibWiki.setQuadre(descrizione);
+        }// end of if cycle
+
+        descrizione = LibWiki.setBold(descrizione);
+        if (!eventualeNota.equals("")) {
+            eventualeNota = SPAZIO + "<ref>" + eventualeNota + "</ref>";
+            descrizione += eventualeNota;
+        }// end of if cycle
+
+        riga.add(descrizione);
+        riga.add(oldValue);
+        riga.add(newValue);
+        if (diff != 0) {
+            riga.add(diff);
+        } else {
+            riga.add(SPAZIO);
+        }// end of if/else cycle
+
+        return riga;
+    }// fine del metodo
+
+    /**
+     * Riga col numero di giorni
+     */
+    private ArrayList getRigaGiorni() {
+        String prefCode = "Non usato in questo test";
+        String descrizione = "Giorni interessati";
+        int oldValue = 350;
+        int newValue = 350;
+        String nota = "Previsto il [[29 febbraio]] per gli [[Anno bisestile|anni bisestili]]";
+
+        return getRigaBase(false, descrizione, nota, oldValue, newValue, prefCode);
+    }// fine del metodo
+
+    /**
+     * Riga col numero di anni
+     */
+    private ArrayList getRigaAnni() {
+        String prefCode = "Non usato in questo test";
+        int anniPreCristo = 1000;
+        String descrizione = "Anni interessati";
+        int oldValue = 3000;
+        int newValue = 2016 + anniPreCristo;
+        String nota = "Potenzialmente dal [[1000 a.C.]] al [[{{CURRENTYEAR}}]]";
+
+        return getRigaBase(false, descrizione, nota, oldValue, newValue, prefCode);
+    }// fine del metodo
+
     @Test
     /**
      * Crea una table di classe wikitable
@@ -1232,6 +1333,64 @@ public class LibWikiTest extends VaadTest {
         testoPagina += LibWiki.creaTable(mappa);
         new RequestWikiWrite(PAGINA_PROVA, testoPagina, "", wikiLogin);
 
+        testoPagina += "Statistiche.";
+        mappa = new HashMap();
+        righe = new ArrayList<>();
+        lista = new ArrayList();
+        lista.add(getRigaVoci());
+        lista.add(getRigaGiorni());
+        lista.add(getRigaAnni());
+
+        mappa.put(Cost.KEY_MAPPA_TITOLI, getCaption());
+        mappa.put(Cost.KEY_MAPPA_RIGHE_LISTA, lista);
+//        mappa.put(Cost.KEY_MAPPA_SORTABLE_BOOLEAN, false);
+        testoPagina += A_CAPO;
+        testoPagina += LibWiki.creaTable(mappa);
+        new RequestWikiWrite(PAGINA_PROVA, testoPagina, "", wikiLogin);
 
     }// end of single test
+
+
+    @Test
+    public void modificaLink() {
+        sorgente = "George Abbey";
+        modificato = "George Abbey (calciatore)";
+
+        previsto = "George Abbey (calciatore)|George Abbey";
+        ottenuto = LibWiki.modificaLink(modificato);
+        assertEquals(previsto,ottenuto);
+
+
+        contenuto = "Scritto completo dove George Abbey compare diverse volte";
+        previsto = "Scritto completo dove George Abbey compare diverse volte";
+        ottenuto = LibWiki.modificaLink(contenuto, sorgente, modificato);
+        assertEquals(previsto,ottenuto);
+
+        contenuto = "Scritto completo dove George Abbey compare diverse volte, anche come [[George Abbey]] oppure Abbey ma anche";
+        previsto = "Scritto completo dove George Abbey compare diverse volte, anche come [[George Abbey (calciatore)|George Abbey]] oppure Abbey ma anche";
+        ottenuto = LibWiki.modificaLink(contenuto, sorgente, modificato);
+        assertEquals(previsto,ottenuto);
+
+
+        contenuto = "Scritto completo dove George Abbey compare diverse volte, anche come [[George Abbey]] oppure Abbey ma anche";
+        contenuto += " sotto forma di [[George Abbey|George Abbey]]";
+        previsto = "Scritto completo dove George Abbey compare diverse volte, anche come [[George Abbey (calciatore)|George Abbey]] oppure Abbey ma anche";
+        previsto += " sotto forma di [[George Abbey (calciatore)|George Abbey]]";
+        ottenuto = LibWiki.modificaLink(contenuto, sorgente, modificato);
+        assertEquals(previsto,ottenuto);
+
+
+        contenuto = "Scritto completo dove George Abbey compare diverse volte, anche come [[George Abbey]] oppure Abbey ma anche";
+        contenuto += " sotto forma di [[George Abbey|George Abbey]] o di [[George Abbey (pittore)]], oltre che di ";
+        contenuto += " [[George Abbey (scultore)]] ovvero [[George Abbey (cantante)|George Abbey]] e anche [[George Abbey|Abbey]]";
+
+        previsto = "Scritto completo dove George Abbey compare diverse volte, anche come [[George Abbey (calciatore)|George Abbey]] oppure Abbey ma anche";
+        previsto += " sotto forma di [[George Abbey (calciatore)|George Abbey]] o di [[George Abbey (pittore)]], oltre che di ";
+        previsto += " [[George Abbey (scultore)]] ovvero [[George Abbey (cantante)|George Abbey]] e anche [[George Abbey (calciatore)|Abbey]]";
+
+        ottenuto = LibWiki.modificaLink(contenuto, sorgente, modificato);
+        assertEquals(previsto,ottenuto);
+
+    }// end of method
+
 }// end of testing class
