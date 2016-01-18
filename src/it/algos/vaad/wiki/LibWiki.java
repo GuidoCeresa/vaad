@@ -2910,7 +2910,7 @@ public abstract class LibWiki {
 
 
     public static String modificaLink(String newLinkIn) {
-        String newLinkInOut = "";
+        String newLinkInOut = newLinkIn;
         String tagParIni = "(";
         String tagParEnd = ")";
         String tagPipe = "|";
