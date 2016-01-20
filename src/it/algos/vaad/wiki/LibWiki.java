@@ -2495,7 +2495,7 @@ public abstract class LibWiki {
         }// end of if/else cycle
 
         // controllo congruità base della mappa
-        if (listaRighe != null) {
+        if (listaRighe != null && listaRighe.size() > 0) {
             if (listaRighe.size() > 0 && listaRighe.get(0) instanceof ArrayList) {
                 numColonneRighe = listaRighe.get(0).size();
             }// fine del blocco if
@@ -2761,10 +2761,6 @@ public abstract class LibWiki {
         boolean colonnaSortable = false;
         Object cella;
 
-//        if (mappa[MAPPA_NUMERI_FORMATTATI] in Boolean) {
-//            numeriFormattati = mappa[MAPPA_NUMERI_FORMATTATI]
-//        }// fine del blocco if
-
         for (int k = 0; k < singolaRiga.size(); k++) {
             cella = singolaRiga.get(k);
             colonnaSortable = listaColonneSort.get(k);
@@ -2807,58 +2803,6 @@ public abstract class LibWiki {
         return body.trim();
     }// fine del metodo
 
-//    public static String modificaLink(String testoIn, String oldTitle, String newTitle) {
-//        Pattern pattern;
-//        Matcher matcher;
-//        String testoOut = testoIn;
-//        String tagRegex = "\\[\\[";
-//        String tagStx = "[[";
-//        String pipe = "|";
-//        String patternString = tagRegex + oldTitle;
-//        String newLink;
-//        int posIni;
-//        int posEnd;
-//        String carattereSuccessivo;
-//        String estratto;
-//        ArrayList listaIni = new ArrayList();
-//        ArrayList listaEnd = new ArrayList();
-//        int delta=0;
-//
-//        pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
-//        matcher = pattern.matcher(testoOut);
-//
-//        while (matcher.find()) {
-//            posIni = matcher.start();
-//            posEnd = matcher.end();
-//            listaIni.add(matcher.start());
-//            listaEnd.add(matcher.end());
-//            estratto = testoOut.substring(posIni, posEnd);
-//            int a = 87;
-////            carattereSuccessivo = testoOut.substring(posEnd, posEnd + 1);
-////            if (carattereSuccessivo.equals(pipe)) {
-////                testoOut = LibText.sostituisce(testoOut, posIni, posEnd, tagStx + newTitle);
-////            } else {
-////                testoOut = LibText.sostituisce(testoOut, posIni, posEnd, tagStx + modificaLink(newTitle));
-////            }// end of if/else cycle
-//        }// end of for cycle
-//
-//        for (int k = 0; k < listaIni.size(); k++) {
-//            posIni = (int) listaIni.get(k)+delta;
-//            posEnd = (int) listaEnd.get(k)+delta;
-//            estratto = testoOut.substring(posIni, posEnd);
-//            carattereSuccessivo = testoOut.substring(posEnd, posEnd + 1);
-//            if (carattereSuccessivo.equals(pipe)) {
-//                newLink = tagStx + newTitle;
-//            } else {
-//                newLink = tagStx + modificaLink(newTitle);
-//            }// end of if/else cycle
-//            testoOut = LibText.sostituisce(testoOut, posIni, posEnd, newLink);
-//            delta =   newLink.length()-estratto.length();
-//        }// end of for cycle
-//
-//
-//        return testoOut;
-//    }// end of method
 
     /**
      * Sostituzione ragionata
@@ -2877,7 +2821,7 @@ public abstract class LibWiki {
         int posEnd = 0;
         String nextCar;
         String nextNext2Car;
-        String prima ;
+        String prima;
         String estratto;
         String dopo = testoIn;
         int k = 0;
@@ -2888,7 +2832,7 @@ public abstract class LibWiki {
             posEnd = posIni + oldLink.length();
             prima = dopo.substring(0, posIni);
             estratto = dopo.substring(posIni, posEnd);
-            nextCar = dopo.substring(posEnd, posEnd +1);
+            nextCar = dopo.substring(posEnd, posEnd + 1);
             if (nextCar.equals(pipe)) {
                 newSub = newLink;
             } else {
