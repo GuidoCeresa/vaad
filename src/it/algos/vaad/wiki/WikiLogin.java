@@ -544,7 +544,9 @@ public class WikiLogin {
         Object[] keyArray;
         Object[] valArray;
         Object sessionObj = null;
-        String sesionTxt = "";
+        String sessionKey = "itwikiSession";
+//        String sessionTxt = "";
+        String sessionValue = "";
         String sep = "=";
         Object valObj = null;
         String valTxt = "";
@@ -552,26 +554,32 @@ public class WikiLogin {
         // controllo di congruità
         if (urlConn != null) {
             cookies = this.getCookies();
-            if (cookies != null && cookies.size() > 0) {
+//            if (cookies != null && cookies.size() > 0) {
+//
+//                keyArray = cookies.keySet().toArray();
+//                if (keyArray.length > 0) {
+//                    sessionObj = keyArray[0];
+//                }// fine del blocco if
+//                if (sessionObj != null && sessionObj instanceof String) {
+//                    sesionTxt = (String) sessionObj;
+//                }// fine del blocco if
+//
+//                valArray = cookies.values().toArray();
+//                if (valArray.length > 0) {
+//                    valObj = valArray[0];
+//                }// fine del blocco if
+//                if (valObj != null && valObj instanceof String) {
+//                    valTxt = (String) valObj;
+//                }// fine del blocco if
+//
+//            }// fine del blocco if
 
-                keyArray = cookies.keySet().toArray();
-                if (keyArray.length > 0) {
-                    sessionObj = keyArray[0];
-                }// fine del blocco if
-                if (sessionObj != null && sessionObj instanceof String) {
-                    sesionTxt = (String) sessionObj;
-                }// fine del blocco if
+            if (cookies.get(sessionKey)!=null) {
+                sessionValue=(String)cookies.get(sessionKey);
+            }// end of if cycle
 
-                valArray = cookies.values().toArray();
-                if (valArray.length > 0) {
-                    valObj = valArray[0];
-                }// fine del blocco if
-                if (valObj != null && valObj instanceof String) {
-                    valTxt = (String) valObj;
-                }// fine del blocco if
+            urlConn.setRequestProperty("Cookie", sessionKey + sep + sessionValue);
 
-                urlConn.setRequestProperty("Cookie", sesionTxt + sep + valTxt);
-            }// fine del blocco if
         }// fine del blocco if
     } // fine del metodo
 

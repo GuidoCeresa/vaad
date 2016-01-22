@@ -45,6 +45,8 @@ public abstract class LibWiki {
     public static final String GRAFFE_INI = GRAFFA_INI + GRAFFA_INI;
     public static final String GRAFFA_END = "}";
     public static final String GRAFFE_END = GRAFFA_END + GRAFFA_END;
+    public static final String REF_INI = "<ref>";
+    public static final String REF_END = "</ref>";
     public static final String BOLD = "'''";
     public static final String BIO = Cost.TAG_BIO;
 
@@ -2250,6 +2252,24 @@ public abstract class LibWiki {
             if (!stringaPulita.equals("")) {
                 stringaOut = BOLD + stringaPulita + BOLD;
             }// fine del blocco if-else
+        }// fine del blocco if
+
+        return stringaOut.trim();
+    } // fine del metodo
+
+    /**
+     * Aggiunge il tag ref in testa ed in coda alla stringa
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param stringaIn in ingresso
+     * @return stringa con i tag ref iniziale e finale
+     */
+    public static String setRef(String stringaIn) {
+        String stringaOut = stringaIn;
+
+        if (stringaIn != null && stringaIn.length() > 0) {
+            stringaOut = REF_INI + stringaOut + REF_END;
         }// fine del blocco if
 
         return stringaOut.trim();
