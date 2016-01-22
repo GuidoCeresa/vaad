@@ -110,6 +110,7 @@ public abstract class LibWiki {
     private static String PATCH_NEW = "text";
     private static String GRIGIO_SCURO = "style=\"background-color:#EFEFEF;\"";
     private static String GRIGIO_MEDIO = "style=\"background-color:#CCC;\"";
+    private static String TXT_ALIGN = "style=\"text-align: right;\"" + SPAZIO;
 
 
 //    /**
@@ -2754,7 +2755,8 @@ public abstract class LibWiki {
         String body = VUOTA;
 
         if (pos > 0) {
-            body += SPAZIO;
+            body += tagCampo;
+            body += TXT_ALIGN;
             body += tagCampo;
             body += SPAZIO;
             body += pos;
@@ -2774,7 +2776,6 @@ public abstract class LibWiki {
         String body = VUOTA;
         String tagCampo = PIPE;
         String value = "";
-        String txtAlign = "style=\"text-align: right;\"";
         boolean numero = false;
         boolean numeriFormattati = true;
         boolean allineatoADestra = false;
@@ -2802,7 +2803,7 @@ public abstract class LibWiki {
 
             if (allineatoADestra) {
                 body += tagCampo;
-                body += txtAlign + SPAZIO;
+                body += TXT_ALIGN;
             }// fine del blocco if
             body += tagCampo;
             body += SPAZIO;
