@@ -678,7 +678,7 @@ public class RequestTest extends VaadTest {
         //--login obbligatorio
         setLogin();
 
-        request = new RequestWikiWrite(TITOLO_3, "Prova di scrittura", "test iniziale", wikiLogin);
+        request = new RequestWikiWrite(TITOLO_3, "Prova di scrittura2", "test iniziale", wikiLogin);
 
         //--recupera il testo esistente per partire da una situazione pulita
         testoIniziale = Api.leggeVoce(TITOLO_3);

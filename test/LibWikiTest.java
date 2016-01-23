@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
  */
 public class LibWikiTest extends VaadTest {
 
-    private static String PAGINA_PROVA = "Utente:Biobot/2";
+    private static String PAGINA_PROVA = "Utente:Gac/Sandbox5";
 
     // alcuni valori di riferimento
     private static String SPAZI_MULTIPLI = "Abc    def ghi   lmn";
