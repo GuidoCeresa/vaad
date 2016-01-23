@@ -2517,8 +2517,12 @@ public abstract class LibWiki {
 
         // controllo congruità base della mappa
         if (listaRighe != null && listaRighe.size() > 0) {
-            if (listaRighe.size() > 0 && listaRighe.get(0) instanceof ArrayList) {
-                numColonneRighe = listaRighe.get(0).size();
+            if (listaRighe.size() > 0) {
+                if (listaRighe.get(0) instanceof ArrayList) {
+                    numColonneRighe = listaRighe.get(0).size();
+                } else {
+                    numColonneRighe = 1;
+                }// end of if/else cycle
             }// fine del blocco if
         } else {
             return true;
@@ -2621,12 +2625,29 @@ public abstract class LibWiki {
     @SuppressWarnings("all")
     private static ArrayList<ArrayList> getRighe(HashMap mappa) {
         ArrayList<ArrayList> listaRighe = null;
+        ArrayList listaTmp = null;
+        ArrayList listaSingolaRiga = null;
+        Object obj = null;
 
         if (mappa.get(Cost.KEY_MAPPA_RIGHE_LISTA) != null) {
             if (mappa.get(Cost.KEY_MAPPA_RIGHE_LISTA) instanceof ArrayList) {
-                listaRighe = (ArrayList) mappa.get(Cost.KEY_MAPPA_RIGHE_LISTA);
+                listaTmp = (ArrayList) mappa.get(Cost.KEY_MAPPA_RIGHE_LISTA);
             }// fine del blocco if
         }// fine del blocco if
+
+        if (listaTmp != null && listaTmp.size() > 0) {
+            if (!(listaTmp.get(0) instanceof ArrayList)) {
+                listaRighe = new ArrayList();
+                for (int k = 0; k < listaTmp.size(); k++) {
+                    obj = listaTmp.get(k);
+                    listaSingolaRiga = new ArrayList();
+                    listaSingolaRiga.add(obj);
+                    listaRighe.add(listaSingolaRiga);
+                }// end of for cycle
+            } else {
+                listaRighe = listaTmp;
+            }// end of if/else cycle
+        }// end of if cycle
 
         return listaRighe;
     }// fine del metodo
@@ -2735,17 +2756,19 @@ public abstract class LibWiki {
         ArrayList<Boolean> listaColonneSort = getColonneSort(mappa);
 
         if (listaRighe != null && listaRighe.size() > 0) {
-            for (ArrayList singolaRiga : (ArrayList<ArrayList>) listaRighe) {
-                pos++;
-                body += tagRiga;
-                body += A_CAPO;
-                if (numProg) {
-                    body += rigaProg(pos, tagCampo);
-                }// fine del blocco if
-                body += creaTableRiga(singolaRiga, pos, listaColonneSort);
-                body = LibText.levaCoda(body, tagCampo);
-                body += A_CAPO;
-            }// end of for cycle
+            if (listaRighe.get(0) instanceof ArrayList) {
+                for (ArrayList singolaRiga : (ArrayList<ArrayList>) listaRighe) {
+                    pos++;
+                    body += tagRiga;
+                    body += A_CAPO;
+                    if (numProg) {
+                        body += rigaProg(pos, tagCampo);
+                    }// fine del blocco if
+                    body += creaTableRiga(singolaRiga, pos, listaColonneSort);
+                    body = LibText.levaCoda(body, tagCampo);
+                    body += A_CAPO;
+                }// end of for cycle
+            }// end of if cycle
         }// fine del blocco if
 
         return body.trim();

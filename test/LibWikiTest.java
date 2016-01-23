@@ -1343,8 +1343,50 @@ public class LibWikiTest extends VaadTest {
 
         mappa.put(Cost.KEY_MAPPA_TITOLI, getCaption());
         mappa.put(Cost.KEY_MAPPA_RIGHE_LISTA, lista);
-//        mappa.put(Cost.KEY_MAPPA_SORTABLE_BOOLEAN, false);
         testoPagina += A_CAPO;
+        testoPagina += LibWiki.creaTable(mappa);
+        new RequestWikiWrite(PAGINA_PROVA, testoPagina, "", wikiLogin);
+
+        testoPagina += "Monocolonna stringhe.";
+        lista = new ArrayList();
+        lista.add("spazzino");
+        lista.add("badilante");
+        lista.add("comparsa");
+        lista.add("faccendiere");
+        lista.add("attore");
+
+        mappa.put(Cost.KEY_MAPPA_TITOLI, "Attività");
+        mappa.put(Cost.KEY_MAPPA_RIGHE_LISTA, lista);
+        testoPagina += A_CAPO;
+        testoPagina += LibWiki.creaTable(mappa);
+        new RequestWikiWrite(PAGINA_PROVA, testoPagina, "", wikiLogin);
+
+
+        testoPagina += "Monocolonna stringhe sort";
+        testoPagina += A_CAPO;
+        mappa.put(Cost.KEY_MAPPA_SORTABLE_BOOLEAN, true);
+        testoPagina += LibWiki.creaTable(mappa);
+        new RequestWikiWrite(PAGINA_PROVA, testoPagina, "", wikiLogin);
+
+
+        testoPagina += "Monocolonna numeri.";
+        lista = new ArrayList();
+        lista.add(821);
+        lista.add(47);
+        lista.add(1350);
+        lista.add(2);
+        lista.add(10);
+
+        mappa.put(Cost.KEY_MAPPA_TITOLI, "Voci");
+        mappa.put(Cost.KEY_MAPPA_RIGHE_LISTA, lista);
+        mappa.put(Cost.KEY_MAPPA_SORTABLE_BOOLEAN, false);
+        testoPagina += A_CAPO;
+        testoPagina += LibWiki.creaTable(mappa);
+        new RequestWikiWrite(PAGINA_PROVA, testoPagina, "", wikiLogin);
+
+        testoPagina += "Monocolonna numeri sort";
+        testoPagina += A_CAPO;
+        mappa.put(Cost.KEY_MAPPA_SORTABLE_BOOLEAN, true);
         testoPagina += LibWiki.creaTable(mappa);
         new RequestWikiWrite(PAGINA_PROVA, testoPagina, "", wikiLogin);
 
