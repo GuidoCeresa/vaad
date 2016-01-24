@@ -134,7 +134,7 @@ public abstract class RequestWiki extends Request {
                 String errore = unErrore.getMessage();
             }// fine del blocco try-catch
         } else {
-//            super.doRequest();
+            super.doRequest();
         }// end of if/else cycle
     } // fine del metodo
 
