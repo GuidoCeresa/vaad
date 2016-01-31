@@ -1390,6 +1390,42 @@ public class LibWikiTest extends VaadTest {
         testoPagina += LibWiki.creaTable(mappa);
         new RequestWikiWrite(PAGINA_PROVA, testoPagina, "", wikiLogin);
 
+        testoPagina += "Colonne destra, sinistra";
+        mappa = new HashMap();
+        righe = new ArrayList<>();
+        lista = new ArrayList();
+        mappa.put(Cost.KEY_MAPPA_TITOLI, "Sinistra,Destra,Sinistra,Destra");
+        lista.add("Primo");
+        lista.add("Beta");
+        lista.add(825);
+        lista.add(34820);
+        righe.add(lista);
+        lista = new ArrayList();
+        lista.add("Seconda");
+        lista.add("Gamma");
+        lista.add(37);
+        lista.add(51);
+        righe.add(lista);
+        lista = new ArrayList();
+        lista.add("Terza");
+        lista.add("Alfa");
+        lista.add(231000);
+        lista.add(1250);
+        righe.add(lista);
+        colonne = new ArrayList<>();
+        colonne.add(false);
+        colonne.add(true);
+        colonne.add(false);
+        colonne.add(true);
+        mappa.put(Cost.KEY_MAPPA_RIGHE_LISTA, righe);
+        mappa.put(Cost.KEY_MAPPA_SORTABLE_BOOLEAN, true);
+        mappa.put(Cost.KEY_MAPPA_DESTRA_LISTA, colonne);
+        testoPagina += A_CAPO;
+        testoPagina += LibWiki.creaTable(mappa);
+        new RequestWikiWrite(PAGINA_PROVA, testoPagina, "", wikiLogin);
+
+
+
     }// end of single test
 
 

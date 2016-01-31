@@ -1,5 +1,6 @@
 package it.algos.vaad.wiki.request;
 
+import it.algos.vaad.VaadApp;
 import it.algos.vaad.wiki.LibWiki;
 import it.algos.vaad.wiki.TipoRisultato;
 import it.algos.vaad.wiki.WikiLogin;
@@ -141,6 +142,10 @@ public class RequestWikiWrite extends RequestWiki {
             wikiLogin = (WikiLogin) LibSession.getAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION);
         }// end of if/else cycle
 
+        if (wikiLogin == null) {
+            wikiLogin = VaadApp.WIKI_LOGIN;
+        }// end of if cycle
+
         if (needLogin && wikiLogin == null) {
             risultato = TipoRisultato.noLogin;
             valida = false;
@@ -158,6 +163,7 @@ public class RequestWikiWrite extends RequestWiki {
         String titolo = "";
         String tag = "https://it.wikipedia.org/w/api.php?format=json&formatversion=2&action=edit";
 
+        tag += API_ASSERT;
         try { // prova ad eseguire il codice
             titolo = URLEncoder.encode(wikiTitle, "UTF-8");
         } catch (Exception unErrore) { // intercetta l'errore

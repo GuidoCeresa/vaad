@@ -2701,6 +2701,20 @@ public abstract class LibWiki {
         return listaColonneSort;
     }// fine del metodo
 
+
+    @SuppressWarnings("all")
+    private static ArrayList<Boolean> getColonneDestra(HashMap mappa) {
+        ArrayList<Boolean> listaColonneDestra = null;
+
+        if (mappa.get(Cost.KEY_MAPPA_DESTRA_LISTA) != null) {
+            if (mappa.get(Cost.KEY_MAPPA_DESTRA_LISTA) instanceof ArrayList) {
+                listaColonneDestra = (ArrayList) mappa.get(Cost.KEY_MAPPA_DESTRA_LISTA);
+            }// fine del blocco if
+        }// end of if cycle
+
+        return listaColonneDestra;
+    }// fine del metodo
+
     private static String creaTableSingoloTitolo(HashMap mappa, String nome, boolean colonnaSortable, boolean coloriScuri) {
         String titolo = VUOTA;
         String tagNormale = PIPE;
@@ -2749,6 +2763,7 @@ public abstract class LibWiki {
     private static String creaTableBody(HashMap mappa) {
         String body = VUOTA;
         ArrayList<ArrayList> listaRighe = getRighe(mappa);
+        ArrayList<Boolean> listaColonneDestra = getColonneDestra(mappa);
         String tagRiga = "|-";
         String tagCampo = PIPE;
         int pos = 0;
@@ -2764,7 +2779,7 @@ public abstract class LibWiki {
                     if (numProg) {
                         body += rigaProg(pos, tagCampo);
                     }// fine del blocco if
-                    body += creaTableRiga(singolaRiga, pos, listaColonneSort);
+                    body += creaTableRiga(singolaRiga, pos, listaColonneSort, listaColonneDestra);
                     body = LibText.levaCoda(body, tagCampo);
                     body += A_CAPO;
                 }// end of for cycle
@@ -2795,7 +2810,7 @@ public abstract class LibWiki {
      * I numeri sono sempre allineati a destra
      * Sono formattati se la colonna NON è sortable
      */
-    private static String creaTableRiga(ArrayList singolaRiga, int pos, ArrayList<Boolean> listaColonneSort) {
+    private static String creaTableRiga(ArrayList singolaRiga, int pos, ArrayList<Boolean> listaColonneSort, ArrayList<Boolean> listaColonneDestra) {
         String body = VUOTA;
         String tagCampo = PIPE;
         String value = "";
@@ -2804,11 +2819,16 @@ public abstract class LibWiki {
         boolean allineatoADestra = false;
         boolean colonnaSortable = false;
         Object cella;
+        boolean destraObbligatoria = false;
 
         for (int k = 0; k < singolaRiga.size(); k++) {
             cella = singolaRiga.get(k);
             colonnaSortable = listaColonneSort.get(k);
             allineatoADestra = false;
+            if (listaColonneDestra != null && listaColonneDestra.size() == singolaRiga.size()) {
+                destraObbligatoria = listaColonneDestra.get(k);
+            }// end of if cycle
+
             if (cella instanceof Number) {
                 numero = true;
                 allineatoADestra = true;
@@ -2824,7 +2844,7 @@ public abstract class LibWiki {
                 value = (String) cella;
             }// end of if cycle
 
-            if (allineatoADestra) {
+            if (allineatoADestra || destraObbligatoria) {
                 body += tagCampo;
                 body += TXT_ALIGN;
             }// fine del blocco if

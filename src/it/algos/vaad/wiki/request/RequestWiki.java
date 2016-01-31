@@ -1,12 +1,12 @@
 package it.algos.vaad.wiki.request;
 
+import it.algos.vaad.VaadApp;
 import it.algos.vaad.wiki.*;
 import it.algos.webbase.web.lib.LibSession;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -31,36 +31,27 @@ import java.util.LinkedHashMap;
 public abstract class RequestWiki extends Request {
 
 
+    private static final String TAG_PRELINARY = "&action=query&meta=tokens";
     //--codifica dei caratteri
     protected static String ENCODE = "UTF-8";
-
     //--language selezionato (per adesso solo questo)
     protected static String LANGUAGE = "it";
-
     //--progetto selezionato (per adesso solo questo)
     protected static String PROJECT = "wikipedia";
-
     /* suffisso per il formato della risposta */
     protected static String API_FORMAT = "format=" + Cost.FORMAT.toString() + "&formatversion=2";
-
     /* azione API generica */
     protected static String API_ACTION = "&action=";
-
     /* azione API specifica */
     protected static String API_QUERY = "query";
     protected static String API_ASSERT = "&assert=bot";
-
     //--stringa iniziale (sempre valida) del DOMAIN a cui aggiungere le ulteriori specifiche
     protected static String API_BASE = Cost.API_HTTP + LANGUAGE + Cost.API_WIKI + PROJECT + Cost.API_PHP + API_FORMAT;
-
     // tag per la costruzione della stringa della request
     protected static String TAG_PROP = Cost.CONTENT_ALL;
     protected static String TAG_TITOLO = "&titles=";
     protected static String TAG_PAGEID = "&pageids=";
     protected static String CSRF_TOKEN = "csrftoken";
-
-    private static final String TAG_PRELINARY = "&action=query&meta=tokens";
-
     //--tipo di ricerca della pagina
     //--di default il titolo
     protected TipoRicerca tipoRicerca = TipoRicerca.title;
@@ -110,8 +101,13 @@ public abstract class RequestWiki extends Request {
      */
     @Override
     protected void doRequest() {
+
         if (wikiLogin == null) {
             wikiLogin = (WikiLogin) LibSession.getAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION);
+        }// end of if cycle
+
+        if (wikiLogin == null) {
+            wikiLogin = VaadApp.WIKI_LOGIN;
         }// end of if cycle
 
         if (needLogin) {
@@ -123,7 +119,7 @@ public abstract class RequestWiki extends Request {
         if (needToken) {
             try { // prova ad eseguire il codice
                 if (preliminaryRequest()) {
-                    super.doRequest();
+//                    super.doRequest();
                 } else {
                     valida = false;
                     if (risultato != TipoRisultato.mustbeposted) {
@@ -149,6 +145,7 @@ public abstract class RequestWiki extends Request {
         BufferedReader readBuffer;
         StringBuilder textBuffer = new StringBuilder();
         String stringa;
+        String risposta = "";
 
         //--connessione
         urlConn = creaConnessionePreliminary();
@@ -177,9 +174,10 @@ public abstract class RequestWiki extends Request {
         readBuffer.close();
         inputReader.close();
         input.close();
+        risposta = textBuffer.toString();
 
         // controlla il valore di ritorno della request e regola il risultato
-        return elaboraRispostaPreliminary(textBuffer.toString());
+        return elaboraRispostaPreliminary(risposta);
     } // fine del metodo
 
     /**
@@ -191,19 +189,19 @@ public abstract class RequestWiki extends Request {
     protected URLConnection creaConnessionePreliminary() throws Exception {
         URLConnection urlConn = null;
         String domain = this.getDomainPreliminary();
+        String txtCookies = "";
 
+        domain+="&assert=bot";
         if (domain != null && !domain.equals("")) {
             urlConn = new URL(domain).openConnection();
             urlConn.setDoOutput(true);
         }// end of if cycle
 
 
-        String txtCookies = "";
-
         // regola le property
         if (wikiLogin != null) {
             txtCookies = wikiLogin.getStringCookies();
-            urlConn.setRequestProperty("Cookie", txtCookies);
+//            urlConn.setRequestProperty("Cookie", txtCookies);
         }// end of if cycle
 
         return urlConn;

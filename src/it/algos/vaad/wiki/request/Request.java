@@ -96,6 +96,7 @@ public abstract class Request {
         BufferedReader readBuffer;
         StringBuilder textBuffer = new StringBuilder();
         String stringa;
+        String risposta;
 
         //--Connessione
         urlConn = creaConnessione();
@@ -126,7 +127,8 @@ public abstract class Request {
         input.close();
 
         // controlla il valore di ritorno della request e regola il risultato
-        elaboraRisposta(textBuffer.toString());
+        risposta = textBuffer.toString();
+        elaboraRisposta(risposta);
     } // fine del metodo
 
 
@@ -152,8 +154,12 @@ public abstract class Request {
         if (domain != null && !domain.equals("")) {
             urlConn = new URL(domain).openConnection();
             urlConn.setDoOutput(true);
-        }// end of if cycle
+            urlConn.setRequestProperty("Accept-Encoding", "GZIP");
+            urlConn.setRequestProperty("Content-Encoding", "GZIP");
+            urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+            urlConn.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; PPC Mac OS X; it-it) AppleWebKit/418.9 (KHTML, like Gecko) Safari/419.3");
 
+        }// end of if cycle
         return urlConn;
     } // fine del metodo
 
