@@ -119,7 +119,7 @@ public abstract class RequestWiki extends Request {
         if (needToken) {
             try { // prova ad eseguire il codice
                 if (preliminaryRequest()) {
-//                    super.doRequest();
+                    super.doRequest();
                 } else {
                     valida = false;
                     if (risultato != TipoRisultato.mustbeposted) {
@@ -201,7 +201,7 @@ public abstract class RequestWiki extends Request {
         // regola le property
         if (wikiLogin != null) {
             txtCookies = wikiLogin.getStringCookies();
-//            urlConn.setRequestProperty("Cookie", txtCookies);
+            urlConn.setRequestProperty("Cookie", txtCookies);
         }// end of if cycle
 
         return urlConn;
@@ -255,7 +255,6 @@ public abstract class RequestWiki extends Request {
         URLConnection urlConn = super.creaConnessione();
         String txtCookies = "";
 
-        wikiLogin=new WikiLogin("Gac","alfa");
         // regola le property
         if (wikiLogin != null) {
             txtCookies = wikiLogin.getStringCookies();

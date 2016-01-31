@@ -678,8 +678,6 @@ public class RequestTest extends VaadTest {
         //--login obbligatorio
         setLogin();
 
-//        request = new RequestWikiWrite(TITOLO_3, "Prova di scrittura2", "test iniziale", wikiLogin);
-
         //--recupera il testo esistente per partire da una situazione pulita
         testoIniziale = Api.leggeVoce(TITOLO_3);
 
@@ -702,7 +700,7 @@ public class RequestTest extends VaadTest {
         testoA = testoIniziale + "x";
         request = new RequestWikiWrite(TITOLO_3, testoA, summaryA, wikiLogin);
         assertTrue(request.isValida());
-        assertEquals(request.getRisultato(), TipoRisultato.registrata);
+        assertEquals(request.getRisultato(), TipoRisultato.modificaRegistrata);
 
         request = new RequestWikiWrite(TITOLO_3, testoA, summaryA, wikiLogin);
         assertTrue(request.isValida());
@@ -711,7 +709,7 @@ public class RequestTest extends VaadTest {
         testoB = testoIniziale;
         request = new RequestWikiWrite(TITOLO_3, testoB, summaryB, wikiLogin);
         assertTrue(request.isValida());
-        assertEquals(request.getRisultato(), TipoRisultato.registrata);
+        assertEquals(request.getRisultato(), TipoRisultato.modificaRegistrata);
 
         request = new RequestWikiWrite(TITOLO_3, testoB, summaryB, wikiLogin);
         assertTrue(request.isValida());
