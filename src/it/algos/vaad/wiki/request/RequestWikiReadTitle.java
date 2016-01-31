@@ -39,7 +39,7 @@ public class RequestWikiReadTitle extends RequestWikiRead {
             domain +=  TAG_TITOLO + URLEncoder.encode(wikiTitle, ENCODE);
         } catch (Exception unErrore) { // intercetta l'errore
         }// fine del blocco try-catch
-domain+=API_ASSERT;
+domain="https://it.wikipedia.org/w/api.php?format=json&formatversion=2&action=query&meta=tokens";
         return domain;
     } // fine del metodo
 

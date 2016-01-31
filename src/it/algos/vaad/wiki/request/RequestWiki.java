@@ -191,7 +191,7 @@ public abstract class RequestWiki extends Request {
         String domain = this.getDomainPreliminary();
         String txtCookies = "";
 
-        domain+="&assert=bot";
+//        domain+="&assert=bot";
         if (domain != null && !domain.equals("")) {
             urlConn = new URL(domain).openConnection();
             urlConn.setDoOutput(true);
@@ -255,6 +255,7 @@ public abstract class RequestWiki extends Request {
         URLConnection urlConn = super.creaConnessione();
         String txtCookies = "";
 
+        wikiLogin=new WikiLogin("Gac","alfa");
         // regola le property
         if (wikiLogin != null) {
             txtCookies = wikiLogin.getStringCookies();
