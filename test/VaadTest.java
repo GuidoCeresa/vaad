@@ -1,3 +1,4 @@
+import it.algos.vaad.VaadApp;
 import it.algos.vaad.wiki.Page;
 import it.algos.vaad.wiki.PagePar;
 import it.algos.vaad.wiki.TipoRisultato;
@@ -13,11 +14,11 @@ import java.util.List;
  */
 public abstract class VaadTest {
 
+    protected final static String A_CAPO = "\n";
+    protected final static String SPAZIO = " ";
     // alcuni valori da soddisfare
     protected static int PARAMETRI_LETTI_DAL_SERVER = 18;
     protected static int PARAMETRI_PER_DATABASE = 16;
-
-
     // alcuni valori di prova
     protected static String TITOLO = "Nicola Conte (ufficiale)";
     protected static String TITOLO_2 = "Credito Sammarinese";
@@ -32,18 +33,15 @@ public abstract class VaadTest {
     protected static String TITOLO_BACK = "Stefano Corti";
     protected static String TITOLO_MODULO = "Modulo:Bio/Plurale_attività";
     protected static String SUMMARY = "Sola scrittura";
-
     protected static int PAGEID = 698528;
     protected static int PAGEID_UTF8 = 2286987;
     protected static int PAGEID_ERRATO = 289455234;
     protected static String PAGEID_COME_STRINGA = "698528";
-
     protected static String TITOLO_WEB = "http://www.quattroprovince.it/";
     //    protected static String TITOLO_WEB_ERRATO = "http://www.treprovincex.it/";
     protected static String TITOLO_WEB_ERRATO = "http://www.pippozbelloz.it/";
     protected static String CONTENUTO_WEB = "http://www.danielapossenti.it/quattroprovince/";
     protected static String TAG_ERRORE = "UnknownHostException";
-
     protected static String TITOLO_CAT_BREVE = "Eventi del 1902";
     protected static String TITOLO_CAT_ERRATA = "Eventi del 2902";
     protected static String TITOLO_CAT_MEDIA = "Nati nel 1420";
@@ -91,9 +89,6 @@ public abstract class VaadTest {
     protected TipoRisultato risultatoOttenuto = null;
     protected ArrayList<Long> listaLong = null;
     protected ArrayList<String> listaString = null;
-
-    protected final static String A_CAPO= "\n";
-    protected final static String SPAZIO= " ";
     protected WikiLogin wikiLogin = null;
 
     // Login logic here
@@ -103,6 +98,7 @@ public abstract class VaadTest {
 
         if (wikiLogin == null) {
             wikiLogin = new WikiLogin(nick, password);
+            VaadApp.WIKI_LOGIN = wikiLogin;
         }// end of if cycle
     } // fine del metodo iniziale
 
