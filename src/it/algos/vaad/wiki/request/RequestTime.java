@@ -21,9 +21,6 @@ public class RequestTime extends ARequest {
     //--stringa (separata da pipe oppure da virgola) delle pageids
     private String stringaPageIds;
 
-    //--lista di wrapper con pagesid e timestamp
-    private ArrayList<WrapTime> listaWrapTime;
-    private ArrayList<WrapTime> listaWrapTimeMissing;
 
 
     /**
@@ -102,19 +99,5 @@ public class RequestTime extends ARequest {
 
     } // fine del metodo
 
-    public ArrayList<WrapTime> getListaWrapTime() {
-        return listaWrapTime;
-    }// end of getter method
 
-    public void setListaWrapTime(ArrayList<WrapTime> listaWrapTime) {
-        this.listaWrapTime = listaWrapTime;
-    }//end of setter method
-
-    public ArrayList<WrapTime> getListaWrapTimeMissing() {
-        return listaWrapTimeMissing;
-    }// end of getter method
-
-    public void setListaWrapTimeMissing(ArrayList<WrapTime> listaWrapTimeMissing) {
-        this.listaWrapTimeMissing = listaWrapTimeMissing;
-    }//end of setter method
 } // fine della classe

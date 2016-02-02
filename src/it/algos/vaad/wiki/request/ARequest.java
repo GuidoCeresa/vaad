@@ -2,6 +2,7 @@ package it.algos.vaad.wiki.request;
 
 import it.algos.vaad.VaadApp;
 import it.algos.vaad.wiki.*;
+import it.algos.webbase.web.lib.LibArray;
 import it.algos.webbase.web.lib.LibSession;
 
 import java.io.BufferedReader;
@@ -11,6 +12,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -104,6 +106,21 @@ public abstract class ARequest {
     // token ottenuto dalla preliminaryRequest ed usato per Edit e Move
     protected String csrfToken;
 
+    // liste di pagine
+    protected ArrayList<Long> listaPaginePageids;
+    protected ArrayList<String> listaPagineTitles;
+
+    // liste di voci della categoria (namespace=0)
+    protected ArrayList<Long> listaVociPageids;
+    protected ArrayList<String> listaVociTitles;
+
+    // liste di sottocategorie della categoria (namespace=14)
+    protected ArrayList<Long> listaCatPageids;
+    protected ArrayList<String> listaCatTitles;
+
+    //--lista di wrapper con pagesid e timestamp
+    protected ArrayList<WrapTime> listaWrapTime;
+    protected ArrayList<WrapTime> listaWrapTimeMissing;
 
     /**
      * Costruttore
@@ -456,4 +473,37 @@ public abstract class ARequest {
     public void setTestoResponse(String testoResponse) {
         this.testoResponse = testoResponse;
     }//end of setter method
+
+    public ArrayList<Long> getListaVociPageids() {
+        return listaVociPageids;
+    }// end of getter method
+
+    public ArrayList<String> getListaVociTitles() {
+        return listaVociTitles;
+    }// end of getter method
+
+    public ArrayList<Long> getListaCatPageids() {
+        return listaCatPageids;
+    }// end of getter method
+
+    public ArrayList<String> getListaCatTitles() {
+        return listaCatTitles;
+    }// end of getter method
+
+    public ArrayList<Long> getListaAllPageids() {
+        return LibArray.somma(getListaVociPageids(), getListaCatPageids());
+    }// end of getter method
+
+    public ArrayList<String> getListaAllTitles() {
+        return LibArray.somma(getListaVociTitles(), getListaCatTitles());
+    }// end of getter method
+
+    public ArrayList<WrapTime> getListaWrapTime() {
+        return listaWrapTime;
+    }// end of getter method
+
+    public ArrayList<WrapTime> getListaWrapTimeMissing() {
+        return listaWrapTimeMissing;
+    }// end of getter method
+
 } // fine della classe

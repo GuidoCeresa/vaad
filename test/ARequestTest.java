@@ -18,18 +18,14 @@ import static org.junit.Assert.*;
  */
 public class ARequestTest extends VaadTest {
 
-    private ARequest request;
-    private RequestCat requestCat;
-    private RequestTime requestTime;
-
     private static final Long[] listaPageIdsForArray = {3397115L, 4452510L, 1691379L, 3520373L, 4956588L, 5136975L, 2072357L, 4700355L};
     private static final long[] listaPageIds = {3397115L, 4452510L, 1691379L, 3520373L, 4956588L, 5136975L, 2072357L, 4700355L};
     private static final String pipe = "|";
     private static final String virgola = ",";
-
     private static String pageIdsPipe;
     private static String pageIdsVirgola;
     private static ArrayList<Long> arrayPageIds;
+    private ARequest request;
     private ArrayList<WrapTime> lista;
 
 
@@ -155,65 +151,59 @@ public class ARequestTest extends VaadTest {
     @Test
     public void cat() {
         //--login obbligatorio - quindi la prima volta NON funziona
-        requestCat = new RequestCat(TITOLO_CAT_BREVE);
-        assertFalse(requestCat.isValida());
+        request = new RequestCat(TITOLO_CAT_BREVE);
+        assertFalse(request.isValida());
 
         //--effettua il login
         setLogin();
 
         //--login obbligatorio - adesso funziona
-        requestCat = new RequestCat(TITOLO_CAT_BREVE);
-        checkCat(2, 12);
+        request = new RequestCat(TITOLO_CAT_BREVE);
+        checkListeCat(2, 12);
     }// end of single test
 
     @Test
     public void cat2() {
-        requestCat = new RequestCat(TITOLO_CAT_MEDIA);
-        checkCat(36, 0);
+        request = new RequestCat(TITOLO_CAT_MEDIA);
+        checkListeCat(36, 0);
     }// end of single test
 
 
     @Test
-    public void timestamp() {
-        requestTime = new RequestTime(arrayPageIds);
-        assertTrue(requestTime.isValida());
-        assertEquals(requestTime.getRisultato(), TipoRisultato.letta);
-        ottenuto = requestTime.getTestoResponse();
+    public void time() {
+        request = new RequestTime(arrayPageIds);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
         assertNull(ottenuto);
-        lista = requestTime.getListaWrapTime();
+        lista = request.getListaWrapTime();
         assertNotNull(lista);
         assertEquals(lista.size(), 8);
 
-        requestTime = new RequestTime(listaPageIds);
-        assertTrue(requestTime.isValida());
-        assertEquals(requestTime.getRisultato(), TipoRisultato.letta);
-        ottenuto = requestTime.getTestoResponse();
+        request = new RequestTime(listaPageIds);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
         assertNull(ottenuto);
-        lista = requestTime.getListaWrapTime();
+        lista = request.getListaWrapTime();
         assertNotNull(lista);
         assertEquals(lista.size(), 8);
+    }// end of single test
 
-//        request = new RequestTime(arrayPageIds);
-//        assertTrue(request.isValida());
-//        assertEquals(request.getRisultato(), TipoRisultato.letta);
-//        ottenuto = request.getTestoResponse();
-//        assertNotNull(ottenuto);
-//        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
-//        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
-//        lista = request.getListaWrapTime();
-//        assertNotNull(lista);
-//        assertEquals(lista.size(), 8);
-//
-//        request = new RequestTime(arrayPageIds);
-//        assertTrue(request.isValida());
-//        assertEquals(request.getRisultato(), TipoRisultato.letta);
-//        ottenuto = request.getTestoResponse();
-//        assertNotNull(ottenuto);
-//        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
-//        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
-//        lista = request.getListaWrapTime();
-//        assertNotNull(lista);
-//        assertEquals(lista.size(), 8);
+
+    @Test
+    public void links() {
+        request = new RequestLinks(TITOLO_BACK);
+        checkListeTime(12, 10);
+
+        request = new RequestLinks(TITOLO_2);
+        checkListeTime(3, 0);
+
+        request = new RequestLinks(TITOLO_ERRATO);
+        ottenutoNullo();
+
+        request = new RequestLinks(TITOLO_ALTRO);
+        checkListeTime(1, 0);
     }// end of single test
 
     private void ottenutoNullo() {
@@ -221,24 +211,29 @@ public class ARequestTest extends VaadTest {
         assertEquals(request.getRisultato(), TipoRisultato.nonTrovata);
         ottenuto = request.getTestoResponse();
         assertNull(ottenuto);
-    }// end of single test
+    }// fine del metodo
 
     private void checkValidaLetta() {
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.letta);
         ottenuto = request.getTestoResponse();
         checkOttenuto();
-    }// end of single test
+    }// fine del metodo
 
 
     private void checkOttenuto() {
         assertNotNull(ottenuto);
         assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
         assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
-    }// end of single test
+    }// fine del metodo
 
+    private void checkListeCat(int voci, int categorie) {
+    }// fine del metodo
 
-    private void checkCat(int voci, int categorie) {
+    private void checkListeTime(int voci, int categorie) {
+    }// fine del metodo
+
+    private void checkListe(int voci, int categorie, int pagine) {
         ArrayList<Long> listaVociPageids;
         ArrayList<String> listaVociTitles;
         ArrayList<Long> listaCatPageids;
@@ -246,12 +241,12 @@ public class ARequestTest extends VaadTest {
         ArrayList<Long> listaAllPageids;
         ArrayList<String> listaAllTitles;
 
-        assertTrue(requestCat.isValida());
-        assertEquals(requestCat.getRisultato(), TipoRisultato.letta);
-        ottenuto = requestCat.getTestoResponse();
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
         assertNull(ottenuto);
 
-        listaVociPageids = requestCat.getListaVociPageids();
+        listaVociPageids = request.getListaVociPageids();
         if (voci > 0) {
             assertNotNull(listaVociPageids);
             assertEquals(listaVociPageids.size(), voci);
@@ -259,7 +254,7 @@ public class ARequestTest extends VaadTest {
             assertNull(listaVociPageids);
         }// end of if/else cycle
 
-        listaVociTitles = requestCat.getListaVociTitles();
+        listaVociTitles = request.getListaVociTitles();
         if (voci > 0) {
             assertNotNull(listaVociTitles);
             assertEquals(listaVociTitles.size(), voci);
@@ -267,7 +262,7 @@ public class ARequestTest extends VaadTest {
             assertNull(listaVociTitles);
         }// end of if/else cycle
 
-        listaCatPageids = requestCat.getListaCatPageids();
+        listaCatPageids = request.getListaCatPageids();
         if (categorie > 0) {
             assertNotNull(listaCatPageids);
             assertEquals(listaCatPageids.size(), categorie);
@@ -275,7 +270,7 @@ public class ARequestTest extends VaadTest {
             assertNull(listaCatPageids);
         }// end of if/else cycle
 
-        listaCatTitles = requestCat.getListaCatTitles();
+        listaCatTitles = request.getListaCatTitles();
         if (categorie > 0) {
             assertNotNull(listaCatTitles);
             assertEquals(listaCatTitles.size(), categorie);
@@ -283,7 +278,7 @@ public class ARequestTest extends VaadTest {
             assertNull(listaCatTitles);
         }// end of if/else cycle
 
-        listaAllPageids = requestCat.getListaAllPageids();
+        listaAllPageids = request.getListaAllPageids();
         if (voci + categorie > 0) {
             assertNotNull(listaAllPageids);
             assertEquals(listaAllPageids.size(), voci + categorie);
@@ -291,13 +286,13 @@ public class ARequestTest extends VaadTest {
             assertNull(listaAllPageids);
         }// end of if/else cycle
 
-        listaAllTitles = requestCat.getListaAllTitles();
+        listaAllTitles = request.getListaAllTitles();
         if (voci + categorie > 0) {
             assertNotNull(listaAllTitles);
             assertEquals(listaAllTitles.size(), voci + categorie);
         } else {
             assertNull(listaAllTitles);
         }// end of if/else cycle
-    }// end of single test
+    }// fine del metodo
 
 }// end of testing class

@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 /**
  * Superclasse astratta per le Request sul Web
@@ -38,6 +39,7 @@ public abstract class Request {
 
     //--contenuto testuale completo della risposta (la seconda, se ci sono due request)
     protected String testoResponse;
+
 
     /**
      * Costruttore

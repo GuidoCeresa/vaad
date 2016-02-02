@@ -36,20 +36,13 @@ public class RequestCat extends ARequest {
     protected static String TAG_LIMIT = "&cmlimit=";
 
     //--stringa per indicare il titolo della pagina
-    protected static String TITLE = "&cmtitle=Category:";
+    protected static String TAG_TITOLO_CAT = "&cmtitle=Category:";
 
     //--stringa per il successivo inizio della lista
     private static String CONTINUE = "&cmcontinue=";
 
     protected int limite;
 
-    // liste di pagine della categoria (namespace=0)
-    private ArrayList<Long> listaVociPageids;
-    private ArrayList<String> listaVociTitles;
-
-    // liste di sottocategorie della categoria (namespace=14)
-    private ArrayList<Long> listaCatPageids;
-    private ArrayList<String> listaCatTitles;
 
 
     /**
@@ -90,7 +83,7 @@ public class RequestCat extends ARequest {
         String domainTmp = API_BASE + API_ACTION + API_QUERY + CAT + TYPE_ALL;
 
         if (wikiTitle != null && !wikiTitle.equals("")) {
-            domainTmp += TITLE + titleEncoded();
+            domainTmp += TAG_TITOLO_CAT + titleEncoded();
         }// end of if/else cycle
 
         if (needBot) {
@@ -161,28 +154,5 @@ public class RequestCat extends ARequest {
     } // fine del metodo
 
 
-    public ArrayList<Long> getListaVociPageids() {
-        return listaVociPageids;
-    }// end of getter method
-
-    public ArrayList<String> getListaVociTitles() {
-        return listaVociTitles;
-    }// end of getter method
-
-    public ArrayList<Long> getListaCatPageids() {
-        return listaCatPageids;
-    }// end of getter method
-
-    public ArrayList<String> getListaCatTitles() {
-        return listaCatTitles;
-    }// end of getter method
-
-    public ArrayList<Long> getListaAllPageids() {
-        return LibArray.somma(listaVociPageids, listaCatPageids);
-    }// end of getter method
-
-    public ArrayList<String> getListaAllTitles() {
-        return LibArray.somma(listaVociTitles, listaCatTitles);
-    }// end of getter method
 
 } // fine della classe
