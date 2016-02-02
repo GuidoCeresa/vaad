@@ -158,6 +158,8 @@ public abstract class ARequest {
 
             cicloRequest();
         } catch (Exception unErrore) { // intercetta l'errore
+            valida = false;
+            risultato = TipoRisultato.nonTrovata;
             String errore = unErrore.getMessage();
             String errore2 = unErrore.getClass().getSimpleName();
         }// fine del blocco try-catch
@@ -387,7 +389,7 @@ public abstract class ARequest {
     protected void elaboraRisposta(String rispostaRequest) {
         HashMap<String, Object> mappa = LibWiki.creaMappaQuery(rispostaRequest);
         tokenContinua = "";
-        testoResponse = "";
+        testoResponse = null;
 
         if (mappa != null) {
             if (mappa.get(PagePar.title.toString()) == null) {

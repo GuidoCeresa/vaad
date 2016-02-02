@@ -37,10 +37,10 @@ public abstract class VaadTest {
     protected static int PAGEID_UTF8 = 2286987;
     protected static int PAGEID_ERRATO = 289455234;
     protected static String PAGEID_COME_STRINGA = "698528";
-    protected static String TITOLO_WEB = "http://www.quattroprovince.it/";
+    protected static String TITOLO_WEB = "http://www.algos.it/estudio";
     //    protected static String TITOLO_WEB_ERRATO = "http://www.treprovincex.it/";
     protected static String TITOLO_WEB_ERRATO = "http://www.pippozbelloz.it/";
-    protected static String CONTENUTO_WEB = "http://www.danielapossenti.it/quattroprovince/";
+    protected static String CONTENUTO_WEB = "<title>Estudio mobile office</title>";
     protected static String TAG_ERRORE = "UnknownHostException";
     protected static String TITOLO_CAT_BREVE = "Eventi del 1902";
     protected static String TITOLO_CAT_ERRATA = "Eventi del 2902";

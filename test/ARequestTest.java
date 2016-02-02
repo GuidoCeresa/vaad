@@ -1,9 +1,11 @@
 import it.algos.vaad.wiki.Page;
 import it.algos.vaad.wiki.PagePar;
 import it.algos.vaad.wiki.TipoRisultato;
-import it.algos.vaad.wiki.request.ARequest;
-import it.algos.vaad.wiki.request.RequestCat;
-import it.algos.vaad.wiki.request.RequestRead;
+import it.algos.vaad.wiki.WrapTime;
+import it.algos.vaad.wiki.request.*;
+import it.algos.webbase.web.lib.LibArray;
+import it.algos.webbase.web.lib.LibText;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -15,8 +17,61 @@ import static org.junit.Assert.*;
  * .
  */
 public class ARequestTest extends VaadTest {
+
     private ARequest request;
     private RequestCat requestCat;
+    private RequestTime requestTime;
+
+    private static final Long[] listaPageIdsForArray = {3397115L, 4452510L, 1691379L, 3520373L, 4956588L, 5136975L, 2072357L, 4700355L};
+    private static final long[] listaPageIds = {3397115L, 4452510L, 1691379L, 3520373L, 4956588L, 5136975L, 2072357L, 4700355L};
+    private static final String pipe = "|";
+    private static final String virgola = ",";
+
+    private static String pageIdsPipe;
+    private static String pageIdsVirgola;
+    private static ArrayList<Long> arrayPageIds;
+    private ArrayList<WrapTime> lista;
+
+
+    @Before
+    @SuppressWarnings("all")
+    // Setup logic here
+    public void setUp() {
+        pageIdsPipe = "";
+        pageIdsVirgola = "";
+
+        for (Long lungo : listaPageIds) {
+            pageIdsPipe += lungo;
+            pageIdsPipe += pipe;
+        } // fine del ciclo for-each
+        pageIdsPipe = LibText.levaCoda(pageIdsPipe, pipe);
+
+        for (Long lungo : listaPageIds) {
+            pageIdsVirgola += lungo;
+            pageIdsVirgola += virgola;
+        } // fine del ciclo for-each
+        pageIdsVirgola = LibText.levaCoda(pageIdsVirgola, virgola);
+
+        arrayPageIds = (ArrayList) LibArray.fromLong(listaPageIds);
+    } // fine del metodo iniziale
+
+    @Test
+    public void web() {
+        request = new RequestWeb(TITOLO_WEB_ERRATO);
+        assertFalse(request.isValida());
+        risultatoOttenuto = request.getRisultato();
+        assertEquals(risultatoOttenuto, TipoRisultato.nonTrovata);
+        ottenuto = request.getTestoResponse();
+        assertNull(ottenuto);
+
+        request = new RequestWeb(TITOLO_WEB);
+        assertTrue(request.isValida());
+        risultatoOttenuto = request.getRisultato();
+        assertEquals(risultatoOttenuto, TipoRisultato.letta);
+        ottenuto = request.getTestoResponse();
+        assertNotNull(ottenuto);
+        assertTrue(ottenuto.contains(CONTENUTO_WEB));
+    }// end of single test
 
     @Test
     public void read() {
@@ -118,12 +173,54 @@ public class ARequestTest extends VaadTest {
     }// end of single test
 
 
+    @Test
+    public void timestamp() {
+        requestTime = new RequestTime(arrayPageIds);
+        assertTrue(requestTime.isValida());
+        assertEquals(requestTime.getRisultato(), TipoRisultato.letta);
+        ottenuto = requestTime.getTestoResponse();
+        assertNull(ottenuto);
+        lista = requestTime.getListaWrapTime();
+        assertNotNull(lista);
+        assertEquals(lista.size(), 8);
+
+        requestTime = new RequestTime(listaPageIds);
+        assertTrue(requestTime.isValida());
+        assertEquals(requestTime.getRisultato(), TipoRisultato.letta);
+        ottenuto = requestTime.getTestoResponse();
+        assertNull(ottenuto);
+        lista = requestTime.getListaWrapTime();
+        assertNotNull(lista);
+        assertEquals(lista.size(), 8);
+
+//        request = new RequestTime(arrayPageIds);
+//        assertTrue(request.isValida());
+//        assertEquals(request.getRisultato(), TipoRisultato.letta);
+//        ottenuto = request.getTestoResponse();
+//        assertNotNull(ottenuto);
+//        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
+//        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
+//        lista = request.getListaWrapTime();
+//        assertNotNull(lista);
+//        assertEquals(lista.size(), 8);
+//
+//        request = new RequestTime(arrayPageIds);
+//        assertTrue(request.isValida());
+//        assertEquals(request.getRisultato(), TipoRisultato.letta);
+//        ottenuto = request.getTestoResponse();
+//        assertNotNull(ottenuto);
+//        assertTrue(ottenuto.startsWith(TAG_INI_PAGINA));
+//        assertTrue(ottenuto.endsWith(TAG_END_PAGINA));
+//        lista = request.getListaWrapTime();
+//        assertNotNull(lista);
+//        assertEquals(lista.size(), 8);
+    }// end of single test
+
     private void ottenutoNullo() {
         assertFalse(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.nonTrovata);
         ottenuto = request.getTestoResponse();
-        assertNotNull(ottenuto);
-        assertTrue(ottenuto.equals(""));
+        assertNull(ottenuto);
     }// end of single test
 
     private void checkValidaLetta() {
@@ -152,7 +249,7 @@ public class ARequestTest extends VaadTest {
         assertTrue(requestCat.isValida());
         assertEquals(requestCat.getRisultato(), TipoRisultato.letta);
         ottenuto = requestCat.getTestoResponse();
-        assertNotNull(ottenuto);
+        assertNull(ottenuto);
 
         listaVociPageids = requestCat.getListaVociPageids();
         if (voci > 0) {
