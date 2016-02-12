@@ -711,15 +711,23 @@ public abstract class LibWiki {
             return null;
         }// fine del blocco if
 
-        //recupera i valori dei parametri base (3) ed info (1)
+        //recupera i valori dei parametri di login
         if (objectAll.get(LOGIN) != null && objectAll.get(LOGIN) instanceof JSONObject) {
             objectQuery = (JSONObject) objectAll.get(LOGIN);
+        }// fine del blocco if
+
+        //recupera i valori dei parametri di login
+        if (objectAll.get(QUERY) != null && objectAll.get(QUERY) instanceof JSONObject) {
+            objectQuery = (JSONObject) objectAll.get(QUERY);
+        }// fine del blocco if
+
+        if (objectQuery != null && objectQuery.size() > 0) {
             mappa = new HashMap<String, Object>();
 
             for (Object key : objectQuery.keySet()) {
                 mappa.put((String) key, objectQuery.get(key));
             } // fine del ciclo for-each
-        }// fine del blocco if
+        }// end of if cycle
 
         return mappa;
     } // fine del metodo

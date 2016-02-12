@@ -201,9 +201,9 @@ public class WikiLogin {
         }// fine del blocco try-catch
 
         // now we send the data POST
-        testoPost = this.getPrimoPost();
-        out.print(testoPost);
-        out.close();
+//        testoPost = this.getPrimoPost();
+//        out.print(testoPost);
+//        out.close();
 
         // regola l'entrata
         try { // prova ad eseguire il codice
@@ -275,6 +275,8 @@ public class WikiLogin {
             domain += Cost.API_FORMAT;
         }// fine del blocco if
 
+        domain="https://it.wikipedia.org/w/api.php?action=login&format=json&formatversion=2";
+        domain="https://it.wikipedia.org/w/api.php?action=query&meta=tokens&type=login&format=json&formatversion=2";
         return domain;
     } // fine del metodo
 

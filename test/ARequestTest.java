@@ -5,6 +5,7 @@ import it.algos.vaad.wiki.WrapTime;
 import it.algos.vaad.wiki.request.*;
 import it.algos.webbase.web.lib.LibArray;
 import it.algos.webbase.web.lib.LibText;
+import it.algos.webbase.web.query.AQuery;
 import org.junit.Before;
 import org.junit.Test;
 
