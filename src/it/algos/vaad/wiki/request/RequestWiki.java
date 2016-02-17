@@ -152,6 +152,8 @@ public abstract class RequestWiki extends Request {
         urlConn = creaConnessionePreliminary();
 
         //--manda i cookies ottenuti dal login
+//        LibWiki.uploadCookies(urlConn,cookies);
+
 //        if (needCookies) {
 //            this.uploadCookies(urlConn);
 //        }// end of if cycle
@@ -196,7 +198,7 @@ public abstract class RequestWiki extends Request {
         URLConnection urlConn = null;
         String domain = this.getDomainPreliminary();
         String txtCookies = "";
-
+        HashMap<String, Object> cookiesMap;
 //        domain+="&assert=bot";
         if (domain != null && !domain.equals("")) {
             urlConn = new URL(domain).openConnection();
@@ -206,7 +208,8 @@ public abstract class RequestWiki extends Request {
 
         // regola le property
         if (wikiLogin != null) {
-            txtCookies = wikiLogin.getStringCookies();
+            cookiesMap= wikiLogin.getCookies();
+            txtCookies = LibWiki.creaCookiesText(cookiesMap);
 //            txtCookies=" itwikiUserName=Gac; itwikiSession=qm3mhhgg3i7qnbopdl0lrvtjddtpuac1; itwikiUserID=399; centralauth_User=Gac; centralauth_Session=aa5f3ad00ae724ef5c6ba7096732f950";
 //            txtCookies=" itwikiUserName=Gac; itwikiUserID=399; centralauth_User=Gac; centralauth_Session=aa5f3ad00ae724ef5c6ba7096732f950";
 
@@ -266,12 +269,15 @@ public abstract class RequestWiki extends Request {
     @Override
     protected URLConnection creaConnessione() throws Exception {
         URLConnection urlConn = super.creaConnessione();
+        HashMap<String, Object> mappa = null;
         String txtCookies = "";
 
         // regola le property
         if (wikiLogin != null) {
             txtCookies = wikiLogin.getStringCookies();
-            txtCookies=" itwikiUserName=Gac; itwikiUserID=399; centralauth_User=Gac; centralauth_Session=aa5f3ad00ae724ef5c6ba7096732f950";
+            mappa= wikiLogin.getCookies();
+//            txtCookies=" itwikiUserName=Gac; itwikiUserID=399; centralauth_User=Gac; centralauth_Session=aa5f3ad00ae724ef5c6ba7096732f950";
+            txtCookies= LibWiki.creaCookiesText(mappa);
             urlConn.setRequestProperty("Cookie", txtCookies);
         }// end of if cycle
 

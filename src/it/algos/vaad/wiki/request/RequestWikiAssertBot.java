@@ -58,7 +58,7 @@ public class RequestWikiAssertBot extends RequestWikiAssert {
      */
     @Override
     protected String getDomain() {
-        return super.getDomain() + API_BOT;
+        return "https://it.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&assert=bot";
     } // fine del metodo
 
     /**

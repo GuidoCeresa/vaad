@@ -30,15 +30,16 @@ public class WikiLoginTest {
         assertTrue(wikiLogin.isUser());
         assertFalse(wikiLogin.isBot());
 
-//        wikiLogin = new WikiLogin(NICK_BOT, PASS_BOT);
-//        assertNotNull(wikiLogin);
-//        assertTrue(wikiLogin.isValido());
-//        assertEquals(wikiLogin.getFirstResult(), ErrLogin.needToken);
-//        assertEquals(wikiLogin.getRisultato(), ErrLogin.success);
-//        assertTrue(wikiLogin.getToken().length() > 20);
-//        assertEquals(wikiLogin.getCookieprefix(), "itwiki");
-//        assertTrue(wikiLogin.getSessionId().length() > 20);
-//        assertTrue(wikiLogin.isBot());
+        wikiLogin = new WikiLogin(NICK_BOT, PASS_BOT);
+        assertNotNull(wikiLogin);
+        assertTrue(wikiLogin.isValido());
+        assertEquals(wikiLogin.getFirstResult(), ErrLogin.needToken);
+        assertEquals(wikiLogin.getRisultato(), ErrLogin.success);
+        assertTrue(wikiLogin.getToken().length() > 20);
+        assertEquals(wikiLogin.getCookieprefix(), "itwiki");
+        assertTrue(wikiLogin.getSessionId().length() > 20);
+        assertTrue(wikiLogin.isUser());
+        assertTrue(wikiLogin.isBot());
     }// end of single test
 
 }// end of testing class

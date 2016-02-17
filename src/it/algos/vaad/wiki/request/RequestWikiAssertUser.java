@@ -48,7 +48,7 @@ public class RequestWikiAssertUser extends RequestWikiAssert {
      */
     @Override
     protected String getDomain() {
-        return super.getDomain() + API_USER;
+        return "https://it.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&assert=user";
     } // fine del metodo
 
 

@@ -1,7 +1,9 @@
 package it.algos.vaad.wiki;
 
 import com.vaadin.ui.Notification;
-import it.algos.vaad.wiki.request.QueryCat;
+import it.algos.vaad.wiki.request.RequestWikiAssert;
+import it.algos.vaad.wiki.request.RequestWikiAssertBot;
+import it.algos.vaad.wiki.request.RequestWikiAssertUser;
 import it.algos.webbase.web.lib.LibSession;
 import org.json.simple.JSONObject;
 
@@ -72,6 +74,7 @@ import java.util.HashMap;
  */
 public class WikiLogin {
 
+
     // key to store the Login object in the session
     public static final String WIKI_LOGIN_KEY_IN_SESSION = "wikilogin";
     private static final String FIRST_RESULT = "result";
@@ -84,9 +87,14 @@ public class WikiLogin {
     private static final String SESSION_ID = "sessionid";
     private static final String USER_ID = "lguserid";
     private static final String USER_NAME = "lgusername";
-    protected static String INPUT = "UTF8";
+
+    private static final boolean USA_NEW_LOGIN_TOKEN = false;
+
     //--codifica dei caratteri
+    private static String INPUT = "UTF8";
     private static String ENCODE = "UTF-8";
+    private static String LOGIN = "query&meta=tokens&type=login";
+
     // lingua di default
     private static String LINGUA_DEFAULT = "it";
 
@@ -101,13 +109,6 @@ public class WikiLogin {
 
     private String firstDomain;
     private String secondDomain;
-    private String assertUserDomain;
-    private String assertBotDomain;
-
-    private String firstPost;
-    private String secondPost;
-    private String assertUserPost;
-    private String assertBotPost;
 
     // nome utente (parametro in entrata)
     private String lgname;
@@ -158,7 +159,7 @@ public class WikiLogin {
 
     // mappa dei cookies
     // ci metto tutti i cookies restituiti da URLConnection.responses
-    private HashMap<String, String> cookies;
+    private HashMap<String, Object> cookies;
 
     // flag di controllo per il collegamento come user (equivale al flag valido)
     private boolean user = false;
@@ -166,13 +167,6 @@ public class WikiLogin {
     // flag di controllo per il collegamento come bot
     private boolean bot = false;
 
-//    /**
-//     * Costruttore parziale
-//     */
-//    public WikiLogin() {
-//        this.setLingua(LINGUA_DEFAULT);
-//        this.setProgetto(PROGETTO_DEFAULT);
-//    }// fine del metodo costruttore
 
     /**
      * Costruttore parziale con lingua e progetto standard
@@ -210,12 +204,25 @@ public class WikiLogin {
         try { // prova ad eseguire il codice
             this.preliminaryRequest();
             this.urlRequest();
+//            this.assertRequest();
+            RequestWikiAssert request = new RequestWikiAssertUser(cookies);
+            if (request.isValida()) {
+                this.setUser(true);
+            } else {
+                this.setUser(false);
+            }// end of if/else cycle
+             request = new RequestWikiAssertBot(cookies);
+            if (request.isValida()) {
+                this.setBot(true);
+            } else {
+                this.setBot(false);
+            }// end of if/else cycle
+
         } catch (Exception unErrore) { // intercetta l'errore
             this.setRisultato(ErrLogin.generico);
         }// fine del blocco try-catch
 
         LibSession.setAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION, this);
-        chekBot();
     }// fine del metodo costruttore completo
 
     /**
@@ -242,6 +249,7 @@ public class WikiLogin {
         urlConn.setDoOutput(true);
 
         //--POST
+        //--The body of the POST can be empty.
         out = new PrintWriter(urlConn.getOutputStream());
         out.close();
 
@@ -249,6 +257,7 @@ public class WikiLogin {
         input = urlConn.getInputStream();
         inputReader = new InputStreamReader(input, INPUT);
 
+        //--This request will also return a session cookie in the HTTP header
         //--recupera i cookies ritornati e li memorizza nei parametri
         //--in modo da poterli rinviare nella seconda richiesta
         this.downlopadCookies(urlConn);
@@ -281,17 +290,52 @@ public class WikiLogin {
         lingua = this.getLingua();
         progetto = this.getProgetto();
 
-        if (!lingua.equals("") && progetto != null) {
-            domain += Cost.API_HTTP;
-            domain += lingua;
-            domain += Cost.API_WIKI;
-            domain += progetto;
-            domain += Cost.API_ACTION;
-            domain += Cost.API_LOGIN;
-            domain += Cost.API_FORMAT;
-        }// fine del blocco if
+        if (USA_NEW_LOGIN_TOKEN) {
+            if (!lingua.equals("") && progetto != null) {
+                domain += Cost.API_HTTP;
+                domain += lingua;
+                domain += Cost.API_WIKI;
+                domain += progetto;
+                domain += Cost.API_ACTION;
+                domain += LOGIN;
+                domain += Cost.API_FORMAT;
+                this.firstDomain = domain;
+            }// fine del blocco if
 
-        this.firstDomain = domain;
+            if (!lingua.equals("") && progetto != null) {
+                domain = Cost.API_HTTP;
+                domain += lingua;
+                domain += Cost.API_WIKI;
+                domain += progetto;
+                domain += Cost.API_ACTION;
+                domain += LOGIN;
+                domain += Cost.API_FORMAT;
+                this.secondDomain = domain;
+            }// fine del blocco if
+        } else {
+            if (!lingua.equals("") && progetto != null) {
+                domain += Cost.API_HTTP;
+                domain += lingua;
+                domain += Cost.API_WIKI;
+                domain += progetto;
+                domain += Cost.API_ACTION;
+                domain += Cost.API_LOGIN;
+                domain += Cost.API_FORMAT;
+                this.firstDomain = domain;
+            }// fine del blocco if
+
+            if (!lingua.equals("") && progetto != null) {
+                domain = Cost.API_HTTP;
+                domain += lingua;
+                domain += Cost.API_WIKI;
+                domain += progetto;
+                domain += Cost.API_ACTION;
+                domain += Cost.API_LOGIN;
+                domain += Cost.API_FORMAT;
+                this.secondDomain = domain;
+            }// fine del blocco if
+        }// end of if/else cycle
+
     } // fine del metodo
 
 
@@ -306,7 +350,7 @@ public class WikiLogin {
         String cookie;
         String name;
         String value;
-        HashMap<String, String> mappa = new HashMap<String, String>();
+        HashMap<String, Object> mappa = new HashMap<String, Object>();
 
         // controllo di congruità
         if (urlConn != null) {
@@ -382,6 +426,7 @@ public class WikiLogin {
 
     /**
      * POST request.
+     * Send a login request with POST, including the login as returned from previous request, and with the session cookie set in the header.
      * <p>
      * domain: solo la richiesta del token
      * post: lgname, lgpassword, lgtoken
@@ -403,7 +448,7 @@ public class WikiLogin {
         String risposta;
 
         //--connessione
-        urlConn = new URL(firstDomain).openConnection();
+        urlConn = new URL(secondDomain).openConnection();
         urlConn.setDoOutput(true);
 
         //--rimanda i cookies arrivati con la prima richiesta
@@ -411,7 +456,7 @@ public class WikiLogin {
 
         // now we send the data POST
         out = new PrintWriter(urlConn.getOutputStream());
-        testoPost = this.getSecondoPost();
+        testoPost = this.getPost();
         out.print(testoPost);
         out.close();
 
@@ -444,7 +489,6 @@ public class WikiLogin {
      * Costruisce il cookie della sessione
      */
     private String cookieSession() {
-        String cookieText = "";
         String sessionKey = "itwikiSession";
         String sep = "=";
         String sessionValue = this.getSessionId();
@@ -452,50 +496,50 @@ public class WikiLogin {
         return sessionKey + sep + sessionValue;
     } // fine del metodo
 
-    /**
-     * Allega i cookies alla request (upload)
-     * Serve solo la sessione
-     *
-     * @param urlConn connessione
-     */
-    private void uploadCookies(URLConnection urlConn) {
-        HashMap<String, String> cookies;
-        Object[] keyArray;
-        Object[] valArray;
-        Object sessionObj = null;
-        String sessionKey = "itwikiSession";
-//        String sessionTxt = "";
-        String sessionValue = "";
-        String sep = "=";
-        Object valObj = null;
-        String valTxt = "";
-        String key;
-
-        // controllo di congruità
-        if (urlConn != null) {
-            cookies = this.getCookies();
-            if (cookies != null && cookies.size() > 0) {
-
-                for (Object obj : cookies.keySet()) {
-                    if (obj instanceof String) {
-                        key = (String) obj;
-                        valObj = cookies.get(key);
-                        valTxt += key;
-                        valTxt += "=";
-                        valTxt += valObj;
-                        valTxt += ";";
-                    }// end of if cycle
-                }
-
-                if (cookies.get(sessionKey) != null) {
-                    sessionValue = (String) cookies.get(sessionKey);
-                }// end of if cycle
-            }// fine del blocco if
-
-//            urlConn.setRequestProperty("Cookie", sessionKey + sep + sessionValue);
-
-        }// fine del blocco if
-    } // fine del metodo
+//    /**
+//     * Allega i cookies alla request (upload)
+//     * Serve solo la sessione
+//     *
+//     * @param urlConn connessione
+//     */
+//    private void uploadCookies(URLConnection urlConn) {
+//        HashMap<String, String> cookies;
+//        Object[] keyArray;
+//        Object[] valArray;
+//        Object sessionObj = null;
+//        String sessionKey = "itwikiSession";
+////        String sessionTxt = "";
+//        String sessionValue = "";
+//        String sep = "=";
+//        Object valObj = null;
+//        String valTxt = "";
+//        String key;
+//
+//        // controllo di congruità
+//        if (urlConn != null) {
+//            cookies = this.getCookies();
+//            if (cookies != null && cookies.size() > 0) {
+//
+//                for (Object obj : cookies.keySet()) {
+//                    if (obj instanceof String) {
+//                        key = (String) obj;
+//                        valObj = cookies.get(key);
+//                        valTxt += key;
+//                        valTxt += "=";
+//                        valTxt += valObj;
+//                        valTxt += ";";
+//                    }// end of if cycle
+//                }
+//
+//                if (cookies.get(sessionKey) != null) {
+//                    sessionValue = (String) cookies.get(sessionKey);
+//                }// end of if cycle
+//            }// fine del blocco if
+//
+////            urlConn.setRequestProperty("Cookie", sessionKey + sep + sessionValue);
+//
+//        }// fine del blocco if
+//    } // fine del metodo
 
 
 //    /**
@@ -527,7 +571,7 @@ public class WikiLogin {
      *
      * @return post
      */
-    private String getSecondoPost() {
+    private String getPost() {
         String testoPost = "";
 //        String lgname=this.getLgname();
 //        String password;
@@ -564,10 +608,6 @@ public class WikiLogin {
      */
     private void risultatoRisposta(String testoRisposta) {
         HashMap<String, Object> mappa = null;
-        String cookieprefix;
-        String tokenProvvisorio;
-        String txtResult;
-        String password;
         ErrLogin risultato;
 
         // pulisce il parametro prima di controllare
@@ -577,40 +617,8 @@ public class WikiLogin {
         // Restituisce il parametro risultato
         mappa = this.elaboraSecondaRisposta(testoRisposta);
 
-//        // elabora il risultato
-//        switch (risultato) {
-//            case ErrLogin.success:
-//                this.setValido(true)
-//
         // mette da parte i parametri restituiti dal server
         this.regolaParametriSecondaRequest(mappa);
-//
-//                break
-//            case ErrLogin.noName:
-//                break
-//            case ErrLogin.illegal:
-//                break
-//            case ErrLogin.notExists:
-//                break
-//            case ErrLogin.emptyPass:
-//                break
-//            case ErrLogin.wrongPass:
-//                break
-//            case ErrLogin.wrongPluginPass:
-//                break
-//            case ErrLogin.createBlocked:
-//                break
-//            case ErrLogin.throttled:
-//                break
-//            case ErrLogin.blocked:
-//                break
-//            case ErrLogin.mustbeposted:
-//                break
-//            case ErrLogin.needToken:
-//                break
-//            default: // caso non definito
-//                break
-//        } // fine del blocco switch
 
         risultato = this.getRisultato();
         if (risultato == ErrLogin.success) {
@@ -631,7 +639,6 @@ public class WikiLogin {
 
         if (!testoRisposta.equals("")) {
             mappa = LibWiki.creaMappaLogin(testoRisposta);
-//            this.setPar(mappa);
         }// fine del blocco if
 
         return mappa;
@@ -644,8 +651,9 @@ public class WikiLogin {
      */
     private void regolaParametriSecondaRequest(HashMap<String, Object> mappa) {
         ErrLogin firstresult;
+        JSONObject obj;
 
-        if (mappa != null && mappa.size() >= 6) {
+        if (mappa != null && mappa.size() > 0) {
             if (mappa.get(SECOND_RESULT) != null && mappa.get(SECOND_RESULT) instanceof String) {
                 risultato = ErrLogin.get((String) mappa.get(SECOND_RESULT));
                 this.setRisultato(risultato);
@@ -663,6 +671,14 @@ public class WikiLogin {
                 this.setToken((String) mappa.get(SECOND_TOKEN));
             }// fine del blocco if
 
+            if (mappa.get(FIRST_NEW_TOKEN) != null && mappa.get(FIRST_NEW_TOKEN) instanceof JSONObject) {
+                obj = (JSONObject) mappa.get(FIRST_NEW_TOKEN);
+                if (obj.get(LOGIN_TOKEN) != null && obj.get(LOGIN_TOKEN) instanceof String) {
+                    token = (String) obj.get(LOGIN_TOKEN);
+                    this.setToken(token);
+                }// fine del blocco if
+            }// fine del blocco if
+
             if (mappa.get(COOKIE_PREFIX) != null && mappa.get(COOKIE_PREFIX) instanceof String) {
                 this.setCookieprefix((String) mappa.get(COOKIE_PREFIX));
             }// fine del blocco if
@@ -674,23 +690,23 @@ public class WikiLogin {
     } // fine del metodo
 
 
-    /**
-     * Controlla se il collegamento è effettuato con i privilegi del bot
-     */
-    public void chekBot() {
-        boolean isBot = false;
-        QueryCat query;
-
-        assertRequest();
-//        String titoloCategoria = "Nati il 29 febbraio";
-//        query = new QueryCat(titoloCategoria);
+//    /**
+//     * Controlla se il collegamento è effettuato con i privilegi del bot
+//     */
+//    public void chekBot() {
+//        boolean isBot = false;
+//        QueryCat query;
 //
-//        if (query != null) {
-//            isBot = query.isLimite5000();
-//        }// fine del blocco if
-
-//        this.setBot(isBot);
-    } // fine del metodo
+//        assertRequest();
+////        String titoloCategoria = "Nati il 29 febbraio";
+////        query = new QueryCat(titoloCategoria);
+////
+////        if (query != null) {
+////            isBot = query.isLimite5000();
+////        }// fine del blocco if
+//
+////        this.setBot(isBot);
+//    } // fine del metodo
 
     /**
      * This module only accepts POST requests.
@@ -708,7 +724,7 @@ public class WikiLogin {
      */
     private void assertRequest() {
         String domain;
-        URLConnection connection = null;
+        URLConnection urlConn = null;
         PrintWriter out;
         String testoPost;
         InputStream input = null;
@@ -723,20 +739,21 @@ public class WikiLogin {
 //        "https://it.wikipedia.org/w/api.php?action=login&format=json&formatversion=2"
         domain = "https://it.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&assert=user";
         try { // prova ad eseguire il codice
-            connection = new URL(domain).openConnection();
+            urlConn = new URL(domain).openConnection();
         } catch (Exception unErrore) { // intercetta l'errore
             Notification.show("openConnection", unErrore.toString(), Notification.Type.WARNING_MESSAGE);
             return;
         }// fine del blocco try-catch
-        connection.setDoOutput(true);
+        urlConn.setDoOutput(true);
 
         //--rimanda i cookies arrivati con la prima richiesta
-        this.uploadAssertCookies(connection);
+        this.uploadAssertCookies(urlConn);
+        LibWiki.uploadCookies(urlConn, cookies);
 //        String txtCookies = this.getStringCookies();
 //        connection.setRequestProperty("Cookie", txtCookies);
 
         try { // prova ad eseguire il codice
-            out = new PrintWriter(connection.getOutputStream());
+            out = new PrintWriter(urlConn.getOutputStream());
         } catch (Exception unErrore) { // intercetta l'errore
             Notification.show("getOutputStream", unErrore.toString(), Notification.Type.WARNING_MESSAGE);
             return;
@@ -749,7 +766,7 @@ public class WikiLogin {
 
         // regola l'entrata
         try { // prova ad eseguire il codice
-            input = connection.getInputStream();
+            input = urlConn.getInputStream();
         } catch (Exception unErrore) { // intercetta l'errore
             Notification.show("getInputStream", unErrore.toString(), Notification.Type.WARNING_MESSAGE);
             return;
@@ -800,7 +817,7 @@ public class WikiLogin {
      * @param urlConn connessione
      */
     private void uploadAssertCookies(URLConnection urlConn) {
-        HashMap<String, String> cookies;
+        HashMap<String, Object> cookies;
         Object[] keyArray;
         Object[] valArray;
         Object sessionObj = null;
@@ -843,6 +860,7 @@ public class WikiLogin {
 //                if (valObj != null && valObj instanceof String) {
 //                    valTxt = (String) valObj;
 //                }// fine del blocco if
+                urlConn.setRequestProperty("Cookie", valTxt);
 
             }// fine del blocco if
 
@@ -850,7 +868,7 @@ public class WikiLogin {
                 sessionValue = (String) cookies.get(sessionKey);
             }// end of if cycle
 
-            urlConn.setRequestProperty("Cookie", valTxt);
+//            urlConn.setRequestProperty("Cookie", valTxt);
 
         }// fine del blocco if
     } // fine del metodo
@@ -1068,11 +1086,11 @@ public class WikiLogin {
         this.par = par;
     }//end of setter method
 
-    public HashMap<String, String> getCookies() {
+    public HashMap<String, Object> getCookies() {
         return cookies;
     }// end of getter method
 
-    public void setCookies(HashMap<String, String> cookies) {
+    public void setCookies(HashMap<String, Object> cookies) {
         this.cookies = cookies;
     }//end of setter method
 

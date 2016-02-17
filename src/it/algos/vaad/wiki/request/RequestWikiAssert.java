@@ -1,5 +1,7 @@
 package it.algos.vaad.wiki.request;
 
+import it.algos.vaad.wiki.LibWiki;
+
 import java.net.URLConnection;
 import java.util.HashMap;
 
@@ -56,11 +58,11 @@ public abstract class RequestWikiAssert extends RequestWiki {
      * @param urlConn connessione
      */
     protected void uploadCookies(URLConnection urlConn) {
-        cookies = cookiesMappa;
-        String txtCookies = this.getStringCookies(cookiesMappa);
-
-        super.uploadCookies(urlConn);
-        urlConn.setRequestProperty("Cookie", txtCookies);
+//        cookies = cookiesMappa;
+//        String txtCookies = this.getStringCookies(cookiesMappa);
+//
+//        super.uploadCookies(urlConn);
+        urlConn.setRequestProperty("Cookie", LibWiki.creaCookiesText(cookiesMappa));
 
     } // fine del metodo
 

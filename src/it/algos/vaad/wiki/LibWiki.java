@@ -14,6 +14,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
+import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -2946,5 +2947,47 @@ public abstract class LibWiki {
 
         return newLinkInOut;
     }// end of method
+
+
+    /**
+     * Costruisce la stringa dei cookies
+     *
+     * @param cookies mappa dei cookies
+     */
+    public static String creaCookiesText(HashMap<String, Object> cookies) {
+        String cookiesTxt = "";
+        String sep = "=";
+        Object valObj = null;
+        String key;
+
+        if (cookies != null && cookies.size() > 0) {
+            for (Object obj : cookies.keySet()) {
+                if (obj instanceof String) {
+                    key = (String) obj;
+                    valObj = cookies.get(key);
+                    cookiesTxt += key;
+                    cookiesTxt += sep;
+                    cookiesTxt += valObj;
+                    cookiesTxt += ";";
+                }// end of if cycle
+            }// end of for cycle
+        }// fine del blocco if
+
+        return cookiesTxt;
+    } // fine del metodo
+
+    /**
+     * Allega i cookies alla request (upload)
+     *
+     * @param urlConn connessione attiva
+     * @param cookies mappa dei cookies
+     */
+    public static void uploadCookies(URLConnection urlConn, HashMap<String, Object> cookies) {
+        String cookiesTxt = creaCookiesText(cookies);
+
+        if (urlConn != null && !cookiesTxt.equals("")) {
+            urlConn.setRequestProperty("Cookie", cookiesTxt);
+        }// fine del blocco if
+    } // fine del metodo
 
 } // fine della classe astratta
