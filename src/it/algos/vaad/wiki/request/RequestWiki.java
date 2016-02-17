@@ -30,6 +30,7 @@ import java.util.LinkedHashMap;
  */
 public abstract class RequestWiki extends Request {
 
+    protected static final boolean USA_NEW_META_TOKEN = true; //@todo da passare a true, perché il vecchio intoken=edit è deprecato
 
     private static final String TAG_PRELINARY = "&action=query&meta=tokens";
     //--codifica dei caratteri
@@ -150,6 +151,11 @@ public abstract class RequestWiki extends Request {
         //--connessione
         urlConn = creaConnessionePreliminary();
 
+        //--manda i cookies ottenuti dal login
+//        if (needCookies) {
+//            this.uploadCookies(urlConn);
+//        }// end of if cycle
+
         //--POST
         this.creaPostPreliminary(urlConn);
 
@@ -161,7 +167,7 @@ public abstract class RequestWiki extends Request {
         //--recupera i cookies ritornati e li memorizza nei parametri
         //--in modo da poterli rinviare nella seconda richiesta
         if (needCookies) {
-            this.downlodCookies(urlConn);
+//            this.downlodCookies(urlConn);
         }// end of if cycle
 
         // read the request
@@ -201,6 +207,9 @@ public abstract class RequestWiki extends Request {
         // regola le property
         if (wikiLogin != null) {
             txtCookies = wikiLogin.getStringCookies();
+//            txtCookies=" itwikiUserName=Gac; itwikiSession=qm3mhhgg3i7qnbopdl0lrvtjddtpuac1; itwikiUserID=399; centralauth_User=Gac; centralauth_Session=aa5f3ad00ae724ef5c6ba7096732f950";
+//            txtCookies=" itwikiUserName=Gac; itwikiUserID=399; centralauth_User=Gac; centralauth_Session=aa5f3ad00ae724ef5c6ba7096732f950";
+
             urlConn.setRequestProperty("Cookie", txtCookies);
         }// end of if cycle
 
@@ -213,7 +222,11 @@ public abstract class RequestWiki extends Request {
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
     protected String getDomainPreliminary() {
-        return API_BASE + TAG_PRELINARY;
+        if (USA_NEW_META_TOKEN) {
+            return API_BASE + TAG_PRELINARY;
+        } else {
+            return API_BASE + API_ACTION + "query&prop=info|revisions&intoken=edit&rvprop=timestamp" + TAG_TITOLO + wikiTitle;
+        }// end of if/else cycle
     } // end of getter method
 
     /**
@@ -258,6 +271,7 @@ public abstract class RequestWiki extends Request {
         // regola le property
         if (wikiLogin != null) {
             txtCookies = wikiLogin.getStringCookies();
+            txtCookies=" itwikiUserName=Gac; itwikiUserID=399; centralauth_User=Gac; centralauth_Session=aa5f3ad00ae724ef5c6ba7096732f950";
             urlConn.setRequestProperty("Cookie", txtCookies);
         }// end of if cycle
 
@@ -357,7 +371,11 @@ public abstract class RequestWiki extends Request {
                     valTxt = (String) valObj;
                 }// fine del blocco if
 
+//               String  txtCookies=" itwikiUserName=Gac; itwikiUserID=399; centralauth_User=Gac; centralauth_Session=aa5f3ad00ae724ef5c6ba7096732f950";
+//                urlConn.setRequestProperty("Cookie", txtCookies);
+
                 urlConn.setRequestProperty("Cookie", sesionTxt + sep + valTxt);
+
             }// fine del blocco if
         }// fine del blocco if
     } // fine del metodo

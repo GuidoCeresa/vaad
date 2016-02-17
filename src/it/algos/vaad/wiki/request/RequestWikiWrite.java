@@ -130,6 +130,7 @@ public class RequestWikiWrite extends RequestWiki {
         super.wikiTitle = wikiTitle;
         this.newText = newText;
         super.summary = summary;
+        super.needCookies = true;
         super.needPost = true;
         super.needLogin = true;
         super.needToken = true;
