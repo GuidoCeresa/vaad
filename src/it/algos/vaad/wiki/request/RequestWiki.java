@@ -229,33 +229,33 @@ public abstract class RequestWiki extends Request {
         }// end of if/else cycle
     } // end of getter method
 
-    /**
-     * Grabs cookies from the URL connection provided.
-     * Cattura i cookies ritornati e li memorizza nei parametri
-     *
-     * @param urlConn connessione
-     */
-    private void downlodCookies(URLConnection urlConn) {
-        LinkedHashMap mappa = new LinkedHashMap();
-        String headerName;
-        String cookie;
-        String name;
-        String value;
-
-        if (urlConn != null) {
-            for (int i = 1; (headerName = urlConn.getHeaderFieldKey(i)) != null; i++) {
-                if (headerName.equals("Set-Cookie")) {
-                    cookie = urlConn.getHeaderField(i);
-                    cookie = cookie.substring(0, cookie.indexOf(";"));
-                    name = cookie.substring(0, cookie.indexOf("="));
-                    value = cookie.substring(cookie.indexOf("=") + 1, cookie.length());
-                    mappa.put(name, value);
-                }// fine del blocco if
-            } // fine del ciclo for-each
-        }// fine del blocco if
-
-        this.cookies = mappa;
-    } // fine del metodo
+//    /**
+//     * Grabs cookies from the URL connection provided.
+//     * Cattura i cookies ritornati e li memorizza nei parametri
+//     *
+//     * @param urlConn connessione
+//     */
+//    private void downlodCookies(URLConnection urlConn) {
+//        LinkedHashMap mappa = new LinkedHashMap();
+//        String headerName;
+//        String cookie;
+//        String name;
+//        String value;
+//
+//        if (urlConn != null) {
+//            for (int i = 1; (headerName = urlConn.getHeaderFieldKey(i)) != null; i++) {
+//                if (headerName.equals("Set-Cookie")) {
+//                    cookie = urlConn.getHeaderField(i);
+//                    cookie = cookie.substring(0, cookie.indexOf(";"));
+//                    name = cookie.substring(0, cookie.indexOf("="));
+//                    value = cookie.substring(cookie.indexOf("=") + 1, cookie.length());
+//                    mappa.put(name, value);
+//                }// fine del blocco if
+//            } // fine del ciclo for-each
+//        }// fine del blocco if
+//
+//        this.cookies = mappa;
+//    } // fine del metodo
 
     /**
      * Crea la connessione
