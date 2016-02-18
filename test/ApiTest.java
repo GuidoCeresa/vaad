@@ -5,7 +5,6 @@ import it.algos.webbase.web.lib.LibArray;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
@@ -295,11 +294,26 @@ public class ApiTest extends VaadTest {
      */
     public void modificaVoce2() {
         String wikiTitle = "Utente:Biobot/6";
-        String oldTxt = "quinta";
-        String newTxt = "sesta";
+        String tag5 = "quinta";
+        String tag6 = "sesta";
+        String oldTxt="";
+        String newTxt="";
+        String oldTestoVoce = Api.leggeVoce(wikiTitle);
 
-        boolOttenuto = Api.modificaVoce(wikiTitle, oldTxt, newTxt, "", loginWiki);
-        assertTrue(boolOttenuto);
+        if (oldTestoVoce.contains(tag5)) {
+            oldTxt = tag5;
+            newTxt = tag6;
+        } else {
+            if (oldTestoVoce.contains(tag6)) {
+                oldTxt = tag6;
+                newTxt = tag5;
+            }// end of if cycle
+        }// end of if/else cycle
+
+        if (!oldTxt.equals("")) {
+            boolOttenuto = Api.modificaVoce(wikiTitle, oldTxt, newTxt, "", loginWiki);
+            assertTrue(boolOttenuto);
+        }// end of if cycle
     }// end of single test
 
     @Test

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Superclasse astratta per le Request sul Web
+ * Superclasse astratta per le Request sul Web e su MediaWiki
  * Fornisce le funzionalità di base
  * Nelle sottoclassi vengono implementate le funzionalità specifiche
  * Le request più semplici usano il GET

@@ -1,6 +1,5 @@
 package it.algos.vaad.wiki;
 
-import com.vaadin.ui.Notification;
 import it.algos.vaad.wiki.request.RequestWikiAssert;
 import it.algos.vaad.wiki.request.RequestWikiAssertBot;
 import it.algos.vaad.wiki.request.RequestWikiAssertUser;
@@ -193,10 +192,7 @@ public class WikiLogin {
         this.setLgname(lgname);
         this.setLgpassword(lgpassword);
 
-        //--cancella prima i cookies
-        // this.logout()
-
-        this.fixDomain();
+        this.setUp();
 
         // procedura di accesso e registrazione con le API
         // Logging in through the API requires submitting a login query and constructing a cookie
@@ -204,20 +200,7 @@ public class WikiLogin {
         try { // prova ad eseguire il codice
             this.preliminaryRequest();
             this.urlRequest();
-//            this.assertRequest();
-            RequestWikiAssert request = new RequestWikiAssertUser(cookies);
-            if (request.isValida()) {
-                this.setUser(true);
-            } else {
-                this.setUser(false);
-            }// end of if/else cycle
-             request = new RequestWikiAssertBot(cookies);
-            if (request.isValida()) {
-                this.setBot(true);
-            } else {
-                this.setBot(false);
-            }// end of if/else cycle
-
+            this.checkValidita();
         } catch (Exception unErrore) { // intercetta l'errore
             this.setRisultato(ErrLogin.generico);
         }// fine del blocco try-catch
@@ -225,64 +208,12 @@ public class WikiLogin {
         LibSession.setAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION, this);
     }// fine del metodo costruttore completo
 
-    /**
-     * POST request.
-     * <p>
-     * domain: solo la richiesta del token
-     * post: nessuno
-     * cookies inviati: nessuno
-     * cookies ricevuti: la sessione
-     * risposta: token
-     */
-    private void preliminaryRequest() throws Exception {
-        URLConnection urlConn;
-        PrintWriter out;
-        InputStream input;
-        InputStreamReader inputReader;
-        BufferedReader readBuffer;
-        StringBuilder textBuffer = new StringBuilder();
-        String stringa;
-        String risposta;
-
-        //--connessione
-        urlConn = new URL(firstDomain).openConnection();
-        urlConn.setDoOutput(true);
-
-        //--POST
-        //--The body of the POST can be empty.
-        out = new PrintWriter(urlConn.getOutputStream());
-        out.close();
-
-        // regola l'entrata
-        input = urlConn.getInputStream();
-        inputReader = new InputStreamReader(input, INPUT);
-
-        //--This request will also return a session cookie in the HTTP header
-        //--recupera i cookies ritornati e li memorizza nei parametri
-        //--in modo da poterli rinviare nella seconda richiesta
-        this.downlopadCookies(urlConn);
-
-        // read the request
-        readBuffer = new BufferedReader(inputReader);
-        while ((stringa = readBuffer.readLine()) != null) {
-            textBuffer.append(stringa);
-        }// fine del blocco while
-
-        //--close all
-        readBuffer.close();
-        inputReader.close();
-        input.close();
-
-        // controlla il valore di ritorno della request e regola il risultato
-        risposta = textBuffer.toString();
-        this.risultatoPreliminaryRequest(risposta);
-    } // fine del metodo
-
 
     /**
+     * Metodo iniziale
      * Regola il domain del primo collegamento effettuato per ricevere il token di conferma
      */
-    private void fixDomain() {
+    private void setUp() {
         String domain = "";
         String lingua;
         Progetto progetto;
@@ -336,6 +267,59 @@ public class WikiLogin {
             }// fine del blocco if
         }// end of if/else cycle
 
+    } // fine del metodo
+
+    /**
+     * POST request.
+     * <p>
+     * domain: solo la richiesta del token
+     * post: nessuno
+     * cookies inviati: nessuno
+     * cookies ricevuti: la sessione
+     * risposta: token
+     */
+    private void preliminaryRequest() throws Exception {
+        URLConnection urlConn;
+        PrintWriter out;
+        InputStream input;
+        InputStreamReader inputReader;
+        BufferedReader readBuffer;
+        StringBuilder textBuffer = new StringBuilder();
+        String stringa;
+        String risposta;
+
+        //--connessione
+        urlConn = new URL(firstDomain).openConnection();
+        urlConn.setDoOutput(true);
+
+        //--POST
+        //--The body of the POST can be empty.
+        out = new PrintWriter(urlConn.getOutputStream());
+        out.close();
+
+        // regola l'entrata
+        input = urlConn.getInputStream();
+        inputReader = new InputStreamReader(input, INPUT);
+
+        //--This request will also return a session cookie in the HTTP header
+        //--recupera i cookies ritornati e li memorizza nei parametri
+        //--in modo da poterli rinviare nella seconda richiesta
+        this.downlopadCookies(urlConn);
+
+        // read the request
+        readBuffer = new BufferedReader(inputReader);
+        while ((stringa = readBuffer.readLine()) != null) {
+            textBuffer.append(stringa);
+        }// fine del blocco while
+
+        //--close all
+        readBuffer.close();
+        inputReader.close();
+        input.close();
+
+        // controlla il valore di ritorno della request e regola il risultato
+        risposta = textBuffer.toString();
+        this.risultatoPreliminaryRequest(risposta);
     } // fine del metodo
 
 
@@ -496,74 +480,6 @@ public class WikiLogin {
         return sessionKey + sep + sessionValue;
     } // fine del metodo
 
-//    /**
-//     * Allega i cookies alla request (upload)
-//     * Serve solo la sessione
-//     *
-//     * @param urlConn connessione
-//     */
-//    private void uploadCookies(URLConnection urlConn) {
-//        HashMap<String, String> cookies;
-//        Object[] keyArray;
-//        Object[] valArray;
-//        Object sessionObj = null;
-//        String sessionKey = "itwikiSession";
-////        String sessionTxt = "";
-//        String sessionValue = "";
-//        String sep = "=";
-//        Object valObj = null;
-//        String valTxt = "";
-//        String key;
-//
-//        // controllo di congruità
-//        if (urlConn != null) {
-//            cookies = this.getCookies();
-//            if (cookies != null && cookies.size() > 0) {
-//
-//                for (Object obj : cookies.keySet()) {
-//                    if (obj instanceof String) {
-//                        key = (String) obj;
-//                        valObj = cookies.get(key);
-//                        valTxt += key;
-//                        valTxt += "=";
-//                        valTxt += valObj;
-//                        valTxt += ";";
-//                    }// end of if cycle
-//                }
-//
-//                if (cookies.get(sessionKey) != null) {
-//                    sessionValue = (String) cookies.get(sessionKey);
-//                }// end of if cycle
-//            }// fine del blocco if
-//
-////            urlConn.setRequestProperty("Cookie", sessionKey + sep + sessionValue);
-//
-//        }// fine del blocco if
-//    } // fine del metodo
-
-
-//    /**
-//     * Restituisce il testo del POST per la prima Request
-//     *
-//     * @return post
-//     * @deprecated
-//     */
-//    private String getPrimoPost() {
-//        String testoPost = "";
-//        String lgname;
-//        String password;
-//        String tokenProvvisorio;
-//
-//        lgname = this.getLgname();
-//        password = this.getLgpassword();
-//
-//        testoPost += "lgname=";
-//        testoPost += lgname;
-//        testoPost += "&lgpassword=";
-//        testoPost += password;
-//
-//        return testoPost;
-//    } // fine del metodo
 
     /**
      * Restituisce il testo del POST per la seconda Request
@@ -573,17 +489,6 @@ public class WikiLogin {
      */
     private String getPost() {
         String testoPost = "";
-//        String lgname=this.getLgname();
-//        String password;
-//        String firstToken = this.getToken();
-//
-//        lgname = this.getLgname();
-//        password = this.getLgpassword();
-
-//        try { // prova ad eseguire il codice
-//            firstToken = URLEncoder.encode(firstToken, ENCODE);
-//        } catch (Exception unErrore) { // intercetta l'errore
-//        }// fine del blocco try-catch
 
         testoPost += "lgname=";
         testoPost += this.getLgname();
@@ -690,236 +595,26 @@ public class WikiLogin {
     } // fine del metodo
 
 
-//    /**
-//     * Controlla se il collegamento è effettuato con i privilegi del bot
-//     */
-//    public void chekBot() {
-//        boolean isBot = false;
-//        QueryCat query;
-//
-//        assertRequest();
-////        String titoloCategoria = "Nati il 29 febbraio";
-////        query = new QueryCat(titoloCategoria);
-////
-////        if (query != null) {
-////            isBot = query.isLimite5000();
-////        }// fine del blocco if
-//
-////        this.setBot(isBot);
-//    } // fine del metodo
-
     /**
-     * This module only accepts POST requests.
-     * Parameters (testoPost) second request:
-     * lgname         - User Name
-     * lgpassword     - Password
-     * lgdomain       - Domain (optional)
-     * lgtoken        - Login token obtained in first request
-     * Nei cookies della seconda richiesta DEVE esserci la sessione (ottenuta dalla prima richiesta)
-     * Return:
-     * result         - "NeedToken"
-     * token          - Primo token temporaneo
-     * cookieprefix   - "itwiki" (default)
-     * sessionid      - codice a 32 cifre
+     * Controllo finale per verificare se è loggato come utente o come bot
      */
-    private void assertRequest() {
-        String domain;
-        URLConnection urlConn = null;
-        PrintWriter out;
-        String testoPost;
-        InputStream input = null;
-        InputStreamReader inputReader;
-        BufferedReader readBuffer = null;
-        StringBuilder textBuffer = new StringBuilder();
-        String stringa;
-        String risposta;
+    public void checkValidita() {
+        RequestWikiAssert request;
 
-        // find the target
-//        domain = "https://it.wikipedia.org/w/api.php?action=query&assert=bot&titles=Utente:Biobot/5";
-//        "https://it.wikipedia.org/w/api.php?action=login&format=json&formatversion=2"
-        domain = "https://it.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&assert=user";
-        try { // prova ad eseguire il codice
-            urlConn = new URL(domain).openConnection();
-        } catch (Exception unErrore) { // intercetta l'errore
-            Notification.show("openConnection", unErrore.toString(), Notification.Type.WARNING_MESSAGE);
-            return;
-        }// fine del blocco try-catch
-        urlConn.setDoOutput(true);
-
-        //--rimanda i cookies arrivati con la prima richiesta
-        this.uploadAssertCookies(urlConn);
-        LibWiki.uploadCookies(urlConn, cookies);
-//        String txtCookies = this.getStringCookies();
-//        connection.setRequestProperty("Cookie", txtCookies);
-
-        try { // prova ad eseguire il codice
-            out = new PrintWriter(urlConn.getOutputStream());
-        } catch (Exception unErrore) { // intercetta l'errore
-            Notification.show("getOutputStream", unErrore.toString(), Notification.Type.WARNING_MESSAGE);
-            return;
-        }// fine del blocco try-catch
-
-        // now we send the data POST
-//        testoPost = this.getSecondoPost();
-//        out.print(testoPost);
-        out.close();
-
-        // regola l'entrata
-        try { // prova ad eseguire il codice
-            input = urlConn.getInputStream();
-        } catch (Exception unErrore) { // intercetta l'errore
-            Notification.show("getInputStream", unErrore.toString(), Notification.Type.WARNING_MESSAGE);
-            return;
-        }// fine del blocco try-catch
-        try { // prova ad eseguire il codice
-            inputReader = new InputStreamReader(input, "UTF8");
-        } catch (Exception unErrore) { // intercetta l'errore
-            Notification.show("InputStreamReader", unErrore.toString(), Notification.Type.WARNING_MESSAGE);
-            return;
-        }// fine del blocco try-catch
-
-//        //--recupera i cookies ritornati e li memorizza nei parametri
-//        //--in modo da poterli rinviare nella seconda richiesta
-//        this.downlopadCookies(connection);
-
-        // legge la risposta
-        try { // prova ad eseguire il codice
-            readBuffer = new BufferedReader(inputReader);
-            while ((stringa = readBuffer.readLine()) != null) {
-                textBuffer.append(stringa);
-            }// fine del blocco while
-        } catch (Exception unErrore) { // intercetta l'errore
-            Notification.show("BufferedReader", unErrore.toString(), Notification.Type.WARNING_MESSAGE);
-        }// fine del blocco try-catch
-
-        // chiude
-        try { // prova ad eseguire il codice
-            if (readBuffer != null) {
-                readBuffer.close();
-            }// fine del blocco if
-            inputReader.close();
-            input.close();
-        } catch (Exception unErrore) { // intercetta l'errore
-            Notification.show("readBuffer.close", unErrore.toString(), Notification.Type.WARNING_MESSAGE);
-        }// fine del blocco try-catch
-
-        // valore di ritorno della request
-        risposta = textBuffer.toString();
-
-        // Controllo del testo di risposta
-        this.risultatoTerzaRisposta(risposta);
-    } // fine del metodo
-
-    /**
-     * Allega i cookies alla request (upload)
-     * Serve solo la sessione
-     *
-     * @param urlConn connessione
-     */
-    private void uploadAssertCookies(URLConnection urlConn) {
-        HashMap<String, Object> cookies;
-        Object[] keyArray;
-        Object[] valArray;
-        Object sessionObj = null;
-        String sessionKey = "itwikiSession";
-//        String sessionTxt = "";
-        String sessionValue = "";
-        String sep = "=";
-        Object valObj = null;
-        String valTxt = "";
-        String key;
-
-        // controllo di congruità
-        if (urlConn != null) {
-            cookies = this.getCookies();
-            if (cookies != null && cookies.size() > 0) {
-
-                for (Object obj : cookies.keySet()) {
-                    if (obj instanceof String) {
-                        key = (String) obj;
-                        valObj = cookies.get(key);
-                        valTxt += key;
-                        valTxt += "=";
-                        valTxt += valObj;
-                        valTxt += ";";
-                    }// end of if cycle
-                }
-
-//                keyArray = cookies.keySet().toArray();
-//                if (keyArray.length > 0) {
-//                    sessionObj = keyArray[0];
-//                }// fine del blocco if
-//                if (sessionObj != null && sessionObj instanceof String) {
-//                    sesionTxt = (String) sessionObj;
-//                }// fine del blocco if
-//
-//                valArray = cookies.values().toArray();
-//                if (valArray.length > 0) {
-//                    valObj = valArray[0];
-//                }// fine del blocco if
-//                if (valObj != null && valObj instanceof String) {
-//                    valTxt = (String) valObj;
-//                }// fine del blocco if
-                urlConn.setRequestProperty("Cookie", valTxt);
-
-            }// fine del blocco if
-
-            if (cookies.get(sessionKey) != null) {
-                sessionValue = (String) cookies.get(sessionKey);
-            }// end of if cycle
-
-//            urlConn.setRequestProperty("Cookie", valTxt);
-
-        }// fine del blocco if
-    } // fine del metodo
-
-    /**
-     * Controllo del collegamento (success or error)
-     * Regola il parametro collegato
-     * Memorizza l'errore di collegamento
-     *
-     * @param testoRisposta della seconda Request
-     */
-    private void risultatoTerzaRisposta(String testoRisposta) {
-        HashMap mappa;
-        String cookieprefix;
-        String tokenProvvisorio;
-        String txtResult;
-        String password;
-        ErrLogin risultato;
-
-        // pulisce il parametro prima di controllare
-//        this.setValido(false);
-
-        // Costruisce la mappa dei dati dalla risposta alla seconda Request
-        // Restituisce il parametro risultato
-//        this.elaboraSecondaRisposta(testoRisposta);
-
-//        // elabora il risultato
-//        switch (risultato) {
-//            case ErrLogin.success:
-//                this.setValido(true)
-//
-        // mette da parte i parametri restituiti dal server
-//        this.regolaParametriSecondaRequest();
-//
-
-        if (testoRisposta.contains("assertuserfailed")) {
-            this.setValido(false);
-            this.setUser(false);
-            this.setBot(false);
-        } else {
-            this.setValido(true);
+        request = new RequestWikiAssertUser(cookies);
+        if (request.isValida()) {
             this.setUser(true);
-            this.setBot(false);
+        } else {
+            this.setUser(false);
         }// end of if/else cycle
 
-
-//        risultato = this.getRisultato();
-//        if (risultato == ErrLogin.success) {
-//            this.setValido(true);
-//        }// fine del blocco if
-    } // fine della closure
+        request = new RequestWikiAssertBot(cookies);
+        if (request.isValida()) {
+            this.setBot(true);
+        } else {
+            this.setBot(false);
+        }// end of if/else cycle
+    } // fine del metodo
 
     /**
      * Restituisce i cookies
@@ -956,7 +651,7 @@ public class WikiLogin {
         cookies += session;
 
         return cookies;
-    } // fine della closure
+    } // fine del metodo
 
     public String getLingua() {
         return lingua;
