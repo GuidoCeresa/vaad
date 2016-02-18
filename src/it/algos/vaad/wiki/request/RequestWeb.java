@@ -34,8 +34,9 @@ public class RequestWeb extends ARequest {
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
     @Override
-    protected void elaboraDomain() {
+    protected String elaboraDomain() {
         domain = wikiTitle;
+        return domain;
     } // fine del metodo
 
     /**

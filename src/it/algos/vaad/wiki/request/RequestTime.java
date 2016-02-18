@@ -59,7 +59,7 @@ public class RequestTime extends ARequest {
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
     @Override
-    protected void elaboraDomain() {
+    protected String elaboraDomain() {
         String domainTmp = API_BASE + API_ACTION + API_QUERY;
 
         if (wikiTitle.contains(",")) {
@@ -72,6 +72,7 @@ public class RequestTime extends ARequest {
         }// end of if cycle
 
         domain = domainTmp;
+        return domainTmp;
     } // fine del metodo
 
 

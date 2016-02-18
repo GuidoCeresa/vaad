@@ -274,50 +274,45 @@ public abstract class ARequest {
      */
     private void urlRequest() throws Exception {
         URLConnection urlConn;
-        InputStream input;
-        InputStreamReader inputReader;
-        BufferedReader readBuffer;
-        StringBuilder textBuffer = new StringBuilder();
-        String stringa;
+//        InputStream input;
+//        InputStreamReader inputReader;
+//        BufferedReader readBuffer;
+//        StringBuilder textBuffer = new StringBuilder();
+//        String stringa;
         String risposta;
-        PrintWriter out;
 
-        //--domain
-        elaboraDomain();
+        //--crea la connessione, elaborando il Domain
+        urlConn = this.creaUrlConnection();
 
-        //--Connessione
-        urlConn = creaConnessione();
-
-        //--rimanda i cookies arrivati con la prima richiesta
+        //--invia i cookies di supporto, se richiesti
         if (needCookies) {
             this.uploadCookies(urlConn);
         }// end of if cycle
 
-        // now we send the data POST
+        //--now we send the data POST
+        //--crea una connessione di tipo POST, se richiesta
         if (needPost) {
-            out = new PrintWriter(urlConn.getOutputStream());
-            out.print(elaboraPost());
-            out.close();
+            this.creaPostConnection(urlConn);
         }// end of if cycle
 
-        //--GET
-        input = urlConn.getInputStream();
-        inputReader = new InputStreamReader(input, ENCODE);
-
-        // read the request
-        readBuffer = new BufferedReader(inputReader);
-        while ((stringa = readBuffer.readLine()) != null) {
-            textBuffer.append(stringa);
-        }// fine del blocco while
-
-        //--close all
-        readBuffer.close();
-        inputReader.close();
-        input.close();
-        urlConn = null;
-
-        // controlla il valore di ritorno della request e regola il risultato
-        risposta = textBuffer.toString();
+        //--Invia la request (GET oppure POST)
+        risposta= sendConnection(urlConn);
+//        input = urlConn.getInputStream();
+//        inputReader = new InputStreamReader(input, ENCODE);
+//
+//        // read the request
+//        readBuffer = new BufferedReader(inputReader);
+//        while ((stringa = readBuffer.readLine()) != null) {
+//            textBuffer.append(stringa);
+//        }// fine del blocco while
+//
+//        //--close all
+//        readBuffer.close();
+//        inputReader.close();
+//        input.close();
+//
+//        // controlla il valore di ritorno della request e regola il risultato
+//        risposta = textBuffer.toString();
         elaboraRisposta(risposta);
     } // fine del metodo
 
@@ -327,7 +322,7 @@ public abstract class ARequest {
      * Domain per l'URL dal titolo della pagina o dal pageid (a seconda del costruttore usato)
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
-    protected void elaboraDomain() {
+    protected String elaboraDomain() {
         String domainTmp = API_BASE + API_ACTION + API_QUERY + Cost.CONTENT_ALL;
 
         if (wikiTitle != null && !wikiTitle.equals("")) {
@@ -341,18 +336,25 @@ public abstract class ARequest {
         }// end of if cycle
 
         domain = domainTmp;
+        return domainTmp;
     } // fine del metodo
 
 
     /**
-     * Crea la connessione e regola i parametri
+     * Crea la connessione
+     * <p>
+     * Elabora la stringa di domain per la request
+     * Regola i parametri della connessione
+     *
+     * @return connessione con la request
      */
-    private URLConnection creaConnessione() throws Exception {
+    private URLConnection creaUrlConnection() throws Exception {
         URLConnection urlConn = null;
         String txtCookies = "";
+        String domainTmp = elaboraDomain();
 
-        if (domain != null && !domain.equals("")) {
-            urlConn = new URL(domain).openConnection();
+        if (domainTmp != null && !domainTmp.equals("")) {
+            urlConn = new URL(domainTmp).openConnection();
             urlConn.setDoOutput(true);
             urlConn.setRequestProperty("Accept-Encoding", "GZIP");
             urlConn.setRequestProperty("Content-Encoding", "GZIP");
@@ -374,7 +376,7 @@ public abstract class ARequest {
      * Allega i cookies alla request (upload)
      * Serve solo la sessione
      *
-     * @param urlConn connessione
+     * @param urlConn connessione con la request
      */
     protected void uploadCookies(URLConnection urlConn) {
         HashMap cookies = this.cookies;
@@ -412,13 +414,58 @@ public abstract class ARequest {
     } // fine del metodo
 
     /**
-     * Crea il POST della request
+     * Crea il testo del POST della request
      * <p>
      * In alcune request (non tutte) è obbligatorio anche il POST
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
     protected String elaboraPost() {
         return "";
+    } // fine del metodo
+
+
+    /**
+     * Crea il POST della request
+     * <p>
+     * In alcune request (non tutte) è obbligatorio anche il POST
+     *
+     * @param urlConn connessione con la request
+     */
+    private void creaPostConnection(URLConnection urlConn) throws Exception {
+        PrintWriter out = new PrintWriter(urlConn.getOutputStream());
+        out.print(elaboraPost());
+        out.close();
+    } // fine del metodo
+
+    /**
+     * Invia la request (GET oppure POST)
+     * Testo della risposta
+     *
+     * @param urlConn connessione con la request
+     * @return valore di ritorno della request
+     */
+    private String sendConnection(URLConnection urlConn) throws Exception {
+        InputStream input;
+        InputStreamReader inputReader;
+        BufferedReader readBuffer;
+        StringBuilder textBuffer = new StringBuilder();
+        String stringa;
+
+        input = urlConn.getInputStream();
+        inputReader = new InputStreamReader(input, ENCODE);
+
+        // read the response
+        readBuffer = new BufferedReader(inputReader);
+        while ((stringa = readBuffer.readLine()) != null) {
+            textBuffer.append(stringa);
+        }// fine del blocco while
+
+        //--close all
+        readBuffer.close();
+        inputReader.close();
+        input.close();
+
+        return textBuffer.toString();
     } // fine del metodo
 
 

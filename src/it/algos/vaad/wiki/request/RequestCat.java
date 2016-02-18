@@ -79,7 +79,7 @@ public class RequestCat extends ARequest {
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
     @Override
-    protected void elaboraDomain() {
+    protected String elaboraDomain() {
         String domainTmp = API_BASE + API_ACTION + API_QUERY + CAT + TYPE_ALL;
 
         if (wikiTitle != null && !wikiTitle.equals("")) {
@@ -99,6 +99,7 @@ public class RequestCat extends ARequest {
         }// fine del blocco if
 
         domain = domainTmp;
+        return domainTmp;
     } // fine del metodo
 
 

@@ -45,7 +45,7 @@ public class RequestLinks extends ARequest {
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
     @Override
-    protected void elaboraDomain() {
+    protected String elaboraDomain() {
         String domainTmp = API_BASE + API_ACTION + API_QUERY + TAG_BACK;
 
         if (wikiTitle != null && !wikiTitle.equals("")) {
@@ -57,6 +57,7 @@ public class RequestLinks extends ARequest {
         }// end of if cycle
 
         domain = domainTmp;
+        return domainTmp;
     } // fine del metodo
 
 
