@@ -70,7 +70,9 @@ public abstract class ARequest {
     //--indirizzo internet da leggere
     protected String domain;
 
-    //--flag di controllo
+    //--flag di controllo per la gestione del flusso
+    protected boolean needPreliminary;
+    protected boolean needAssert;
     protected boolean needContinua;
     protected boolean needPost;
     protected boolean needCookies;
@@ -96,31 +98,27 @@ public abstract class ARequest {
 
     //--pageid della pagina
     protected long wikiPageid;
-
     // oggetto della modifica in scrittura
     protected String summary;
-
     // ci metto tutti i cookies restituiti da URLConnection.responses
     protected HashMap cookies;
-
     // token ottenuto dalla preliminaryRequest ed usato per Edit e Move
     protected String csrfToken;
-
     // liste di pagine
     protected ArrayList<Long> listaPaginePageids;
     protected ArrayList<String> listaPagineTitles;
-
     // liste di voci della categoria (namespace=0)
     protected ArrayList<Long> listaVociPageids;
     protected ArrayList<String> listaVociTitles;
-
     // liste di sottocategorie della categoria (namespace=14)
     protected ArrayList<Long> listaCatPageids;
     protected ArrayList<String> listaCatTitles;
-
     //--lista di wrapper con pagesid e timestamp
     protected ArrayList<WrapTime> listaWrapTime;
     protected ArrayList<WrapTime> listaWrapTimeMissing;
+    //--url del collegamento
+    private String preliminatyDomain;
+    private String urlDomain;
 
     /**
      * Costruttore
@@ -152,34 +150,59 @@ public abstract class ARequest {
 
 
     /**
-     * Metodo iniziale
+     * Gestione del flusso
      */
     protected void doInit() {
+        //--Regola alcuni (eventuali) parametri specifici della sottoclasse
         elaboraParametri();
 
-        if (!checkLogin()) {
-            valida = false;
-            return;
-        }// end of if cycle
+//        if (!checkLogin()) {
+//            valida = false;
+//            return;
+//        }// end of if cycle
 
+        //--procedura di accesso e registrazione con le API
         try { // prova ad eseguire il codice
-            if (needToken) {
-                if (!preliminaryRequest()) {
-                    valida = false;
-                    if (risultato != TipoRisultato.mustbeposted) {
-                        risultato = TipoRisultato.noPreliminaryToken;
-                    }// end of if cycle
-                }// end of if cycle
-                return;
+
+            if (needPreliminary) {
+                this.preliminaryRequest();
             }// end of if cycle
 
-            cicloRequest();
+            this.urlRequest();
+            if (needContinua) {
+                while (!tokenContinua.equals("")) {
+                    this.urlRequest();
+                } // fine del blcco while
+            }// end of if cycle
+
+            if (needAssert) {
+                this.checkValidita();
+            }// end of if cycle
+
         } catch (Exception unErrore) { // intercetta l'errore
             valida = false;
             risultato = TipoRisultato.nonTrovata;
-            String errore = unErrore.getMessage();
-            String errore2 = unErrore.getClass().getSimpleName();
         }// fine del blocco try-catch
+
+
+//        try { // prova ad eseguire il codice
+//            if (needToken) {
+//                if (!preliminaryRequest()) {
+//                    valida = false;
+//                    if (risultato != TipoRisultato.mustbeposted) {
+//                        risultato = TipoRisultato.noPreliminaryToken;
+//                    }// end of if cycle
+//                }// end of if cycle
+//                return;
+//            }// end of if cycle
+//
+//            cicloRequest();
+//        } catch (Exception unErrore) { // intercetta l'errore
+//            valida = false;
+//            risultato = TipoRisultato.nonTrovata;
+//            String errore = unErrore.getMessage();
+//            String errore2 = unErrore.getClass().getSimpleName();
+//        }// fine del blocco try-catch
     }// fine del metodo
 
     /**
@@ -189,6 +212,8 @@ public abstract class ARequest {
      * Sovrascritto
      */
     protected void elaboraParametri() {
+        needPreliminary = false;
+        needAssert = false;
         needContinua = false;
         needPost = false;
         needCookies = false;
@@ -198,17 +223,17 @@ public abstract class ARequest {
     }// fine del metodo
 
 
-    /**
-     * Ciclo delle request
-     */
-    private void cicloRequest() throws Exception {
-        urlRequest();
-        if (needContinua) {
-            while (!tokenContinua.equals("")) {
-                urlRequest();
-            } // fine del blcco while
-        }// end of if cycle
-    } // fine del metodo
+//    /**
+//     * Ciclo delle request
+//     */
+//    private void cicloRequest() throws Exception {
+//        urlRequest();
+//        if (needContinua) {
+//            while (!tokenContinua.equals("")) {
+//                urlRequest();
+//            } // fine del blcco while
+//        }// end of if cycle
+//    } // fine del metodo
 
     /**
      * Controllo del login
@@ -237,8 +262,8 @@ public abstract class ARequest {
      * Alcune request (su mediawiki) richiedono anche una tokenRequestOnly preliminare
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
-    private boolean preliminaryRequest() throws Exception {
-        return false;
+    protected void preliminaryRequest() throws Exception {
+
     } // fine del metodo
 
 
@@ -289,6 +314,7 @@ public abstract class ARequest {
         readBuffer.close();
         inputReader.close();
         input.close();
+        urlConn = null;
 
         // controlla il valore di ritorno della request e regola il risultato
         risposta = textBuffer.toString();
@@ -434,6 +460,12 @@ public abstract class ARequest {
 
     } // fine del metodo
 
+    /**
+     * Controllo finale per verificare le condizioni necessarie a questa request per essere considerata valida
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     */
+    protected void checkValidita() {
+    } // fine del metodo
 
     /**
      * Encode del titolo
