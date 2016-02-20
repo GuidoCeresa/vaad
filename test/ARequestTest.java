@@ -160,6 +160,7 @@ public class ARequestTest extends VaadTest {
 
         //--login obbligatorio - adesso funziona
         request = new RequestCat(TITOLO_CAT_BREVE);
+        assertTrue(request.isValida());
         checkListeCat(2, 12);
     }// end of single test
 

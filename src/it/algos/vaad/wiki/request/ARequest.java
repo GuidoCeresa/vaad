@@ -156,14 +156,16 @@ public abstract class ARequest {
         //--Regola alcuni (eventuali) parametri specifici della sottoclasse
         elaboraParametri();
 
-//        if (!checkLogin()) {
-//            valida = false;
-//            return;
-//        }// end of if cycle
+        if (needLogin) {
+        if (!checkLogin()) {
+            valida = false;
+            return;
+        }// end of if cycle
+        }// end of if cycle
+
 
         //--procedura di accesso e registrazione con le API
         try { // prova ad eseguire il codice
-
             if (needPreliminary) {
                 this.preliminaryRequest();
             }// end of if cycle
@@ -260,25 +262,19 @@ public abstract class ARequest {
 
     /**
      * Alcune request (su mediawiki) richiedono anche una tokenRequestOnly preliminare
-     * PUO essere sovrascritto nelle sottoclassi specifiche
+//     * PUO essere sovrascritto nelle sottoclassi specifiche
      */
-    protected void preliminaryRequest() throws Exception {
-
+    private void preliminaryRequest() throws Exception {
     } // fine del metodo
 
 
     /**
-     * Request
+     * Request principale
      * Quella base usa il GET
      * In alcune request (non tutte) è obbligatorio anche il POST
      */
     private void urlRequest() throws Exception {
         URLConnection urlConn;
-//        InputStream input;
-//        InputStreamReader inputReader;
-//        BufferedReader readBuffer;
-//        StringBuilder textBuffer = new StringBuilder();
-//        String stringa;
         String risposta;
 
         //--crea la connessione, elaborando il Domain
@@ -296,23 +292,9 @@ public abstract class ARequest {
         }// end of if cycle
 
         //--Invia la request (GET oppure POST)
-        risposta= sendConnection(urlConn);
-//        input = urlConn.getInputStream();
-//        inputReader = new InputStreamReader(input, ENCODE);
-//
-//        // read the request
-//        readBuffer = new BufferedReader(inputReader);
-//        while ((stringa = readBuffer.readLine()) != null) {
-//            textBuffer.append(stringa);
-//        }// fine del blocco while
-//
-//        //--close all
-//        readBuffer.close();
-//        inputReader.close();
-//        input.close();
-//
-//        // controlla il valore di ritorno della request e regola il risultato
-//        risposta = textBuffer.toString();
+        risposta = sendConnection(urlConn);
+
+        // controlla il valore di ritorno della request e regola il risultato
         elaboraRisposta(risposta);
     } // fine del metodo
 
