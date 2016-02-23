@@ -618,6 +618,8 @@ public class WikiLogin {
 
     /**
      * Restituisce i cookies
+     *
+     * @deprecated
      */
     public String getStringCookies() {
         String cookies = "";
@@ -651,6 +653,15 @@ public class WikiLogin {
         cookies += session;
 
         return cookies;
+    } // fine del metodo
+
+    /**
+     * Restituisce i cookies
+     *
+     * @return stringa per le property della request
+     */
+    public String getCookiesText() {
+        return LibWiki.creaCookiesText(cookies);
     } // fine del metodo
 
     public String getLingua() {

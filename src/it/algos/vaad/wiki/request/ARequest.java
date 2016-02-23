@@ -39,6 +39,7 @@ public abstract class ARequest {
 
 
     //--richiesta preliminary per ottenere il token per Edit e Move
+    protected static final boolean USA_NEW_META_TOKEN = true; //il vecchio intoken=edit è deprecato
     protected static String TAG_PRELINARY = "&action=query&meta=tokens";
 
 
@@ -96,26 +97,39 @@ public abstract class ARequest {
     //--titolo della pagina
     protected String wikiTitle;
 
+    //--parametro provvisorio utilizzato da RequestMove e RequestWrite
+    //--viene specificato/precisato meglio nella sottoclasse nel metodo elaboraParametri
+    //--può essere il nuovo titolo della pagina (RequestMove), oppure il nuovo testo della pagina (RequestWrite)
+    protected String newTitleNewText;
+
     //--pageid della pagina
     protected long wikiPageid;
+
     // oggetto della modifica in scrittura
     protected String summary;
+
     // ci metto tutti i cookies restituiti da URLConnection.responses
     protected HashMap cookies;
+
     // token ottenuto dalla preliminaryRequest ed usato per Edit e Move
     protected String csrfToken;
+
     // liste di pagine
     protected ArrayList<Long> listaPaginePageids;
     protected ArrayList<String> listaPagineTitles;
+
     // liste di voci della categoria (namespace=0)
     protected ArrayList<Long> listaVociPageids;
     protected ArrayList<String> listaVociTitles;
+
     // liste di sottocategorie della categoria (namespace=14)
     protected ArrayList<Long> listaCatPageids;
     protected ArrayList<String> listaCatTitles;
+
     //--lista di wrapper con pagesid e timestamp
     protected ArrayList<WrapTime> listaWrapTime;
     protected ArrayList<WrapTime> listaWrapTimeMissing;
+
     //--url del collegamento
     private String preliminatyDomain;
     private String urlDomain;
@@ -148,6 +162,20 @@ public abstract class ARequest {
         this.doInit();
     }// fine del metodo costruttore completo
 
+    /**
+     * Costruttore completo
+     *
+     * @param wikiTitle       titolo della pagina wiki su cui operare
+     * @param newTitleNewText nuovo titolo della pagina (RequestMove), oppure nuovo testo della pagina (RequestWrite)
+     * @param summary         oggetto dello spostamento (RequestMove) o modifica (RequestWrite)
+     */
+    public ARequest(String wikiTitle, String newTitleNewText, String summary) {
+        this.wikiTitle = wikiTitle;
+        this.newTitleNewText = newTitleNewText;
+        this.summary = summary;
+        this.doInit();
+    }// fine del metodo costruttore completo
+
 
     /**
      * Gestione del flusso
@@ -157,10 +185,10 @@ public abstract class ARequest {
         elaboraParametri();
 
         if (needLogin) {
-        if (!checkLogin()) {
-            valida = false;
-            return;
-        }// end of if cycle
+            if (!checkLogin()) {
+                valida = false;
+                return;
+            }// end of if cycle
         }// end of if cycle
 
 
@@ -186,25 +214,6 @@ public abstract class ARequest {
             risultato = TipoRisultato.nonTrovata;
         }// fine del blocco try-catch
 
-
-//        try { // prova ad eseguire il codice
-//            if (needToken) {
-//                if (!preliminaryRequest()) {
-//                    valida = false;
-//                    if (risultato != TipoRisultato.mustbeposted) {
-//                        risultato = TipoRisultato.noPreliminaryToken;
-//                    }// end of if cycle
-//                }// end of if cycle
-//                return;
-//            }// end of if cycle
-//
-//            cicloRequest();
-//        } catch (Exception unErrore) { // intercetta l'errore
-//            valida = false;
-//            risultato = TipoRisultato.nonTrovata;
-//            String errore = unErrore.getMessage();
-//            String errore2 = unErrore.getClass().getSimpleName();
-//        }// fine del blocco try-catch
     }// fine del metodo
 
     /**
@@ -225,46 +234,34 @@ public abstract class ARequest {
     }// fine del metodo
 
 
-//    /**
-//     * Ciclo delle request
-//     */
-//    private void cicloRequest() throws Exception {
-//        urlRequest();
-//        if (needContinua) {
-//            while (!tokenContinua.equals("")) {
-//                urlRequest();
-//            } // fine del blcco while
-//        }// end of if cycle
-//    } // fine del metodo
-
-    /**
-     * Controllo del login
-     */
-    private boolean checkLogin() {
-        boolean status = true;
-
-        if (wikiLogin == null) {
-            wikiLogin = (WikiLogin) LibSession.getAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION);
-        }// end of if cycle
-
-        if (wikiLogin == null) {
-            wikiLogin = VaadApp.WIKI_LOGIN;
-        }// end of if cycle
-
-        if (needLogin) {
-            if (wikiLogin == null) {
-                return false;
-            }// end of if cycle
-        }// end of if cycle
-
-        return status;
-    } // fine del metodo
 
     /**
      * Alcune request (su mediawiki) richiedono anche una tokenRequestOnly preliminare
-//     * PUO essere sovrascritto nelle sottoclassi specifiche
+     //   * PUO essere sovrascritto nelle sottoclassi specifiche
      */
     private void preliminaryRequest() throws Exception {
+        URLConnection urlConn;
+        String risposta;
+
+        //--crea la connessione, elaborando il Domain
+        urlConn = this.creaUrlConnection("");
+
+        //--invia i cookies di supporto, se richiesti
+        if (needCookies) {
+            this.uploadCookies(urlConn);
+        }// end of if cycle
+
+        //--now we send the data POST
+        //--crea una connessione di tipo POST, se richiesta
+        if (needPost) {
+            this.creaPostConnection(urlConn);
+        }// end of if cycle
+
+        //--Invia la request (GET oppure POST)
+        risposta = sendConnection(urlConn);
+
+        // controlla il valore di ritorno della request e regola il risultato
+        elaboraRisposta(risposta);
     } // fine del metodo
 
 
@@ -278,7 +275,8 @@ public abstract class ARequest {
         String risposta;
 
         //--crea la connessione, elaborando il Domain
-        urlConn = this.creaUrlConnection();
+        String domainTmp = elaboraDomain();
+        urlConn = this.creaUrlConnection(domainTmp);
 
         //--invia i cookies di supporto, se richiesti
         if (needCookies) {
@@ -330,10 +328,9 @@ public abstract class ARequest {
      *
      * @return connessione con la request
      */
-    private URLConnection creaUrlConnection() throws Exception {
+    private URLConnection creaUrlConnection(String domainTmp) throws Exception {
         URLConnection urlConn = null;
-        String txtCookies = "";
-        String domainTmp = elaboraDomain();
+//        String domainTmp = elaboraDomain();
 
         if (domainTmp != null && !domainTmp.equals("")) {
             urlConn = new URL(domainTmp).openConnection();
@@ -346,8 +343,7 @@ public abstract class ARequest {
 
         // regola le property
         if (wikiLogin != null && urlConn != null) {
-            txtCookies = wikiLogin.getStringCookies();
-            urlConn.setRequestProperty("Cookie", txtCookies);
+            urlConn.setRequestProperty("Cookie", wikiLogin.getCookiesText());
         }// end of if cycle
 
         return urlConn;
@@ -490,6 +486,30 @@ public abstract class ARequest {
     } // fine del metodo
 
     /**
+     * Controllo del login
+     */
+    private boolean checkLogin() {
+        boolean status = true;
+
+        if (wikiLogin == null) {
+            wikiLogin = (WikiLogin) LibSession.getAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION);
+        }// end of if cycle
+
+        if (wikiLogin == null) {
+            wikiLogin = VaadApp.WIKI_LOGIN;
+        }// end of if cycle
+
+        if (needLogin) {
+            if (wikiLogin == null) {
+                return false;
+            }// end of if cycle
+        }// end of if cycle
+
+        return status;
+    } // fine del metodo
+
+
+    /**
      * Controllo finale per verificare le condizioni necessarie a questa request per essere considerata valida
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
@@ -549,6 +569,14 @@ public abstract class ARequest {
 
     public ArrayList<String> getListaCatTitles() {
         return listaCatTitles;
+    }// end of getter method
+
+    public ArrayList<Long> getListaPaginePageids() {
+        return listaPaginePageids;
+    }// end of getter method
+
+    public ArrayList<String> getListaPagineTitles() {
+        return listaPagineTitles;
     }// end of getter method
 
     public ArrayList<Long> getListaAllPageids() {

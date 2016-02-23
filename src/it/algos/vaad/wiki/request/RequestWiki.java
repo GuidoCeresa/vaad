@@ -274,7 +274,7 @@ public abstract class RequestWiki extends Request {
 
         // regola le property
         if (wikiLogin != null) {
-            txtCookies = wikiLogin.getStringCookies();
+//            txtCookies = wikiLogin.getStringCookies();
             mappa= wikiLogin.getCookies();
 //            txtCookies=" itwikiUserName=Gac; itwikiUserID=399; centralauth_User=Gac; centralauth_Session=aa5f3ad00ae724ef5c6ba7096732f950";
             txtCookies= LibWiki.creaCookiesText(mappa);

@@ -2,7 +2,6 @@ import it.algos.vaad.wiki.Api;
 import it.algos.vaad.wiki.WikiLogin;
 import it.algos.vaad.wiki.WrapTime;
 import it.algos.webbase.web.lib.LibArray;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -16,18 +15,20 @@ import static org.junit.Assert.*;
 public class ApiTest extends VaadTest {
 
     private static final long[] listaPageIds = {3397115L, 4452510L, 1691379L, 3520373L, 4956588L, 5136975L, 2072357L, 4700355L};
-    private static ArrayList<Long> arrayPageIds;
+    @SuppressWarnings("all")
+    private static ArrayList<Long> arrayPageIds = (ArrayList) LibArray.fromLong(listaPageIds);
     private WikiLogin loginWiki;
 
-    @Before
+//    @Before
     // Setup logic here
-    public void setUp() {
-        String nick = "biobot";
-        String password = "fulvia";
+//    public void setUp() {
+//        String nick = "biobot";
+//        String password = "fulvia";
+//
+//        loginWiki = new WikiLogin(nick, password);
+//        arrayPageIds = (ArrayList) LibArray.fromLong(listaPageIds);
+//    } // fine del metodo iniziale
 
-        loginWiki = new WikiLogin(nick, password);
-        arrayPageIds = (ArrayList) LibArray.fromLong(listaPageIds);
-    } // fine del metodo iniziale
 
     @Test
     /**
@@ -296,8 +297,8 @@ public class ApiTest extends VaadTest {
         String wikiTitle = "Utente:Biobot/6";
         String tag5 = "quinta";
         String tag6 = "sesta";
-        String oldTxt="";
-        String newTxt="";
+        String oldTxt = "";
+        String newTxt = "";
         String oldTestoVoce = Api.leggeVoce(wikiTitle);
 
         if (oldTestoVoce.contains(tag5)) {
@@ -324,8 +325,39 @@ public class ApiTest extends VaadTest {
      * @param titleCat della categoria da ricercare
      * @return lista titoli sia delle voci che delle subcategorie
      */
-    public void leggeTitlesCategoria() {
-        listaString = Api.leggeTitlesCategoria(TITOLO_CAT_BREVE);
+    public void leggeCat() {
+        setLogin();
+        listaString = Api.leggeCat(TITOLO_CAT_BREVE);
+        assertNotNull(listaString);
+        assertEquals(listaString.size(), 14);
+    } // fine del metodo
+
+    @Test
+    /**
+     * Legge gli elementi appartenenti ad una categoria.
+     * Restituisce una lista (ArrayList) di pageid solo delle voci senza le subcategorie
+     *
+     * @param titleCat della categoria da ricercare
+     * @return lista pageid delle voci
+     */
+    public void leggeCatLong() {
+        setLogin();
+        listaLong = Api.leggeCatLong(TITOLO_CAT_BREVE);
+        assertNotNull(listaLong);
+        assertEquals(listaLong.size(), 2);
+    } // fine del metodo
+
+    @Test
+    /**
+     * Legge gli elementi appartenenti ad una categoria.
+     * Restituisce una lista (ArrayList) di titoli sia delle voci che delle subcategorie
+     *
+     * @param titleCat della categoria da ricercare
+     * @return lista titoli sia delle voci che delle subcategorie
+     */
+    public void leggeCatTitles() {
+        setLogin();
+        listaString = Api.leggeCatTitles(TITOLO_CAT_BREVE);
         assertNotNull(listaString);
         assertEquals(listaString.size(), 14);
     }// end of single test
@@ -338,8 +370,9 @@ public class ApiTest extends VaadTest {
      * @param titleCat della categoria da ricercare
      * @return lista pageid sia delle voci che delle subcategorie
      */
-    public void leggePageidsCategoria() {
-        listaLong = Api.leggePageidsCategoria(TITOLO_CAT_BREVE);
+    public void leggeCatPageids() {
+        setLogin();
+        listaLong = Api.leggeCatPageids(TITOLO_CAT_BREVE);
         assertNotNull(listaLong);
         assertEquals(listaLong.size(), 14);
     }// end of single test
@@ -352,8 +385,9 @@ public class ApiTest extends VaadTest {
      * @param titleCat della categoria da ricercare
      * @return lista titoli delle voci
      */
-    public void leggeTitlesCategoriaOnlyVoci() {
-        listaString = Api.leggeTitlesCategoriaOnlyVoci(TITOLO_CAT_BREVE);
+    public void leggeCatTitlesOnlyVoci() {
+        setLogin();
+        listaString = Api.leggeCatTitlesOnlyVoci(TITOLO_CAT_BREVE);
         assertNotNull(listaString);
         assertEquals(listaString.size(), 2);
     }// end of single test
@@ -367,8 +401,9 @@ public class ApiTest extends VaadTest {
      * @param titleCat della categoria da ricercare
      * @return lista pageid delle voci
      */
-    public void leggePageidsCategoriaOnlyVoci() {
-        listaLong = Api.leggePageidsCategoriaOnlyVoci(TITOLO_CAT_BREVE);
+    public void leggeCatPageidsOnlyVoci() {
+        setLogin();
+        listaLong = Api.leggeCatPageidsOnlyVoci(TITOLO_CAT_BREVE);
         assertNotNull(listaLong);
         assertEquals(listaLong.size(), 2);
     }// end of single test
@@ -382,9 +417,14 @@ public class ApiTest extends VaadTest {
      * @return lista titoli delle voci
      */
     public void leggeBacklinks() {
+        setLogin();
         listaString = Api.leggeBacklinks("Lago di Ha! Ha!");
         assertNotNull(listaString);
         assertEquals(listaString.size(), 6);
+
+        listaString = Api.leggeBacklinksOnlyVoci("Lago di Ha! Ha!");
+        assertNotNull(listaString);
+        assertEquals(listaString.size(), 3);
     }// end of single test
 
 

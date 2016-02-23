@@ -63,6 +63,7 @@ public class RequestWikiCat extends RequestWiki {
      * Poi invocano il metodo doInit() della superclasse astratta
      *
      * @param wikiTitle titolo della pagina wiki su cui operare
+     * @deprecated
      */
     public RequestWikiCat(String wikiTitle) {
         this(wikiTitle, LIMITE);
@@ -77,6 +78,7 @@ public class RequestWikiCat extends RequestWiki {
      *
      * @param wikiTitle titolo della pagina wiki su cui operare
      * @param limite    di pagine da caricare
+     * @deprecated
      */
     public RequestWikiCat(String wikiTitle, int limite) {
         super.wikiTitle = wikiTitle;
@@ -89,6 +91,7 @@ public class RequestWikiCat extends RequestWiki {
      *
      * @param wikiTitle titolo della pagina wiki su cui operare
      * @param wikiLogin del collegamento
+     * @deprecated
      */
     public RequestWikiCat(String wikiTitle, WikiLogin wikiLogin) {
         this(wikiTitle, LIMITE, wikiLogin);
@@ -100,6 +103,7 @@ public class RequestWikiCat extends RequestWiki {
      * @param wikiTitle titolo della pagina wiki su cui operare
      * @param limite    di pagine da caricare
      * @param wikiLogin del collegamento
+     * @deprecated
      */
     public RequestWikiCat(String wikiTitle, int limite, WikiLogin wikiLogin) {
         super.wikiTitle = wikiTitle;
@@ -179,7 +183,7 @@ public class RequestWikiCat extends RequestWiki {
 
         if (debug) {
             primoStep = LibTime.difText(inizio);
-            System.out.println( "primoStep: " + primoStep);
+            System.out.println("primoStep: " + primoStep);
         }// end of if cycle
 
 

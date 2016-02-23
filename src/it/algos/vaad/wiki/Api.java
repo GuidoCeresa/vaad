@@ -456,10 +456,10 @@ public class Api {
      */
     public static ArrayList<WrapTime> leggeWrapTime(ArrayList<Long> bloccoPageids) {
         ArrayList<WrapTime> listaWrapTime = null;
-        RequestWikiTimestamp request;
+        ARequest request;
 
         if (bloccoPageids != null) {
-            request = new RequestWikiTimestamp(bloccoPageids);
+            request = new RequestTime(bloccoPageids);
             listaWrapTime = request.getListaWrapTime();
         }// end of if cycle
 
@@ -642,7 +642,7 @@ public class Api {
      * @return lista titoli sia delle voci che delle subcategorie
      */
     public static ArrayList<String> leggeCat(String titleCat) {
-        return leggeTitlesCategoria(titleCat);
+        return leggeCatTitles(titleCat);
     } // fine del metodo
 
     /**
@@ -653,7 +653,7 @@ public class Api {
      * @return lista pageid delle voci
      */
     public static ArrayList<Long> leggeCatLong(String titleCat) {
-        return leggePageidsCategoriaOnlyVoci(titleCat);
+        return leggeCatPageidsOnlyVoci(titleCat);
     } // fine del metodo
 
 
@@ -662,14 +662,15 @@ public class Api {
      * Restituisce una lista (ArrayList) di titoli sia delle voci che delle subcategorie
      *
      * @param titleCat della categoria da ricercare
+     *
      * @return lista titoli sia delle voci che delle subcategorie
      */
-    public static ArrayList<String> leggeTitlesCategoria(String titleCat) {
+    public static ArrayList<String> leggeCatTitles(String titleCat) {
         ArrayList<String> lista = null;
-        RequestWikiCat request;
+        ARequest request;
 
         if (titleCat != null && !titleCat.equals("")) {
-            request = new RequestWikiCat(titleCat);
+            request = new RequestCat(titleCat);
             if (request.isValida()) {
                 lista = request.getListaAllTitles();
             }// end of if cycle
@@ -685,12 +686,12 @@ public class Api {
      * @param titleCat della categoria da ricercare
      * @return lista pageid sia delle voci che delle subcategorie
      */
-    public static ArrayList<Long> leggePageidsCategoria(String titleCat) {
+    public static ArrayList<Long> leggeCatPageids(String titleCat) {
         ArrayList<Long> lista = null;
-        RequestWikiCat request;
+        ARequest request;
 
         if (titleCat != null && !titleCat.equals("")) {
-            request = new RequestWikiCat(titleCat);
+            request = new RequestCat(titleCat);
             if (request.isValida()) {
                 lista = request.getListaAllPageids();
             }// end of if cycle
@@ -706,12 +707,12 @@ public class Api {
      * @param titleCat della categoria da ricercare
      * @return lista titoli delle voci
      */
-    public static ArrayList<String> leggeTitlesCategoriaOnlyVoci(String titleCat) {
+    public static ArrayList<String> leggeCatTitlesOnlyVoci(String titleCat) {
         ArrayList<String> lista = null;
-        RequestWikiCat request;
+        ARequest request;
 
         if (titleCat != null && !titleCat.equals("")) {
-            request = new RequestWikiCat(titleCat);
+            request = new RequestCat(titleCat);
             if (request.isValida()) {
                 lista = request.getListaVociTitles();
             }// end of if cycle
@@ -727,12 +728,12 @@ public class Api {
      * @param titleCat della categoria da ricercare
      * @return lista pageid delle voci
      */
-    public static ArrayList<Long> leggePageidsCategoriaOnlyVoci(String titleCat) {
+    public static ArrayList<Long> leggeCatPageidsOnlyVoci(String titleCat) {
         ArrayList<Long> lista = null;
-        RequestWikiCat request;
+        ARequest request;
 
         if (titleCat != null && !titleCat.equals("")) {
-            request = new RequestWikiCat(titleCat);
+            request = new RequestCat(titleCat);
             if (request.isValida()) {
                 lista = request.getListaVociPageids();
             }// end of if cycle
@@ -750,12 +751,12 @@ public class Api {
      */
     public static ArrayList<String> leggeBacklinks(String title) {
         ArrayList<String> lista = null;
-        RequestWikiBacklinks request;
+        ARequest request;
 
         if (title != null && !title.equals("")) {
-            request = new RequestWikiBacklinks(title);
+            request = new RequestLinks(title);
             if (request.isValida()) {
-                lista = request.getListaAllTitles();
+                lista = request.getListaPagineTitles();
             }// end of if cycle
         }// end of if cycle
 
@@ -771,10 +772,10 @@ public class Api {
      */
     public static ArrayList<String> leggeBacklinksOnlyVoci(String title) {
         ArrayList<String> lista = null;
-        RequestWikiBacklinks request;
+        ARequest request;
 
         if (title != null && !title.equals("")) {
-            request = new RequestWikiBacklinks(title);
+            request = new RequestLinks(title);
             if (request.isValida()) {
                 lista = request.getListaVociTitles();
             }// end of if cycle

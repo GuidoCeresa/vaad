@@ -30,7 +30,7 @@ public abstract class VaadTest {
     protected static String TITOLO9 = "Utente:Gac/Sandbox9";
     protected static String TITOLO_ALTRO = "Utente:Gac/Sandbox4";
     protected static String TITOLO_BLOCCATO = "Utente:Rompiballe11";
-    protected static String TITOLO_BACK = "Stefano Corti";
+    protected static String TITOLO_BACK = "Lago di Ha! Ha!";
     protected static String TITOLO_MODULO = "Modulo:Bio/Plurale_attività";
     protected static String SUMMARY = "Sola scrittura";
     protected static int PAGEID = 698528;
@@ -90,6 +90,7 @@ public abstract class VaadTest {
     protected ArrayList<Long> listaLong = null;
     protected ArrayList<String> listaString = null;
     protected WikiLogin wikiLogin = null;
+
 
     // Login logic here
     protected void setLogin() {

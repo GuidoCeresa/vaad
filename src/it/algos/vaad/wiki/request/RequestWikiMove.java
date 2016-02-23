@@ -66,6 +66,7 @@ public class RequestWikiMove extends RequestWiki {
      *
      * @param oldTitle della pagina da spostare
      * @param newTitle definitivo della pagina
+     * @deprecated
      */
     public RequestWikiMove(String oldTitle, String newTitle) {
         this(oldTitle, newTitle, SUMMARY);
@@ -78,6 +79,7 @@ public class RequestWikiMove extends RequestWiki {
      * @param oldTitle della pagina da spostare
      * @param newTitle definitivo della pagina
      * @param summary  oggetto della modifica
+     * @deprecated
      */
     public RequestWikiMove(String oldTitle, String newTitle, String summary) {
         this.doInit(oldTitle, newTitle, summary, null);

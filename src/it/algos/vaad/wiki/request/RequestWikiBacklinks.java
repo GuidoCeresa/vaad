@@ -51,6 +51,7 @@ public class RequestWikiBacklinks extends RequestWiki {
      * Poi invocano il metodo doInit() della superclasse astratta
      *
      * @param wikiTitle titolo della pagina wiki su cui operare
+     * @deprecated
      */
     public RequestWikiBacklinks(String wikiTitle) {
         this.wikiTitle = wikiTitle;

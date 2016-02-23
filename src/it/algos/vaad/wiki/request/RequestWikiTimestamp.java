@@ -29,6 +29,7 @@ public class RequestWikiTimestamp extends RequestWikiReadMulti {
      * Poi invocano il metodo doInit() della superclasse astratta
      *
      * @param listaPageIds elenco di pageids (long)
+     * @deprecated
      */
     public RequestWikiTimestamp(long[] listaPageIds) {
         super(listaPageIds);
@@ -42,6 +43,7 @@ public class RequestWikiTimestamp extends RequestWikiReadMulti {
      * Poi invocano il metodo doInit() della superclasse astratta
      *
      * @param arrayPageIds elenco di pageids (ArrayList)
+     * @deprecated
      */
     public RequestWikiTimestamp(ArrayList<Long> arrayPageIds) {
         super(arrayPageIds);
@@ -58,7 +60,7 @@ public class RequestWikiTimestamp extends RequestWikiReadMulti {
     protected String getDomain() {
         String domain = super.getDomain();
 
-        domain += API_QUERY+TAG_PROP_PAGEIDS + stringaPageIds;
+        domain += API_QUERY + TAG_PROP_PAGEIDS + stringaPageIds;
 
         return domain;
     } // fine del metodo

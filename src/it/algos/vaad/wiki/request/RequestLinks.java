@@ -76,8 +76,8 @@ public class RequestLinks extends ARequest {
         listaVociPageids = LibWiki.creaListaBackLongVociJson(rispostaRequest);
         listaVociTitles = LibWiki.creaListaBackTxtVociJson(rispostaRequest);
 
-        if (listaAllPageids != null && listaAllTitles != null) {
-            if (listaAllPageids.size() == listaAllTitles.size()) {
+        if (listaPaginePageids != null && listaPagineTitles != null) {
+            if (listaPaginePageids.size() == listaPagineTitles.size()) {
                 risultato = TipoRisultato.letta;
                 valida = true;
             }// end of if cycle

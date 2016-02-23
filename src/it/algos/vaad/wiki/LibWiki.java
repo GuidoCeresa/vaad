@@ -1478,7 +1478,11 @@ public abstract class LibWiki {
             lista = creaListaBaseLongJson(objArray);
         }// end of if cycle
 
-        return lista;
+        if (lista != null && lista.size() > 0) {
+            return lista;
+        } else {
+            return null;
+        }// end of if/else cycle
     } // fine del metodo
 
     /**
@@ -1495,7 +1499,11 @@ public abstract class LibWiki {
             lista = creaListaBaseLongJson(objArray, true);
         }// end of if cycle
 
-        return lista;
+        if (lista != null && lista.size() > 0) {
+            return lista;
+        } else {
+            return null;
+        }// end of if/else cycle
     } // fine del metodo
 
     /**
@@ -1512,7 +1520,11 @@ public abstract class LibWiki {
             lista = creaListaBaseTxtJson(objArray);
         }// end of if cycle
 
-        return lista;
+        if (lista != null && lista.size() > 0) {
+            return lista;
+        } else {
+            return null;
+        }// end of if/else cycle
     } // fine del metodo
 
     /**
@@ -1529,7 +1541,11 @@ public abstract class LibWiki {
             lista = creaListaBaseTxtJson(objArray, true);
         }// end of if cycle
 
-        return lista;
+        if (lista != null && lista.size() > 0) {
+            return lista;
+        } else {
+            return null;
+        }// end of if/else cycle
     } // fine del metodo
 
     /**

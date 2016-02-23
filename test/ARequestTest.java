@@ -5,7 +5,6 @@ import it.algos.vaad.wiki.WrapTime;
 import it.algos.vaad.wiki.request.*;
 import it.algos.webbase.web.lib.LibArray;
 import it.algos.webbase.web.lib.LibText;
-import it.algos.webbase.web.query.AQuery;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -196,7 +195,7 @@ public class ARequestTest extends VaadTest {
     @Test
     public void links() {
         request = new RequestLinks(TITOLO_BACK);
-        checkListeTime(12, 10);
+        checkListeTime(6, 3);
 
         request = new RequestLinks(TITOLO_2);
         checkListeTime(3, 0);
@@ -206,6 +205,15 @@ public class ARequestTest extends VaadTest {
 
         request = new RequestLinks(TITOLO_ALTRO);
         checkListeTime(1, 0);
+    }// end of single test
+
+
+//    @Test
+    public void move() {
+        String reason = "test";
+
+        request = new RequestMove(TITOLO8, TITOLO9, reason);
+        assertTrue(request.isValida());
     }// end of single test
 
     private void ottenutoNullo() {
@@ -230,9 +238,11 @@ public class ARequestTest extends VaadTest {
     }// fine del metodo
 
     private void checkListeCat(int voci, int categorie) {
+        checkListe(voci, categorie, 0);
     }// fine del metodo
 
-    private void checkListeTime(int voci, int categorie) {
+    private void checkListeTime(int pagine, int voci) {
+        checkListe(voci, 0, pagine);
     }// fine del metodo
 
     private void checkListe(int voci, int categorie, int pagine) {
@@ -240,8 +250,8 @@ public class ARequestTest extends VaadTest {
         ArrayList<String> listaVociTitles;
         ArrayList<Long> listaCatPageids;
         ArrayList<String> listaCatTitles;
-        ArrayList<Long> listaAllPageids;
-        ArrayList<String> listaAllTitles;
+        ArrayList<Long> listaPageids;
+        ArrayList<String> listaTitles;
 
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.letta);
@@ -280,20 +290,20 @@ public class ARequestTest extends VaadTest {
             assertNull(listaCatTitles);
         }// end of if/else cycle
 
-        listaAllPageids = request.getListaAllPageids();
-        if (voci + categorie > 0) {
-            assertNotNull(listaAllPageids);
-            assertEquals(listaAllPageids.size(), voci + categorie);
+        listaPageids = request.getListaPaginePageids();
+        if (pagine > 0) {
+            assertNotNull(listaPageids);
+            assertEquals(listaPageids.size(), pagine);
         } else {
-            assertNull(listaAllPageids);
+            assertNull(listaPageids);
         }// end of if/else cycle
 
-        listaAllTitles = request.getListaAllTitles();
-        if (voci + categorie > 0) {
-            assertNotNull(listaAllTitles);
-            assertEquals(listaAllTitles.size(), voci + categorie);
+        listaTitles = request.getListaPagineTitles();
+        if (pagine > 0) {
+            assertNotNull(listaTitles);
+            assertEquals(listaTitles.size(), pagine);
         } else {
-            assertNull(listaAllTitles);
+            assertNull(listaTitles);
         }// end of if/else cycle
     }// fine del metodo
 
