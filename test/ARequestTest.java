@@ -1,7 +1,5 @@
-import it.algos.vaad.wiki.Page;
-import it.algos.vaad.wiki.PagePar;
-import it.algos.vaad.wiki.TipoRisultato;
-import it.algos.vaad.wiki.WrapTime;
+import it.algos.vaad.VaadApp;
+import it.algos.vaad.wiki.*;
 import it.algos.vaad.wiki.request.*;
 import it.algos.webbase.web.lib.LibArray;
 import it.algos.webbase.web.lib.LibText;
@@ -151,8 +149,12 @@ public class ARequestTest extends VaadTest {
     @Test
     public void cat() {
         //--login obbligatorio - quindi la prima volta NON funziona
-        request = new RequestCat(TITOLO_CAT_BREVE);
-        assertFalse(request.isValida());
+        if (wikiLogin == null) {
+            VaadApp.WIKI_LOGIN = null;
+
+            request = new RequestCat(TITOLO_CAT_BREVE);
+            assertFalse(request.isValida());
+        }// end of if cycle
 
         //--effettua il login
         setLogin();
@@ -208,12 +210,80 @@ public class ARequestTest extends VaadTest {
     }// end of single test
 
 
-//    @Test
+    @Test
     public void move() {
         String reason = "test";
 
+        //--login obbligatorio
+        setLogin();
+
         request = new RequestMove(TITOLO8, TITOLO9, reason);
+        assertFalse(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.articleexists);
+    }// end of single test
+
+    @Test
+    /**
+     * Query standard per scrivere il contenuto di una pagina
+     * Usa il titolo della pagina
+     * Necessita di Login per scrivere
+     */
+    public void write() {
+        String testoIniziale;
+        String testoA;
+        String testoB;
+        String summaryA;
+        String summaryB;
+
+        //--recupera il testo esistente per partire da una situazione pulita
+        testoIniziale = Api.leggeVoce(TITOLO_3);
+
+        //--login obbligatorio - quindi la prima volta NON funziona
+        if (wikiLogin == null) {
+            VaadApp.WIKI_LOGIN = null;
+
+            request = new RequestWrite(TITOLO_3, "", "");
+            assertFalse(request.isValida());
+            assertEquals(request.getRisultato(), TipoRisultato.noLogin);
+
+            request = new RequestWrite(TITOLO_3, testoIniziale, "");
+            assertFalse(request.isValida());
+            assertEquals(request.getRisultato(), TipoRisultato.noLogin);
+        }// end of if cycle
+
+        //--login obbligatorio
+        setLogin();
+
+        //--summary utilizza il login esistente
+        summaryA = LibWiki.getSummary("test add x");
+        summaryB = LibWiki.getSummary("test minus x");
+
+        request = new RequestWrite(TITOLO_3, testoIniziale, "");
         assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.nochange);
+
+        request = new RequestWrite(TITOLO_3, testoIniziale, summaryA);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.nochange);
+
+        testoA = testoIniziale + "x";
+        request = new RequestWrite(TITOLO_3, testoA, summaryA);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.modificaRegistrata);
+
+        request = new RequestWrite(TITOLO_3, testoA);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.nochange);
+
+        testoB = testoIniziale;
+        request = new RequestWrite(TITOLO_3, testoB, summaryB);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.modificaRegistrata);
+
+        request = new RequestWrite(TITOLO_3, testoB, summaryB);
+        assertTrue(request.isValida());
+        assertEquals(request.getRisultato(), TipoRisultato.nochange);
+
     }// end of single test
 
     private void ottenutoNullo() {

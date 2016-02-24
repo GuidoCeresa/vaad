@@ -1,5 +1,13 @@
 package it.algos.vaad.wiki.request;
 
+import it.algos.vaad.wiki.LibWiki;
+import it.algos.vaad.wiki.TipoRisultato;
+import it.algos.vaad.wiki.WrapTime;
+
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Created by gac on 27 nov 2015.
  * <p>
@@ -41,7 +49,9 @@ package it.algos.vaad.wiki.request;
 public class RequestMove extends ARequest {
 
 
-//    private static final String TAG_MOVE = "&intoken=move";
+    //--azione API specifica */
+    protected static String API_MOVE = "move";
+
     private static final String FROM = "&from=";
     private static final String TO = "&to=";
     private static final String REASON = "&reason=";
@@ -64,7 +74,7 @@ public class RequestMove extends ARequest {
     }// fine del metodo costruttore
 
     /**
-     * Costruttore
+     * Costruttore completo
      *
      * @param oldTitle della pagina da spostare
      * @param newTitle definitivo della pagina
@@ -85,7 +95,9 @@ public class RequestMove extends ARequest {
         super.elaboraParametri();
         this.newTitle = super.newTitleNewText;
         needPreliminary = true;
+        needLogin = true;
         needBot = true;
+        needPost = true;
     }// fine del metodo
 
     /**
@@ -95,9 +107,20 @@ public class RequestMove extends ARequest {
      */
     @Override
     protected String elaboraDomain() {
-        String domainTmp = API_BASE + API_ACTION + API_QUERY;
+        String domainTmp = API_BASE + API_ACTION + API_MOVE;
+        String from = "";
+        String to = "";
 
-        String tag = "https://it.wikipedia.org/w/api.php?format=json&formatversion=2&action=move";
+        try { // prova ad eseguire il codice
+            from = URLEncoder.encode(wikiTitle, ENCODE);
+            to = URLEncoder.encode(newTitle, ENCODE);
+        } catch (Exception unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch
+
+        domainTmp += FROM;
+        domainTmp += from;
+        domainTmp += TO;
+        domainTmp += to;
 
         if (needBot) {
             domainTmp += API_ASSERT;
@@ -105,6 +128,52 @@ public class RequestMove extends ARequest {
 
         domain = domainTmp;
         return domainTmp;
+    } // fine del metodo
+
+
+    /**
+     * Elabora la risposta
+     * <p>
+     * Informazioni, contenuto e validita della risposta
+     * Controllo del contenuto (testo) ricevuto
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     */
+    @Override
+    protected void elaboraRisposta(String rispostaRequest) {
+        String errorMessage = LibWiki.getError(rispostaRequest);
+
+        risultato = TipoRisultato.spostata;
+
+        if (errorMessage.equals(TipoRisultato.noto.toString())) {
+            risultato = TipoRisultato.noto;
+            valida = false;
+        }// end of if cycle
+
+        if (errorMessage.equals(TipoRisultato.invalidtitle.toString())) {
+            risultato = TipoRisultato.invalidtitle;
+            valida = false;
+        }// end of if cycle
+
+        if (errorMessage.equals(TipoRisultato.selfmove.toString())) {
+            risultato = TipoRisultato.selfmove;
+            valida = false;
+        }// end of if cycle
+
+        if (errorMessage.equals(TipoRisultato.articleexists.toString())) {
+            risultato = TipoRisultato.articleexists;
+            valida = false;
+        }// end of if cycle
+
+        if (errorMessage.equals(TipoRisultato.protectedtitle.toString())) {
+            risultato = TipoRisultato.protectedtitle;
+            valida = false;
+        }// end of if cycle
+
+        if (errorMessage.equals(TipoRisultato.missingtitle.toString())) {
+            risultato = TipoRisultato.missingtitle;
+            valida = false;
+        }// end of if cycle
+
     } // fine del metodo
 
 } // fine della classe

@@ -1,4 +1,5 @@
 import it.algos.vaad.wiki.Api;
+import it.algos.vaad.wiki.LibWiki;
 import it.algos.vaad.wiki.WikiLogin;
 import it.algos.vaad.wiki.WrapTime;
 import it.algos.webbase.web.lib.LibArray;
@@ -274,7 +275,7 @@ public class ApiTest extends VaadTest {
      * @param summary   oggetto della modifica
      * @param login     for testing purpose only
      */
-    public void modificaVoce() {
+    public void modificaVoce2() {
         String wikiTitle = "Utente:Gac/Sandbox4";
         String oldTxt = "diciotto senza remore";
         String newTxt = "senza";
@@ -293,28 +294,69 @@ public class ApiTest extends VaadTest {
      * @param summary   oggetto della modifica
      * @param login     for testing purpose only
      */
-    public void modificaVoce2() {
-        String wikiTitle = "Utente:Biobot/6";
-        String tag5 = "quinta";
-        String tag6 = "sesta";
-        String oldTxt = "";
-        String newTxt = "";
-        String oldTestoVoce = Api.leggeVoce(wikiTitle);
+    public void modificaVoce() {
+        String testoIniziale;
+        String testoTemporaneo;
+        String testoA;
+        String testoB;
+        String summaryA;
+        String summaryB;
+        boolean status;
 
-        if (oldTestoVoce.contains(tag5)) {
-            oldTxt = tag5;
-            newTxt = tag6;
-        } else {
-            if (oldTestoVoce.contains(tag6)) {
-                oldTxt = tag6;
-                newTxt = tag5;
-            }// end of if cycle
-        }// end of if/else cycle
+        //--recupera il testo esistente per partire da una situazione pulita
+        testoIniziale = Api.leggeVoce(TITOLO_3);
 
-        if (!oldTxt.equals("")) {
-            boolOttenuto = Api.modificaVoce(wikiTitle, oldTxt, newTxt, "", loginWiki);
-            assertTrue(boolOttenuto);
-        }// end of if cycle
+        //--login obbligatorio
+        setLogin();
+
+        //--summary utilizza il login esistente
+        summaryA = LibWiki.getSummary("test add h");
+        summaryB = LibWiki.getSummary("test minus h");
+
+        //--modifica da scrivere
+        testoA = testoIniziale + "h";
+
+        //--prima scrittura
+        status = Api.scriveVoce(TITOLO_3, testoA, summaryA);
+        assertTrue(status);
+
+        //--recupera il testo temporaneo dopo una prima scrittura
+        testoTemporaneo = Api.leggeVoce(TITOLO_3);
+
+        //--controllo per vedere se il testo attualmente è diverso
+        assertFalse(testoIniziale.equals(testoTemporaneo));
+
+        //--seconda scrittura
+        testoB = testoIniziale;
+        status = Api.scriveVoce(TITOLO_3, testoB, summaryB);
+        assertTrue(status);
+
+        //--controllo finale
+        assertFalse(testoIniziale.equals(testoTemporaneo));
+        testoTemporaneo = Api.leggeVoce(TITOLO_3);
+        assertTrue(testoIniziale.equals(testoTemporaneo));
+
+//        String wikiTitle = "Utente:Biobot/6";
+//        String tag5 = "quinta";
+//        String tag6 = "sesta";
+//        String oldTxt = "";
+//        String newTxt = "";
+//        String oldTestoVoce = Api.leggeVoce(wikiTitle);
+//
+//        if (oldTestoVoce.contains(tag5)) {
+//            oldTxt = tag5;
+//            newTxt = tag6;
+//        } else {
+//            if (oldTestoVoce.contains(tag6)) {
+//                oldTxt = tag6;
+//                newTxt = tag5;
+//            }// end of if cycle
+//        }// end of if/else cycle
+//
+//        if (!oldTxt.equals("")) {
+//            boolOttenuto = Api.modificaVoce(wikiTitle, oldTxt, newTxt, "", loginWiki);
+//            assertTrue(boolOttenuto);
+//        }// end of if cycle
     }// end of single test
 
     @Test

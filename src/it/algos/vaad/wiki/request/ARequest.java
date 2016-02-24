@@ -26,20 +26,14 @@ import java.util.HashMap;
 public abstract class ARequest {
 
 
-    //--codifica dei caratteri
-    protected static String ENCODE = "UTF-8";
-
-
-    //--language selezionato (per adesso solo questo)
-    protected static String LANGUAGE = "it";
-
-
-    //--progetto selezionato (per adesso solo questo)
-    protected static String PROJECT = "wikipedia";
-
-
     //--richiesta preliminary per ottenere il token per Edit e Move
     protected static final boolean USA_NEW_META_TOKEN = true; //il vecchio intoken=edit è deprecato
+    //--codifica dei caratteri
+    protected static String ENCODE = "UTF-8";
+    //--language selezionato (per adesso solo questo)
+    protected static String LANGUAGE = "it";
+    //--progetto selezionato (per adesso solo questo)
+    protected static String PROJECT = "wikipedia";
     protected static String TAG_PRELINARY = "&action=query&meta=tokens";
 
 
@@ -76,7 +70,6 @@ public abstract class ARequest {
     protected boolean needAssert;
     protected boolean needContinua;
     protected boolean needPost;
-    protected boolean needCookies;
     protected boolean needLogin;
     protected boolean needToken;
     protected boolean needBot;
@@ -198,10 +191,13 @@ public abstract class ARequest {
                 this.preliminaryRequest();
             }// end of if cycle
 
-            this.urlRequest();
+            //--elabora il domain
+            String urlDomain = elaboraDomain();
+            this.urlRequest(urlDomain);
             if (needContinua) {
                 while (!tokenContinua.equals("")) {
-                    this.urlRequest();
+                    urlDomain = elaboraDomain();
+                    this.urlRequest(urlDomain);
                 } // fine del blcco while
             }// end of if cycle
 
@@ -227,61 +223,57 @@ public abstract class ARequest {
         needAssert = false;
         needContinua = false;
         needPost = false;
-        needCookies = false;
         needLogin = false;
         needToken = false;
         needBot = false;
     }// fine del metodo
 
 
-
     /**
      * Alcune request (su mediawiki) richiedono anche una tokenRequestOnly preliminare
-     //   * PUO essere sovrascritto nelle sottoclassi specifiche
+     * La prima request per recuperare il crfToken, usa il GET
      */
     private void preliminaryRequest() throws Exception {
         URLConnection urlConn;
+        String urlDomainPreliminary = API_BASE + TAG_PRELINARY;
         String risposta;
 
         //--crea la connessione, elaborando il Domain
-        urlConn = this.creaUrlConnection("");
+        urlConn = this.creaUrlConnection(urlDomainPreliminary);
 
-        //--invia i cookies di supporto, se richiesti
-        if (needCookies) {
-            this.uploadCookies(urlConn);
-        }// end of if cycle
+//        //--invia i cookies di supporto, se richiesti
+//        if (needCookies) {
+//            this.uploadCookies(urlConn);
+//        }// end of if cycle
 
-        //--now we send the data POST
-        //--crea una connessione di tipo POST, se richiesta
-        if (needPost) {
-            this.creaPostConnection(urlConn);
-        }// end of if cycle
+//        //--now we send the data POST
+//        //--crea una connessione di tipo POST, se richiesta
+//        if (needPost) {
+//            this.creaPostConnection(urlConn);
+//        }// end of if cycle
 
         //--Invia la request (GET oppure POST)
         risposta = sendConnection(urlConn);
 
         // controlla il valore di ritorno della request e regola il risultato
-        elaboraRisposta(risposta);
+        elaboraRispostaPeliminary(risposta);
     } // fine del metodo
 
 
     /**
      * Request principale
      * Quella base usa il GET
+     * Altre usano il POST
      * In alcune request (non tutte) è obbligatorio anche il POST
+     *
+     * @param urlDomain stringa della request
      */
-    private void urlRequest() throws Exception {
+    private void urlRequest(String urlDomain) throws Exception {
         URLConnection urlConn;
         String risposta;
 
-        //--crea la connessione, elaborando il Domain
-        String domainTmp = elaboraDomain();
-        urlConn = this.creaUrlConnection(domainTmp);
-
-        //--invia i cookies di supporto, se richiesti
-        if (needCookies) {
-            this.uploadCookies(urlConn);
-        }// end of if cycle
+        //--crea la connessione
+        urlConn = this.creaUrlConnection(urlDomain);
 
         //--now we send the data POST
         //--crea una connessione di tipo POST, se richiesta
@@ -323,17 +315,17 @@ public abstract class ARequest {
     /**
      * Crea la connessione
      * <p>
-     * Elabora la stringa di domain per la request
      * Regola i parametri della connessione
+     * Invia i cookies di supporto, se richiesti
      *
+     * @param urlDomain stringa della request
      * @return connessione con la request
      */
-    private URLConnection creaUrlConnection(String domainTmp) throws Exception {
+    private URLConnection creaUrlConnection(String urlDomain) throws Exception {
         URLConnection urlConn = null;
-//        String domainTmp = elaboraDomain();
 
-        if (domainTmp != null && !domainTmp.equals("")) {
-            urlConn = new URL(domainTmp).openConnection();
+        if (urlDomain != null && !urlDomain.equals("")) {
+            urlConn = new URL(urlDomain).openConnection();
             urlConn.setDoOutput(true);
             urlConn.setRequestProperty("Accept-Encoding", "GZIP");
             urlConn.setRequestProperty("Content-Encoding", "GZIP");
@@ -341,55 +333,57 @@ public abstract class ARequest {
             urlConn.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; PPC Mac OS X; it-it) AppleWebKit/418.9 (KHTML, like Gecko) Safari/419.3");
         }// end of if cycle
 
-        // regola le property
-        if (wikiLogin != null && urlConn != null) {
-            urlConn.setRequestProperty("Cookie", wikiLogin.getCookiesText());
+        //--invia i cookies di supporto, se richiesti
+        if (needLogin) {
+            if (wikiLogin != null && urlConn != null) {
+                urlConn.setRequestProperty("Cookie", wikiLogin.getCookiesText());
+            }// end of if cycle
         }// end of if cycle
 
         return urlConn;
     } // fine del metodo
 
 
-    /**
-     * Allega i cookies alla request (upload)
-     * Serve solo la sessione
-     *
-     * @param urlConn connessione con la request
-     */
-    protected void uploadCookies(URLConnection urlConn) {
-        HashMap cookies = this.cookies;
-        Object[] keyArray;
-        Object[] valArray;
-        Object sessionObj = null;
-        String sesionTxt = "";
-        String sep = "=";
-        Object valObj = null;
-        String valTxt = "";
-
-        // controllo di congruità
-        if (urlConn != null) {
-            if (cookies != null && cookies.size() > 0) {
-
-                keyArray = cookies.keySet().toArray();
-                if (keyArray.length > 0) {
-                    sessionObj = keyArray[0];
-                }// fine del blocco if
-                if (sessionObj != null && sessionObj instanceof String) {
-                    sesionTxt = (String) sessionObj;
-                }// fine del blocco if
-
-                valArray = cookies.values().toArray();
-                if (valArray.length > 0) {
-                    valObj = valArray[0];
-                }// fine del blocco if
-                if (valObj != null && valObj instanceof String) {
-                    valTxt = (String) valObj;
-                }// fine del blocco if
-
-                urlConn.setRequestProperty("Cookie", sesionTxt + sep + valTxt);
-            }// fine del blocco if
-        }// fine del blocco if
-    } // fine del metodo
+//    /**
+//     * Allega i cookies alla request (upload)
+//     * Serve solo la sessione
+//     *
+//     * @param urlConn connessione con la request
+//     */
+//    protected void uploadCookies(URLConnection urlConn) {
+//        HashMap cookies = this.cookies;
+//        Object[] keyArray;
+//        Object[] valArray;
+//        Object sessionObj = null;
+//        String sesionTxt = "";
+//        String sep = "=";
+//        Object valObj = null;
+//        String valTxt = "";
+//
+//        // controllo di congruità
+//        if (urlConn != null) {
+//            if (cookies != null && cookies.size() > 0) {
+//
+//                keyArray = cookies.keySet().toArray();
+//                if (keyArray.length > 0) {
+//                    sessionObj = keyArray[0];
+//                }// fine del blocco if
+//                if (sessionObj != null && sessionObj instanceof String) {
+//                    sesionTxt = (String) sessionObj;
+//                }// fine del blocco if
+//
+//                valArray = cookies.values().toArray();
+//                if (valArray.length > 0) {
+//                    valObj = valArray[0];
+//                }// fine del blocco if
+//                if (valObj != null && valObj instanceof String) {
+//                    valTxt = (String) valObj;
+//                }// fine del blocco if
+//
+//                urlConn.setRequestProperty("Cookie", sesionTxt + sep + valTxt);
+//            }// fine del blocco if
+//        }// fine del blocco if
+//    } // fine del metodo
 
     /**
      * Crea il testo del POST della request
@@ -398,7 +392,13 @@ public abstract class ARequest {
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
     protected String elaboraPost() {
-        return "";
+        String testoPost = "";
+
+        if (csrfToken != null && !csrfToken.equals("")) {
+            testoPost += "&token=" + csrfToken;
+        }// end of if cycle
+
+        return testoPost;
     } // fine del metodo
 
 
@@ -454,6 +454,25 @@ public abstract class ARequest {
      * Controllo del contenuto (testo) ricevuto
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
+    protected void elaboraRispostaPeliminary(String rispostaRequest) {
+        HashMap<String, Object> mappa = LibWiki.creaMappaQuery(rispostaRequest);
+
+        if (mappa != null) {
+            if (mappa.get(CSRF_TOKEN) != null && mappa.get(CSRF_TOKEN) instanceof String) {
+                csrfToken = (String) mappa.get(CSRF_TOKEN);
+            }// end of if cycle
+        }// fine del blocco if
+
+    } // fine del metodo
+
+
+    /**
+     * Elabora la risposta
+     * <p>
+     * Informazioni, contenuto e validita della risposta
+     * Controllo del contenuto (testo) ricevuto
+     * PUO essere sovrascritto nelle sottoclassi specifiche
+     */
     protected void elaboraRisposta(String rispostaRequest) {
         HashMap<String, Object> mappa = LibWiki.creaMappaQuery(rispostaRequest);
         tokenContinua = "";
@@ -481,6 +500,8 @@ public abstract class ARequest {
                 }// end of if cycle
                 return;
             }// end of if cycle
+
+
         }// fine del blocco if
 
     } // fine del metodo
@@ -501,6 +522,7 @@ public abstract class ARequest {
 
         if (needLogin) {
             if (wikiLogin == null) {
+                risultato = TipoRisultato.noLogin;
                 return false;
             }// end of if cycle
         }// end of if cycle

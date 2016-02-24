@@ -1,5 +1,6 @@
 package it.algos.vaad.wiki.request;
 
+import it.algos.vaad.VaadApp;
 import it.algos.vaad.wiki.LibWiki;
 import it.algos.vaad.wiki.TipoRisultato;
 import it.algos.vaad.wiki.WikiLogin;
@@ -122,6 +123,10 @@ public class RequestWikiMove extends RequestWiki {
         } else {
             wikiLogin = (WikiLogin) LibSession.getAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION);
         }// end of if/else cycle
+
+        if (wikiLogin == null) {
+            wikiLogin = VaadApp.WIKI_LOGIN;
+        }// end of if cycle
 
         if (needLogin && wikiLogin == null) {
             risultato = TipoRisultato.noLogin;

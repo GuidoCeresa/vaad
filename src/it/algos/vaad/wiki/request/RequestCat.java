@@ -66,7 +66,6 @@ public class RequestCat extends ARequest {
         super.elaboraParametri();
         needContinua = true;
         needPost = false;
-        needCookies = false;
         needLogin = true;
         needToken = false;
         needBot = true;

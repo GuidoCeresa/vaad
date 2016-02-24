@@ -15,6 +15,7 @@ public class RequestWikiReadPageid extends RequestWikiRead {
      * Poi invocano il metodo doInit() della superclasse astratta
      *
      * @param wikiPageid pageid della pagina wiki su cui operare
+     * @deprecated
      */
     public RequestWikiReadPageid(long wikiPageid) {
         this.wikiPageid = wikiPageid;

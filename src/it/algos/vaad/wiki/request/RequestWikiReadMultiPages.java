@@ -32,6 +32,7 @@ public class RequestWikiReadMultiPages extends RequestWikiReadMulti {
      * Poi invocano il metodo doInit() della superclasse astratta
      *
      * @param listaPageIds elenco di pageids (long)
+     * @deprecated
      */
     public RequestWikiReadMultiPages(long[] listaPageIds) {
         super(listaPageIds);
@@ -45,6 +46,7 @@ public class RequestWikiReadMultiPages extends RequestWikiReadMulti {
      * Poi invocano il metodo doInit() della superclasse astratta
      *
      * @param arrayPageIds elenco di pageids (ArrayList)
+     * @deprecated
      */
     public RequestWikiReadMultiPages(ArrayList<Long> arrayPageIds) {
         super(arrayPageIds);
@@ -84,10 +86,10 @@ public class RequestWikiReadMultiPages extends RequestWikiReadMulti {
 
         //--recupera i valori dei parametri info
         if (arrayPages != null) {
-            risultato= TipoRisultato.letta;
+            risultato = TipoRisultato.letta;
             listaPages = new ArrayList<Page>();
             for (int k = 0; k < arrayPages.size(); k++) {
-                page = new Page((JSONObject)arrayPages.get(k));
+                page = new Page((JSONObject) arrayPages.get(k));
                 listaPages.add(page);
             }// end of for cycle
         }// end of if cycle

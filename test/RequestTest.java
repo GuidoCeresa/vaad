@@ -589,9 +589,9 @@ public class RequestTest extends VaadTest {
         //--login obbligatorio
         setLogin();
 
-        request = new RequestWikiMove("", "", "");
-        assertFalse(request.isValida());
-        assertEquals(request.getRisultato(), TipoRisultato.noLogin);
+//        request = new RequestWikiMove("", "", "");
+//        assertFalse(request.isValida());
+//        assertEquals(request.getRisultato(), TipoRisultato.noLogin);
 
         request = new RequestWikiMove(TITOLO8, TITOLO9);
         assertFalse(request.isValida());

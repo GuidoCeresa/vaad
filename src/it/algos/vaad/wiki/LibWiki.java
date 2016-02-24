@@ -5,10 +5,12 @@ package it.algos.vaad.wiki;
  * .
  */
 
+import it.algos.vaad.VaadApp;
 import it.algos.vaad.wiki.entities.wiki.Wiki;
 import it.algos.vaad.wiki.request.QueryCat;
 import it.algos.webbase.web.lib.LibArray;
 import it.algos.webbase.web.lib.LibNum;
+import it.algos.webbase.web.lib.LibSession;
 import it.algos.webbase.web.lib.LibText;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -24,6 +26,8 @@ import java.util.regex.Pattern;
  * Libreria
  */
 public abstract class LibWiki {
+
+    public static final String NOME_BOT = "Biobot";
 
     //--preferenza
     public static final String DEBUG = "debug";
@@ -2329,7 +2333,24 @@ public abstract class LibWiki {
      * @return stringa oggetto della modifica
      */
     public static String getSummary() {
-        return "[[Utente:Biobot|Biobot]]";
+        String summary = "";
+        String name = "";
+        WikiLogin wikiLogin = (WikiLogin) LibSession.getAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION);
+
+        if (wikiLogin == null) {
+            wikiLogin = VaadApp.WIKI_LOGIN;
+        }// end of if cycle
+
+        if (wikiLogin != null) {
+            name = wikiLogin.getLgusername();
+        }// end of if cycle
+
+        if (name.equals("")) {
+            name = NOME_BOT;
+        }// end of if cycle
+
+        summary = "[[Utente:" + name + "|" + name + "]]";
+        return summary;
     } // fine del metodo
 
     /**

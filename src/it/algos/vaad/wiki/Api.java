@@ -137,7 +137,7 @@ public class Api {
      */
     @SuppressWarnings("all")
     public static String leggePagina(String title) {
-        Request request = new RequestWikiReadTitle(title);
+        ARequest request = new RequestRead(title);
 
         if (request != null && request.getRisultato() == TipoRisultato.letta) {
             return request.getTestoResponse();
@@ -153,8 +153,9 @@ public class Api {
      * @param pageId della pagina
      * @return contenuto completo (json) della pagina (con i metadati mediawiki)
      */
+    @SuppressWarnings("all")
     public static String leggePagina(long pageId) {
-        Request request = new RequestWikiReadPageid(pageId);
+        ARequest request = new RequestRead(pageId);
 
         if (request != null && request.getRisultato() == TipoRisultato.letta) {
             return request.getTestoResponse();
@@ -508,8 +509,8 @@ public class Api {
      * @return true se la pagina esiste
      */
     public static boolean esiste(String title) {
-        QueryReadTitle query = new QueryReadTitle(title);
-        return query.isLetta();
+        ARequest request = new RequestRead(title);
+        return request.getRisultato() == TipoRisultato.letta;
     } // fine del metodo
 
     /**
@@ -662,7 +663,6 @@ public class Api {
      * Restituisce una lista (ArrayList) di titoli sia delle voci che delle subcategorie
      *
      * @param titleCat della categoria da ricercare
-     *
      * @return lista titoli sia delle voci che delle subcategorie
      */
     public static ArrayList<String> leggeCatTitles(String titleCat) {
