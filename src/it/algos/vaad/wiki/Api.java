@@ -600,13 +600,13 @@ public class Api {
      */
     public static boolean scriveVoce(String wikiTitle, String newText, String summary) {
         boolean status = false;
-        Request request;
+        ARequest request;
 
         if (wikiTitle.equals("") || newText.equals("")) {
             return false;
         }// end of if cycle
 
-        request = new RequestWikiWrite(wikiTitle, newText, summary);
+        request = new RequestWrite(wikiTitle, newText, summary);
         if (request.getRisultato() == TipoRisultato.modificaRegistrata | request.getRisultato() == TipoRisultato.nochange) {
             status = true;
         }// end of if cycle
@@ -803,10 +803,10 @@ public class Api {
      */
     public static boolean sposta(String oldTitle, String newTitle, String summary) {
         boolean status = false;
-        RequestWikiMove request;
+        ARequest request;
 
         if (oldTitle != null && !oldTitle.equals("") && newTitle != null && !newTitle.equals("")) {
-            request = new RequestWikiMove(oldTitle, newTitle, summary);
+            request = new RequestMove(oldTitle, newTitle, summary);
             if (request.isValida() && request.getRisultato() == TipoRisultato.spostata) {
                 status = true;
             }// end of if cycle

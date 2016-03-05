@@ -2923,14 +2923,14 @@ public abstract class LibWiki {
         String testoOut = "";
         String tagStx = "[[";
         String pipe = "|";
-        String par = " (";
+        String spazio = " ";
         String oldLink = tagStx + oldTitle;
         String newLink = tagStx + newTitle;
         String newSub = "";
         int posIni = 0;
         int posEnd = 0;
         String nextCar;
-        String nextNext2Car;
+        String nextNextCar;
         String prima;
         String estratto;
         String dopo = testoIn;
@@ -2946,8 +2946,8 @@ public abstract class LibWiki {
             if (nextCar.equals(pipe)) {
                 newSub = newLink;
             } else {
-                nextNext2Car = dopo.substring(posEnd, posEnd + 2);
-                if (nextNext2Car.equals(par)) {
+                nextNextCar = dopo.substring(posEnd, posEnd + spazio.length());
+                if (nextNextCar.equals(spazio)) {
                     newSub = estratto;
                 } else {
                     newSub = tagStx + modificaLink(newTitle);

@@ -5,6 +5,7 @@ import it.algos.vaad.wiki.request.QueryCat;
 import it.algos.vaad.wiki.request.QueryReadTitle;
 import it.algos.vaad.wiki.request.RequestWikiWrite;
 import it.algos.webbase.web.lib.LibArray;
+import it.algos.webbase.web.lib.LibNum;
 import it.algos.webbase.web.lib.LibTime;
 import org.json.simple.JSONObject;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class LibWikiTest extends VaadTest {
     private static String SPAZI_MULTIPLI_PIU_ESTERNI = " Abc    def ghi   lmn ";
     private static String SPAZIO_SINGOLO = "Abc def ghi lmn";
     private static String SPAZIO_SINGOLO_PIU_ESTERNI = " Abc def ghi lmn ";
-
+    private static int DIM_DELTA = 30000;
     private ArrayList<String> listaPrevista = null;
     private ArrayList<String> listaOttenuta = null;
 
@@ -1010,7 +1011,7 @@ public class LibWikiTest extends VaadTest {
     }// end of single test
 
 
-    @Test
+//    @Test @todo oscurato perché ci mette troppo (10 secondi circa) - Funzionante comunque
     /**
      * Differenza tra due array
      *
@@ -1022,7 +1023,7 @@ public class LibWikiTest extends VaadTest {
         long inizio;
         long fine;
         long durata;
-        int dim = 300000;
+        int dim = DIM_DELTA;
         ArrayList<Integer> listaUno = new ArrayList<Integer>();
         ArrayList<Integer> listaDue = new ArrayList<Integer>();
         ArrayList<Integer> listaDifferenza;
@@ -1040,11 +1041,11 @@ public class LibWikiTest extends VaadTest {
         fine = System.currentTimeMillis();
         durata = fine - inizio;
 
-        int a = 87;
+        System.out.println("Metodo LibWiki.delta: " + LibNum.format(dim) + " interi in " + LibNum.format(durata) + " millisecondi");
     }// end of single test
 
 
-    @Test
+//    @Test @todo oscurato perché ci mette troppo (10 secondi circa) - Funzionante comunque
     /**
      * Differenza tra due array
      *
@@ -1056,7 +1057,7 @@ public class LibWikiTest extends VaadTest {
         long inizio;
         long fine;
         long durata;
-        int dim = 300000;
+        int dim = DIM_DELTA;
         ArrayList<Long> listaUno = new ArrayList<Long>();
         ArrayList<Long> listaDue = new ArrayList<Long>();
         ArrayList<Long> listaDifferenza;
@@ -1074,10 +1075,10 @@ public class LibWikiTest extends VaadTest {
         fine = System.currentTimeMillis();
         durata = fine - inizio;
 
-        int a = 87;
+        System.out.println("Metodo LibWiki.delta: " + LibNum.format(dim) + " long in " + LibNum.format(durata) + " millisecondi");
     }// end of single test
 
-    @Test
+//    @Test @todo oscurato perché ci mette troppo (20 secondi circa) - Funzionante comunque
     /**
      * Differenza tra due array
      *
@@ -1089,7 +1090,7 @@ public class LibWikiTest extends VaadTest {
         long inizio;
         long fine;
         long durata;
-        int dim = 300000;
+        int dim = DIM_DELTA;
         ArrayList<Long> listaUno = new ArrayList<Long>();
         ArrayList<Long> listaDue = new ArrayList<Long>();
         ArrayList<Long> listaDifferenza;
@@ -1118,7 +1119,7 @@ public class LibWikiTest extends VaadTest {
         fine = System.currentTimeMillis();
         durata = fine - inizio;
 
-        int a = 87;
+        System.out.println("Metodo ArrayList.retainAll e removeAll: " + LibNum.format(dim) + " long in " + LibNum.format(durata) + " millisecondi");
     }// end of single test
 
     /**
@@ -1221,7 +1222,7 @@ public class LibWikiTest extends VaadTest {
         return getRigaBase(false, descrizione, nota, oldValue, newValue, prefCode);
     }// fine del metodo
 
-    @Test
+//    @Test @todo oscurato perché ci mette troppo (10 secondi circa) - Funzionante comunque
     /**
      * Crea una table di classe wikitable
      * <p>
@@ -1424,8 +1425,6 @@ public class LibWikiTest extends VaadTest {
         testoPagina += LibWiki.creaTable(mappa);
         new RequestWikiWrite(PAGINA_PROVA, testoPagina, "", wikiLogin);
 
-
-
     }// end of single test
 
 
@@ -1436,18 +1435,18 @@ public class LibWikiTest extends VaadTest {
 
         previsto = "George Abbey (calciatore)|George Abbey";
         ottenuto = LibWiki.modificaLink(modificato);
-        assertEquals(previsto,ottenuto);
+        assertEquals(previsto, ottenuto);
 
 
         contenuto = "Scritto completo dove George Abbey compare diverse volte";
         previsto = "Scritto completo dove George Abbey compare diverse volte";
         ottenuto = LibWiki.modificaLink(contenuto, sorgente, modificato);
-        assertEquals(previsto,ottenuto);
+        assertEquals(previsto, ottenuto);
 
         contenuto = "Scritto completo dove George Abbey compare diverse volte, anche come [[George Abbey]] oppure Abbey ma anche";
         previsto = "Scritto completo dove George Abbey compare diverse volte, anche come [[George Abbey (calciatore)|George Abbey]] oppure Abbey ma anche";
         ottenuto = LibWiki.modificaLink(contenuto, sorgente, modificato);
-        assertEquals(previsto,ottenuto);
+        assertEquals(previsto, ottenuto);
 
 
         contenuto = "Scritto completo dove George Abbey compare diverse volte, anche come [[George Abbey]] oppure Abbey ma anche";
@@ -1455,7 +1454,7 @@ public class LibWikiTest extends VaadTest {
         previsto = "Scritto completo dove George Abbey compare diverse volte, anche come [[George Abbey (calciatore)|George Abbey]] oppure Abbey ma anche";
         previsto += " sotto forma di [[George Abbey (calciatore)|George Abbey]]";
         ottenuto = LibWiki.modificaLink(contenuto, sorgente, modificato);
-        assertEquals(previsto,ottenuto);
+        assertEquals(previsto, ottenuto);
 
 
         contenuto = "Scritto completo dove George Abbey compare diverse volte, anche come [[George Abbey]] oppure Abbey ma anche";
@@ -1467,7 +1466,25 @@ public class LibWikiTest extends VaadTest {
         previsto += " [[George Abbey (scultore)]] ovvero [[George Abbey (cantante)|George Abbey]] e anche [[George Abbey (calciatore)|Abbey]]";
 
         ottenuto = LibWiki.modificaLink(contenuto, sorgente, modificato);
-        assertEquals(previsto,ottenuto);
+        assertEquals(previsto, ottenuto);
+    }// end of method
+
+    @Test
+    public void modificaLink2() {
+        sorgente = "Morton Downey";
+        modificato = "Morton Downey (cantante)";
+
+
+        contenuto = "*[[Morton Downey]], cantante e attore statunitense";
+        previsto = "*[[Morton Downey (cantante)|Morton Downey]], cantante e attore statunitense";
+        ottenuto = LibWiki.modificaLink(contenuto, sorgente, modificato);
+        assertEquals(previsto, ottenuto);
+
+
+        contenuto = "*[[Morton Downey Jr.]], attore e showman statunitense";
+        previsto = "*[[Morton Downey Jr.]], attore e showman statunitense";
+        ottenuto = LibWiki.modificaLink(contenuto, sorgente, modificato);
+        assertEquals(previsto, ottenuto);
 
     }// end of method
 

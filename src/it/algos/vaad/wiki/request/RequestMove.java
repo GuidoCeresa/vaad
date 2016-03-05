@@ -141,7 +141,7 @@ public class RequestMove extends ARequest {
     @Override
     protected void elaboraRisposta(String rispostaRequest) {
         String errorMessage = LibWiki.getError(rispostaRequest);
-
+        valida = true;
         risultato = TipoRisultato.spostata;
 
         if (errorMessage.equals(TipoRisultato.noto.toString())) {
