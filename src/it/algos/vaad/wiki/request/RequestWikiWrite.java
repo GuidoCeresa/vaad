@@ -66,6 +66,7 @@ import java.util.HashMap;
  * <p>
  * Link: https://www.mediawiki.org/wiki/API:Edit
  */
+@Deprecated
 public class RequestWikiWrite extends RequestWiki {
 
     private static final String SUMMARY = "fix vari";
