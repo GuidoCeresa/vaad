@@ -4,8 +4,6 @@ import it.algos.vaad.wiki.Api;
 import it.algos.vaad.wiki.LibWiki;
 import it.algos.vaad.wiki.TipoRisultato;
 import it.algos.webbase.web.lib.LibArray;
-import it.algos.webbase.web.lib.LibNum;
-import it.algos.webbase.web.lib.LibTime;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +42,6 @@ public class RequestCat extends ARequest {
     protected int limite;
 
 
-
     /**
      * Costruttore completo
      *
@@ -69,6 +66,7 @@ public class RequestCat extends ARequest {
         needLogin = true;
         needToken = false;
         needBot = true;
+        limite = 5000;
     }// fine del metodo
 
 
@@ -152,7 +150,6 @@ public class RequestCat extends ARequest {
         }// end of if cycle
 
     } // fine del metodo
-
 
 
 } // fine della classe
