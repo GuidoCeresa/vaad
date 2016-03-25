@@ -42,6 +42,7 @@ public abstract class LibWiki {
     public static final String NEW_BIO = "NewBio";
     public static final String REF = "<ref>";
     public static final String NOTE = "<!--";
+    public static final String PARAGRAFO = "==";
     public static final String QUADRA_INI = "[";
     public static final String QUADRE_INI = QUADRA_INI + QUADRA_INI;
     public static final String QUADRA_END = "]";
@@ -1816,7 +1817,7 @@ public abstract class LibWiki {
      * La mappa in ingresso contiene ns, pageid e title
      * Utilizzo solo il pageid (Integer)
      *
-     * @param mappa standard (valori String) in ingresso
+     * @param listaIn standard (valori String) in ingresso
      * @return mappa typizzata secondo PagePar
      */
     private static ArrayList<Integer> converteListaCat(ArrayList listaIn) {
@@ -2212,6 +2213,27 @@ public abstract class LibWiki {
         return stringaOut.trim();
     } // fine del metodo
 
+    /**
+     * Elimina (eventuali) doppi uguali (paragrafo) in testa e coda della stringa.
+     * Funziona solo se i doppi uguali sono esattamente in TESTA ed in CODA alla stringa
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param stringaIn in ingresso
+     * @return stringa con doppi uguali eliminati
+     */
+    public static String setNoParagrafo(String stringaIn) {
+        String stringaOut = stringaIn;
+
+        if (stringaIn != null && stringaIn.length() > 0) {
+            stringaOut = stringaIn.trim();
+            stringaOut = levaTesta(stringaOut, PARAGRAFO);
+            stringaOut = levaCoda(stringaOut, PARAGRAFO);
+        }// fine del blocco if
+
+        return stringaOut.trim();
+    } // fine del metodo
+
 
     /**
      * Aggiunge doppie graffe in testa e coda alla stringa.
@@ -2281,6 +2303,30 @@ public abstract class LibWiki {
             stringaPulita = setNoBold(stringaIn);
             if (!stringaPulita.equals("")) {
                 stringaOut = BOLD + stringaPulita + BOLD;
+            }// fine del blocco if-else
+        }// fine del blocco if
+
+        return stringaOut.trim();
+    } // fine del metodo
+
+    /**
+     * Aggiunge doppi uguali in testa e coda alla stringa per creare un paragrafo.
+     * Aggiunge SOLO se gia non esistono (ne doppie, ne singole)
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     * Elimina eventuali uguali già presenti, per evitare di metterle doppi
+     *
+     * @param stringaIn in ingresso
+     * @return stringa con doppi uguali aggiunti
+     */
+    public static String setParagrafo(String stringaIn) {
+        String stringaOut = stringaIn;
+        String stringaPulita;
+
+        if (stringaIn != null && stringaIn.length() > 0) {
+            stringaPulita = setNoParagrafo(stringaIn);
+            if (!stringaPulita.equals("")) {
+                stringaOut = PARAGRAFO + stringaPulita + PARAGRAFO;
             }// fine del blocco if-else
         }// fine del blocco if
 
