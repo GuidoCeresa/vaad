@@ -1004,14 +1004,35 @@ public class LibWikiTest extends VaadTest {
      * @return testo del modulo
      */
     public void leggeModulo() {
-        ottenuto = LibWiki.leggeModulo(TITOLO_MODULO);
+        LinkedHashMap<String, Object> mappa;
+        String keyAttivita = "abate";
+        String keyProfessione = "accademica";
+        Object value;
 
-        HashMap<String, String> mappa = LibWiki.leggeMappaModulo(TITOLO_MODULO);
+        mappa = LibWiki.leggeMappaModulo(TITOLO_MODULO_ATTIVITA);
+        if (mappa.containsKey(keyAttivita)) {
+            value = mappa.get(keyAttivita);
+            assertTrue(value instanceof String);
+        }// end of if cycle
+
+        mappa = LibWiki.leggeMappaModulo(TITOLO_MODULO_PROFESSIONE);
+        if (mappa.containsKey(keyProfessione)) {
+            value = mappa.get(keyProfessione);
+            assertTrue(value instanceof String);
+        }// end of if cycle
+
+        mappa = LibWiki.leggeMappaModulo(TITOLO_MODULO_GENERE);
+        if (mappa.containsKey(keyAttivita)) {
+            value = mappa.get(keyAttivita);
+            assertTrue(value instanceof ArrayList);
+        }// end of if cycle
+
         int a = 87;
     }// end of single test
 
 
 //    @Test @todo oscurato perché ci mette troppo (10 secondi circa) - Funzionante comunque
+
     /**
      * Differenza tra due array
      *
@@ -1046,6 +1067,7 @@ public class LibWikiTest extends VaadTest {
 
 
 //    @Test @todo oscurato perché ci mette troppo (10 secondi circa) - Funzionante comunque
+
     /**
      * Differenza tra due array
      *
@@ -1079,6 +1101,7 @@ public class LibWikiTest extends VaadTest {
     }// end of single test
 
 //    @Test @todo oscurato perché ci mette troppo (20 secondi circa) - Funzionante comunque
+
     /**
      * Differenza tra due array
      *
@@ -1223,6 +1246,7 @@ public class LibWikiTest extends VaadTest {
     }// fine del metodo
 
 //    @Test @todo oscurato perché ci mette troppo (10 secondi circa) - Funzionante comunque
+
     /**
      * Crea una table di classe wikitable
      * <p>

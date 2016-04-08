@@ -2284,6 +2284,35 @@ public abstract class LibWiki {
         return stringaOut.trim();
     } // fine del metodo
 
+    /**
+     * Aggiunge doppie quadre in testa e coda alla stringa.
+     * Aggiunge SOLO se gia non esistono (ne doppie, ne singole)
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     * Elimina eventuali quadre già presenti, per evitare di metterle doppi
+     *
+     * @param paginaWiki da linkare
+     * @return stringa con doppie quadre aggiunte
+     */
+    public static String setLink(String paginaWiki) {
+        return setQuadre(paginaWiki);
+    } // fine del metodo
+
+    /**
+     * Aggiunge doppie quadre in testa e coda alla stringa.
+     * Aggiunge SOLO se gia non esistono (ne doppie, ne singole)
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     * Elimina eventuali quadre già presenti, per evitare di metterle doppi
+     *
+     * @param paginaWiki   da linkare
+     * @param nomeVisibile da mostrare
+     * @return stringa con doppie quadre aggiunte
+     */
+    public static String setLink(String paginaWiki, String nomeVisibile) {
+        return setQuadre(paginaWiki + PIPE + nomeVisibile);
+    } // fine del metodo
+
 
     /**
      * Aggiunge tripli apici (grassetto) in testa ed in coda della stringa.
@@ -2460,21 +2489,23 @@ public abstract class LibWiki {
      * @param titolo della pagina da cui recuperare la mappa
      * @return mappa chiave/valore dei campi singolare/plurale
      */
-    public static LinkedHashMap<String, String> leggeMappaModulo(String titolo) {
-        LinkedHashMap<String, String> mappa = null;
+    public static LinkedHashMap<String, Object> leggeMappaModulo(String titolo) {
+        LinkedHashMap<String, Object> mappa = null;
         String testoModulo = "";
         String[] righe;
         String chiave;
         String valore;
         String tagUgu = "=";
         String[] partiDellaRiga;
+        String[] partiDelValore;
+        ArrayList arrayValori;
 
         if (!titolo.equals("")) {
             testoModulo = leggeModulo(titolo);
         }// fine del blocco if
 
         if (!testoModulo.equals("")) {
-            mappa = new LinkedHashMap<String, String>();
+            mappa = new LinkedHashMap<String, Object>();
             righe = testoModulo.split("\n");
             for (String riga : righe) {
                 partiDellaRiga = riga.split(tagUgu);
@@ -2485,10 +2516,23 @@ public abstract class LibWiki {
                     chiave = LibText.levaTesta(chiave, "\"");
                     chiave = LibText.levaCoda(chiave, "\"");
                     valore = partiDellaRiga[1];
-                    valore = LibText.levaTesta(valore, "\"");
                     valore = LibText.levaCoda(valore, ",");
-                    valore = LibText.levaCoda(valore, "\"");
-                    mappa.put(chiave, valore);
+                    if (valore.contains(",")) {
+                        arrayValori=new ArrayList();
+                        partiDelValore = valore.split(",");
+                        for (String stringa : partiDelValore) {
+                            stringa = LibText.levaTesta(stringa, "{");
+                            stringa = LibText.levaCoda(stringa, "}");
+                            stringa = LibText.levaTesta(stringa, "\"");
+                            stringa = LibText.levaCoda(stringa, "\"");
+                            arrayValori.add(stringa);
+                        }// end of for cycle
+                        mappa.put(chiave, arrayValori);
+                    } else {
+                        valore = LibText.levaTesta(valore, "\"");
+                        valore = LibText.levaCoda(valore, "\"");
+                        mappa.put(chiave, valore);
+                    }// end of if/else cycle
                 }// fine del blocco if
             }// end of for cycle
         }// fine del blocco if

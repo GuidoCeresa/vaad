@@ -31,7 +31,9 @@ public abstract class VaadTest {
     protected static String TITOLO_ALTRO = "Utente:Gac/Sandbox4";
     protected static String TITOLO_BLOCCATO = "Utente:Rompiballe11";
     protected static String TITOLO_BACK = "Lago di Ha! Ha!";
-    protected static String TITOLO_MODULO = "Modulo:Bio/Plurale_attività";
+    protected static String TITOLO_MODULO_ATTIVITA = "Modulo:Bio/Plurale_attività";
+    protected static String TITOLO_MODULO_PROFESSIONE = "Modulo:Bio/Link attività";
+    protected static String TITOLO_MODULO_GENERE = "Modulo:Bio/Plurale attività genere";
     protected static String SUMMARY = "Sola scrittura";
     protected static int PAGEID = 698528;
     protected static int PAGEID_UTF8 = 2286987;
