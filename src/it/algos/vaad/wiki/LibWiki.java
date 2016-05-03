@@ -2315,7 +2315,7 @@ public abstract class LibWiki {
 
 
     /**
-     * Aggiunge tripli apici (grassetto) in testa ed in coda della stringa.
+     * Aggiunge tripli apici (grassetto) in testa ed in coda alla stringa.
      * Aggiunge SOLO se gia non esistono
      * Se arriva una stringa vuota, restituisce una stringa vuota
      * Elimina spazi vuoti iniziali e finali
@@ -2336,6 +2336,16 @@ public abstract class LibWiki {
         }// fine del blocco if
 
         return stringaOut.trim();
+    } // fine del metodo
+
+    /**
+     * Aggiunge tripli apici (grassetto) in testa ed in coda al numero.
+     *
+     * @param numero in ingresso
+     * @return stringa con tripli apici aggiunte
+     */
+    public static String setBold(Number numero) {
+        return setBold(numero + "");
     } // fine del metodo
 
     /**
@@ -2518,7 +2528,7 @@ public abstract class LibWiki {
                     valore = partiDellaRiga[1];
                     valore = LibText.levaCoda(valore, ",");
                     if (valore.contains(",")) {
-                        arrayValori=new ArrayList();
+                        arrayValori = new ArrayList();
                         partiDelValore = valore.split(",");
                         for (String stringa : partiDelValore) {
                             stringa = LibText.levaTesta(stringa, "{");
@@ -2552,7 +2562,7 @@ public abstract class LibWiki {
         if (!testoIn.equals("")) {
             testoOut = "{{Div col}}";
             testoOut += A_CAPO;
-            testoOut += testoIn;
+            testoOut += testoIn.trim();
             testoOut += A_CAPO;
             testoOut += "{{Div col end}}";
         }// fine del blocco if
@@ -3115,6 +3125,40 @@ public abstract class LibWiki {
         if (urlConn != null && !cookiesTxt.equals("")) {
             urlConn.setRequestProperty("Cookie", cookiesTxt);
         }// fine del blocco if
+    } // fine del metodo
+
+    /**
+     * Prepara una riga di una lista
+     * Prepone un asterisco
+     * Racchiude tra parentesi quadre
+     * Pospone un ritorno a capo
+     *
+     * @param rigaIn ingresso
+     */
+    public static String setRigaQuadre(String rigaIn) {
+        String rigaOut = "*";
+
+        rigaOut += setQuadre(rigaIn);
+        rigaOut += A_CAPO;
+
+        return rigaOut;
+    } // fine del metodo
+
+    /**
+     * Prepara una riga di categoria
+     * Racchiude tra parentesi quadre
+     * Pospone un ritorno a capo
+     *
+     * @param rigaIn ingresso
+     */
+    public static String setRigaCat(String rigaIn) {
+        String rigaOut = "";
+        String tag = "Categoria:";
+
+        rigaOut = QUADRE_INI + tag + rigaIn + QUADRE_END;
+        rigaOut += A_CAPO;
+
+        return rigaOut;
     } // fine del metodo
 
 } // fine della classe astratta
