@@ -98,6 +98,8 @@ public abstract class VaadTest {
     protected void setLogin() {
         String nick = "gacbot";
         String password = "fulvia";
+        nick = "Gacbot@Gacbot";
+        password = "tftgv0vhl16c0qnmfdqide3jqdp1i5m7";
 
         if (wikiLogin == null) {
             wikiLogin = new WikiLogin(nick, password);

@@ -84,6 +84,7 @@ public class WikiLogin {
     private static final String SECOND_TOKEN = "lgtoken";
     private static final String COOKIE_PREFIX = "cookieprefix";
     private static final String SESSION_ID = "sessionid";
+    private static final String COOKIE_SESSION = "itwikiSession";
     private static final String USER_ID = "lguserid";
     private static final String USER_NAME = "lgusername";
 
@@ -405,6 +406,11 @@ public class WikiLogin {
             }// fine del blocco if
         }// fine del blocco if
 
+        HashMap<String, Object> mappaCookies = getCookies();
+        if (mappaCookies.get(COOKIE_SESSION) != null && mappaCookies.get(COOKIE_SESSION) instanceof String) {
+            this.setSessionId((String) mappaCookies.get(COOKIE_SESSION));
+        }// end of if cycle
+
     } // fine del metodo
 
 
@@ -477,7 +483,9 @@ public class WikiLogin {
         String sep = "=";
         String sessionValue = this.getSessionId();
 
-        return sessionKey + sep + sessionValue;
+        HashMap<String, Object> mappa = getCookies();
+        String value = (String) mappa.get(sessionKey);
+        return sessionKey + sep + value;
     } // fine del metodo
 
 

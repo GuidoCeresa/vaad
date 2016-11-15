@@ -34,8 +34,8 @@ public class VaadServlet extends AlgosServlet {
     public void sessionInit(SessionInitEvent event) throws ServiceException {
         super.sessionInit(event);
         AlgosApp.USE_SECURITY = true;
-        Toolbar.ALTEZZA_BOTTONI = 40;
-        Toolbar.LARGHEZZA_BOTTONI = 120;
+//        Toolbar.ALTEZZA_BOTTONI = 40;
+//        Toolbar.LARGHEZZA_BOTTONI = 120;
     }// end of method
 
 }// end of class

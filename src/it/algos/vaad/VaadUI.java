@@ -1,13 +1,13 @@
 package it.algos.vaad;
 
 import com.vaadin.annotations.Theme;
-import it.algos.vaad.ui.VaadAlgosUI;
-import it.algos.vaad.wiki.WikiLogin;
+import it.algos.webbase.web.login.LoginEvent;
 import it.algos.webbase.web.module.ModulePop;
+import it.algos.webbase.web.ui.AlgosUI;
 
 //@Theme("valo")
 @Theme("algos")
-public class VaadUI extends VaadAlgosUI {
+public class VaadUI extends AlgosUI {
 
     private ModulePop moduloPartenza;
 
@@ -15,7 +15,7 @@ public class VaadUI extends VaadAlgosUI {
      * Crea i menu specifici
      * Sovrascritto nella sottoclasse
      */
-    @Override
+//    @Override
     protected void addAllModuli() {
 //        moduloPartenza = new VersMod();
 
@@ -28,7 +28,7 @@ public class VaadUI extends VaadAlgosUI {
      * Modulo da visualizzare alla partenza
      * Sovrascritto nella sottoclasse
      */
-    @Override
+//    @Override
     protected String startModulo() {
 //        return LogMod.MENU_ADDRESS;
 //        LibWiki.download("Nicola Conte (ufficiale)");
@@ -37,4 +37,8 @@ public class VaadUI extends VaadAlgosUI {
         return "";
     }// end of method
 
+    @Override
+    public void onUserLogin(LoginEvent loginEvent) {
+
+    }
 }//end of UI class

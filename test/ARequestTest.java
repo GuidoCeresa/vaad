@@ -132,7 +132,7 @@ public class ARequestTest extends VaadTest {
         numOttenuto = page.getPageid();
         assertEquals(numOttenuto, numPrevisto);
 
-        boolPrevisto = true;
+        boolPrevisto = false;
         boolOttenuto = (boolean) mappaObj.get(PagePar.minor.toString());
         assertEquals(boolOttenuto, boolPrevisto);
 
@@ -162,13 +162,13 @@ public class ARequestTest extends VaadTest {
         //--login obbligatorio - adesso funziona
         request = new RequestCat(TITOLO_CAT_BREVE);
         assertTrue(request.isValida());
-        checkListeCat(2, 12);
+        checkListeCat(1, 12);
     }// end of single test
 
     @Test
     public void cat2() {
         request = new RequestCat(TITOLO_CAT_MEDIA);
-        checkListeCat(36, 0);
+        checkListeCat(35, 0);
     }// end of single test
 
 
@@ -283,8 +283,21 @@ public class ARequestTest extends VaadTest {
         request = new RequestWrite(TITOLO_3, testoB, summaryB);
         assertTrue(request.isValida());
         assertEquals(request.getRisultato(), TipoRisultato.nochange);
+    }// end of single test
+
+    @Test
+    /**
+     * Query standard per scrivere il contenuto di una pagina
+     * Usa il titolo della pagina
+     * Necessita di Login per scrivere
+     */
+    public void requestWikiReadMultiPages() {
+        RequestWikiReadMultiPages  requestRMP = new RequestWikiReadMultiPages(arrayPageIds);
+        assertNotNull(requestRMP);
 
     }// end of single test
+
+
 
     private void ottenutoNullo() {
         assertFalse(request.isValida());

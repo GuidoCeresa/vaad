@@ -2,6 +2,7 @@ package it.algos.vaad.wiki.request;
 
 import it.algos.vaad.wiki.LibWiki;
 import it.algos.vaad.wiki.TipoRisultato;
+import it.algos.vaad.wiki.WikiLogin;
 
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -109,7 +110,6 @@ public class RequestWrite extends ARequest {
         needBot = true;
         needPost = true;
     }// fine del metodo
-
 
     /**
      * Stringa del browser per la request

@@ -5,9 +5,9 @@ package it.algos.vaad.wiki;
  * .
  */
 
-import it.algos.vaad.VaadApp;
-import it.algos.vaad.wiki.entities.wiki.Wiki;
-import it.algos.vaad.wiki.request.QueryCat;
+import it.algos.vaad.*;
+import it.algos.vaad.wiki.entities.wiki.*;
+import it.algos.vaad.wiki.request.*;
 import it.algos.webbase.web.lib.LibArray;
 import it.algos.webbase.web.lib.LibNum;
 import it.algos.webbase.web.lib.LibSession;
@@ -2430,7 +2430,7 @@ public abstract class LibWiki {
             name = wikiLogin.getLgusername();
         }// end of if cycle
 
-        if (name.equals("")) {
+        if (name == null || name.equals("")) {
             name = NOME_BOT;
         }// end of if cycle
 

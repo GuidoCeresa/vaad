@@ -28,7 +28,7 @@ public class LibWikiTest extends VaadTest {
     private static String SPAZI_MULTIPLI_PIU_ESTERNI = " Abc    def ghi   lmn ";
     private static String SPAZIO_SINGOLO = "Abc def ghi lmn";
     private static String SPAZIO_SINGOLO_PIU_ESTERNI = " Abc def ghi lmn ";
-    private static int DIM_DELTA = 30000;
+    private static int DIM_DELTA = 300000;
     private ArrayList<String> listaPrevista = null;
     private ArrayList<String> listaOttenuta = null;
 
@@ -1033,13 +1033,14 @@ public class LibWikiTest extends VaadTest {
 
 //    @Test @todo oscurato perché ci mette troppo (10 secondi circa) - Funzionante comunque
 
+    @Test
     /**
-     * Differenza tra due array
-     *
-     * @param primo   array
-     * @param secondo array
-     * @return differenza
-     */
+      * Differenza tra due array
+      *
+      * @param primo   array
+      * @param secondo array
+      * @return differenza
+      */
     public void delta() {
         long inizio;
         long fine;
@@ -1068,6 +1069,7 @@ public class LibWikiTest extends VaadTest {
 
 //    @Test @todo oscurato perché ci mette troppo (10 secondi circa) - Funzionante comunque
 
+    @Test
     /**
      * Differenza tra due array
      *
@@ -1102,6 +1104,7 @@ public class LibWikiTest extends VaadTest {
 
 //    @Test @todo oscurato perché ci mette troppo (20 secondi circa) - Funzionante comunque
 
+    @Test
     /**
      * Differenza tra due array
      *

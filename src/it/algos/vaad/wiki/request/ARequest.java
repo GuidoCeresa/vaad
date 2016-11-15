@@ -327,8 +327,8 @@ public abstract class ARequest {
         if (urlDomain != null && !urlDomain.equals("")) {
             urlConn = new URL(urlDomain).openConnection();
             urlConn.setDoOutput(true);
-            urlConn.setRequestProperty("Accept-Encoding", "GZIP");
-            urlConn.setRequestProperty("Content-Encoding", "GZIP");
+//            urlConn.setRequestProperty("Accept-Encoding", "GZIP");
+//            urlConn.setRequestProperty("Content-Encoding", "GZIP");
             urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
             urlConn.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; PPC Mac OS X; it-it) AppleWebKit/418.9 (KHTML, like Gecko) Safari/419.3");
         }// end of if cycle
@@ -430,7 +430,7 @@ public abstract class ARequest {
         String stringa;
 
         input = urlConn.getInputStream();
-        inputReader = new InputStreamReader(input, ENCODE);
+        inputReader = new InputStreamReader(input, "UTF8");
 
         // read the response
         readBuffer = new BufferedReader(inputReader);

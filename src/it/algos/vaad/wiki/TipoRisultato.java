@@ -1,11 +1,9 @@
 package it.algos.vaad.wiki;
 
 /**
- * Created by gac on 11 nov 2015.
- * .
+ * Created by gac on 22 ott 2016.
  */
 public enum TipoRisultato {
-
     erroreGenerico("Errore generico."),
     nonTrovata("Pagina inesistente."),
     esistente("Pagina esistente."),
@@ -64,4 +62,4 @@ public enum TipoRisultato {
         this.tag = tag;
     }//end of setter method
 
-} // fine della Enumeration
+}
