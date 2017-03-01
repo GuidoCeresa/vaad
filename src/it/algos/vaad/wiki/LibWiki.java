@@ -5,9 +5,9 @@ package it.algos.vaad.wiki;
  * .
  */
 
-import it.algos.vaad.*;
-import it.algos.vaad.wiki.entities.wiki.*;
-import it.algos.vaad.wiki.request.*;
+import it.algos.vaad.VaadApp;
+import it.algos.vaad.wiki.entities.wiki.Wiki;
+import it.algos.vaad.wiki.request.QueryCat;
 import it.algos.webbase.web.lib.LibArray;
 import it.algos.webbase.web.lib.LibNum;
 import it.algos.webbase.web.lib.LibSession;
@@ -165,6 +165,7 @@ public abstract class LibWiki {
      *
      * @param testo da spazzolare
      * @param tag   da cercare
+     *
      * @return numero di occorrenze - zero se non ce ne sono
      */
     public static int getNumTag(String testo, String tag) {
@@ -191,6 +192,7 @@ public abstract class LibWiki {
      * Restituisce il numero di occorrenze di una coppia di graffe iniziali nel testo.
      *
      * @param testo da spazzolare
+     *
      * @return numero di occorrenze
      * zero se non ce ne sono
      */
@@ -202,6 +204,7 @@ public abstract class LibWiki {
      * Restituisce il numero di occorrenze di una coppia di graffe finali nel testo.
      *
      * @param testo da spazzolare
+     *
      * @return numero di occorrenze
      * zero se non ce ne sono
      */
@@ -216,6 +219,7 @@ public abstract class LibWiki {
      * @param testo  da spazzolare
      * @param tagIni tag iniziale
      * @param tagEnd tag finale
+     *
      * @return vero se il numero di tagIni è uguale al numero di tagEnd
      */
     public static boolean isPariTag(String testo, String tagIni, String tagEnd) {
@@ -238,6 +242,7 @@ public abstract class LibWiki {
      * Ordine ed annidamento NON considerato
      *
      * @param testo da spazzolare
+     *
      * @return vero se il numero di GRAFFE_INI è uguale al numero di GRAFFE_END
      */
     public static boolean isPariGraffe(String testo) {
@@ -253,6 +258,7 @@ public abstract class LibWiki {
      *
      * @param entrata stringa in ingresso
      * @param testa   da eliminare
+     *
      * @return uscita stringa convertita
      */
     public static String levaTesta(String entrata, String testa) {
@@ -281,6 +287,7 @@ public abstract class LibWiki {
      *
      * @param entrata stringa in ingresso
      * @param coda    da eliminare
+     *
      * @return uscita stringa convertita
      */
     public static String levaCoda(String entrata, String coda) {
@@ -308,6 +315,7 @@ public abstract class LibWiki {
      * @param testoIn    in ingresso
      * @param oldStringa da eliminare
      * @param newStringa da sostituire
+     *
      * @return testoOut convertito
      */
     public static String sostituisce(String testoIn, String oldStringa, String newStringa) {
@@ -346,6 +354,7 @@ public abstract class LibWiki {
      * Se non riesce a pareggiare le graffe, ritorna una stringa nulla
      *
      * @param templateIn da spazzolare
+     *
      * @return template
      */
     public static String chiudeTmpl(String templateIn) {
@@ -503,6 +512,7 @@ public abstract class LibWiki {
      * Crea una mappa standard (valori reali) dal testo JSON di una pagina action=query
      *
      * @param textJSON in ingresso
+     *
      * @return mappa query (valori reali)
      */
     public static HashMap<String, Object> creaMappaQuery(String textJSON) {
@@ -513,6 +523,7 @@ public abstract class LibWiki {
      * Crea una mappa standard (valori reali) dal testo JSON di una pagina action=query
      *
      * @param textJSON in ingresso
+     *
      * @return mappa query (valori reali)
      */
     public static HashMap<String, Object> creaMappaQuery(String textJSON, int pos) {
@@ -573,6 +584,7 @@ public abstract class LibWiki {
      * Crea una mappa standard (valori reali) dal testo JSON di una pagina action=edit
      *
      * @param textJSON in ingresso
+     *
      * @return mappa edit (valori reali)
      */
     public static HashMap<String, Object> creaMappaEdit(String textJSON) {
@@ -653,6 +665,7 @@ public abstract class LibWiki {
      * Crea una mappa standard (valori reali) dal testo JSON di una pagina action=move
      *
      * @param textJSON in ingresso
+     *
      * @return mappa edit (valori reali)
      */
     public static HashMap<String, Object> creaMappaMove(String textJSON) {
@@ -702,6 +715,7 @@ public abstract class LibWiki {
      * Crea una mappa login (valori String) dal testo JSON di una pagina di login
      *
      * @param textJSON in ingresso
+     *
      * @return mappa standard (valori String)
      */
     public static HashMap<String, Object> creaMappaLogin(String textJSON) {
@@ -742,6 +756,7 @@ public abstract class LibWiki {
      * Crea una mappa token (valori String) dal testo JSON di una preliminary request
      *
      * @param textJSON in ingresso
+     *
      * @return mappa standard (valori String)
      */
     public static HashMap<String, Object> creaMappaToken(String textJSON) {
@@ -786,6 +801,7 @@ public abstract class LibWiki {
      * Crea una mappa standard (valori reali) dal testo JSON di una pagina
      *
      * @param textJSON in ingresso
+     *
      * @return mappa standard (valori reali)
      */
     public static HashMap<String, Object> creaMappa(String textJSON) {
@@ -818,6 +834,7 @@ public abstract class LibWiki {
      * Crea una mappa per leggere solo i timestamps dal testo JSON di una pagina
      *
      * @param textJSON in ingresso
+     *
      * @return mappa con due array: timestamps validi e timestamps non validi
      */
     public static HashMap<String, ArrayList<WrapTime>> creaArrayWrapTime(String textJSON) {
@@ -895,6 +912,7 @@ public abstract class LibWiki {
      * Il parametro ''anon'' è presente nel ritorno della Request SOLO se l'ultimo utente è un IP
      *
      * @param mappa in ingresso
+     *
      * @return mappa in uscita
      */
     public static HashMap<String, Object> patchMappa(HashMap<String, Object> mappa) {
@@ -915,6 +933,7 @@ public abstract class LibWiki {
      * Crea una mappa standard (valori String) dalle mappe JSON parziali
      *
      * @param batchcomplete flag di controllo
+     *
      * @return mappa standard (valori String)
      */
     public static HashMap<String, Object> mixJSON(boolean batchcomplete, String token) {
@@ -927,6 +946,7 @@ public abstract class LibWiki {
      * @param batchcomplete flag di controllo
      * @param arrayPages    parametri base (3) ed info (1)
      * @param arrayRev      parametri revisions (12)
+     *
      * @return mappa standard (valori String)
      */
     public static HashMap<String, Object> mixJSON(boolean batchcomplete, JSONArray arrayPages, JSONArray arrayRev, String token) {
@@ -939,6 +959,7 @@ public abstract class LibWiki {
      * @param batchcomplete flag di controllo
      * @param arrayPages    parametri base (3) ed info (1)
      * @param arrayRev      parametri revisions (12)
+     *
      * @return mappa standard (valori String)
      */
     public static HashMap<String, Object> mixJSON(boolean batchcomplete, JSONArray arrayPages, JSONArray arrayRev, String token, int pos) {
@@ -982,6 +1003,7 @@ public abstract class LibWiki {
      * Estrae un (eventuale) messaggio di errore dal testo JSON di una pagina
      *
      * @param textJSON in ingresso
+     *
      * @return messaggio di errore
      */
     public static String getWarning(String textJSON) {
@@ -1014,6 +1036,7 @@ public abstract class LibWiki {
      * Estrae un (eventuale) messaggio di errore dal testo JSON di un login
      *
      * @param textJSON in ingresso
+     *
      * @return messaggio di errore
      */
     public static String getError(String textJSON) {
@@ -1041,6 +1064,7 @@ public abstract class LibWiki {
      * Estrae un (eventuale) token testo JSON di una preliminaryRequest
      *
      * @param textJSON in ingresso
+     *
      * @return csrfToken
      */
     public static String getToken(String textJSON) {
@@ -1076,6 +1100,7 @@ public abstract class LibWiki {
      * Crea una mappa standard (valori String) dal testo JSON di una pagina
      *
      * @param textJSON in ingresso
+     *
      * @return mappa standard (valori String)
      * @deprecated
      */
@@ -1104,6 +1129,7 @@ public abstract class LibWiki {
      * Poi, se ci sono, i parametri della revisione
      *
      * @param mappaJson JSONObject in ingresso
+     *
      * @return mappa standard (valori String)
      * @deprecated
      */
@@ -1144,6 +1170,7 @@ public abstract class LibWiki {
      * Estrae una mappa standard da un JSONObject
      *
      * @param mappaJson JSONObject in ingresso
+     *
      * @return mappa standard (valori String)
      */
     private static HashMap<String, Object> estraeMappaJson(JSONObject mappaJson) {
@@ -1181,6 +1208,7 @@ public abstract class LibWiki {
      * Considera SOLO i valori della Enumeration PagePar
      *
      * @param arrayJson JSONArray in ingresso
+     *
      * @return mappa standard (valori String)
      */
     private static HashMap<String, Object> estraeMappaJsonPar(JSONArray arrayJson) {
@@ -1193,6 +1221,7 @@ public abstract class LibWiki {
      *
      * @param arrayJson JSONArray in ingresso
      * @param pos       elemento da estrarre
+     *
      * @return mappa standard (valori String)
      */
     public static HashMap<String, Object> estraeMappaJsonPar(JSONArray arrayJson, int pos) {
@@ -1224,6 +1253,7 @@ public abstract class LibWiki {
      * Estrae una mappa standard da un JSONArray
      *
      * @param mappaJson JSONArray in ingresso
+     *
      * @return mappa standard (valori String)
      */
     private static HashMap<String, Object> estraeMappaJson(JSONArray mappaJson) {
@@ -1245,6 +1275,7 @@ public abstract class LibWiki {
      * Converte i typi di una mappa secondo i parametri PagePar
      *
      * @param mappaIn standard (valori String) in ingresso
+     *
      * @return mappa typizzata secondo PagePar
      */
     public static HashMap<String, Object> converteMappa(HashMap mappaIn) {
@@ -1284,6 +1315,7 @@ public abstract class LibWiki {
      * Crea un array delle categorie dal testo JSON di una pagina
      *
      * @param textJSON in ingresso
+     *
      * @return array di oggetti Json
      */
     private static JSONArray creaArrayCatJson(String textJSON) {
@@ -1300,6 +1332,7 @@ public abstract class LibWiki {
      * Crea un array delle pagine back dal testo JSON di una pagina
      *
      * @param textJSON in ingresso
+     *
      * @return arry di oggetti Json
      */
     private static JSONArray creaArrayBackJson(String textJSON) {
@@ -1316,6 +1349,7 @@ public abstract class LibWiki {
      * Crea una lista di pagine (valori pageids) da un array di oggetti Json
      *
      * @param objArray array di oggetti Json
+     *
      * @return lista pageid (valori Long)
      */
     private static ArrayList<Long> creaListaBaseLongJson(JSONArray objArray) {
@@ -1328,6 +1362,7 @@ public abstract class LibWiki {
      *
      * @param objArray          array di oggetti Json
      * @param nameSpaceBaseOnly flag per selezionare solo il namespace=0
+     *
      * @return lista pageid (valori Long)
      */
     private static ArrayList<Long> creaListaBaseLongJson(JSONArray objArray, boolean nameSpaceBaseOnly) {
@@ -1376,6 +1411,7 @@ public abstract class LibWiki {
      * Crea una lista di pagine (valori title) da un array di oggetti Json
      *
      * @param objArray array di oggetti Json
+     *
      * @return lista title (valori String)
      */
     private static ArrayList<String> creaListaBaseTxtJson(JSONArray objArray) {
@@ -1388,6 +1424,7 @@ public abstract class LibWiki {
      *
      * @param objArray          array di oggetti Json
      * @param nameSpaceBaseOnly flag per selezionare solo il namespace=0
+     *
      * @return lista title (valori String)
      */
     private static ArrayList<String> creaListaBaseTxtJson(JSONArray objArray, boolean nameSpaceBaseOnly) {
@@ -1436,6 +1473,7 @@ public abstract class LibWiki {
      * Crea una lista di pagine (valori pageids) dal testo JSON di una categoria
      *
      * @param textJSON in ingresso
+     *
      * @return lista pageid (valori Long)
      * @deprecated
      */
@@ -1454,6 +1492,7 @@ public abstract class LibWiki {
      * Crea una lista di pagine (valori title) dal testo JSON di una categoria
      *
      * @param textJSON in ingresso
+     *
      * @return lista title (valori String)
      * @deprecated
      */
@@ -1473,6 +1512,7 @@ public abstract class LibWiki {
      * Crea una lista di pagine back (valori pageids) dal testo JSON di una pagina puntata
      *
      * @param textJSON in ingresso
+     *
      * @return lista pageid (valori Long)
      */
     public static ArrayList<Long> creaListaBackLongJson(String textJSON) {
@@ -1494,6 +1534,7 @@ public abstract class LibWiki {
      * Crea una lista di voci back (valori pageids) dal testo JSON di una pagina puntata
      *
      * @param textJSON in ingresso
+     *
      * @return lista pageid (valori Long) solo delle voci (namespace=0)
      */
     public static ArrayList<Long> creaListaBackLongVociJson(String textJSON) {
@@ -1515,6 +1556,7 @@ public abstract class LibWiki {
      * Crea una lista di pagine back (valori title) dal testo JSON di una pagina puntata
      *
      * @param textJSON in ingresso
+     *
      * @return lista title (valori String)
      */
     public static ArrayList<String> creaListaBackTxtJson(String textJSON) {
@@ -1536,6 +1578,7 @@ public abstract class LibWiki {
      * Crea una lista di voci back (valori title) dal testo JSON di una pagina puntata
      *
      * @param textJSON in ingresso
+     *
      * @return lista title (valori String) solo delle voci (namespace=0)
      */
     public static ArrayList<String> creaListaBackTxtVociJson(String textJSON) {
@@ -1557,6 +1600,7 @@ public abstract class LibWiki {
      * Crea una lista di wrapper dal testo JSON di una pagina per le categorie
      *
      * @param textJSON in ingresso
+     *
      * @return lista wrapper
      */
     public static ArrayList<WrapCat> creaListaWrapJson(String textJSON) {
@@ -1572,6 +1616,7 @@ public abstract class LibWiki {
      * Crea una lista di wrapper da un JSONArray per le categorie
      *
      * @param objArray in ingresso
+     *
      * @return lista wrapper
      */
     private static ArrayList<WrapCat> creaListaWrapJson(JSONArray objArray) {
@@ -1617,6 +1662,7 @@ public abstract class LibWiki {
      * namespace 0/14 e title/pageid
      *
      * @param lista in ingresso
+     *
      * @return mappa con le quattro liste
      */
     public static HashMap<String, ArrayList> getMappaWrap(ArrayList<WrapCat> lista) {
@@ -1660,6 +1706,7 @@ public abstract class LibWiki {
      * namespace 0/14 e title/pageid
      *
      * @param textJSON in ingresso
+     *
      * @return mappa con le quattro liste
      */
     public static HashMap<String, ArrayList> getMappaWrap(String textJSON) {
@@ -1682,6 +1729,7 @@ public abstract class LibWiki {
      * Crea un array delle pagine wikimedia dal testo JSON di una risposta multiPagine action=query
      *
      * @param textJSON in ingresso
+     *
      * @return array delle singole pagine
      */
     public static JSONArray getArrayPagesJSON(String textJSON) {
@@ -1712,6 +1760,7 @@ public abstract class LibWiki {
      * Crea una mappa standard (valori reali) da una singola page JSON di una multi-pagina action=query
      *
      * @param paginaJSON in ingresso
+     *
      * @return mappa query (valori reali)
      */
     public static HashMap<String, Object> creaMappaJSON(JSONObject paginaJSON) {
@@ -1751,6 +1800,7 @@ public abstract class LibWiki {
      * Controlla se esiste un warnings nella risposta del server
      *
      * @param textJSON in ingresso
+     *
      * @return true se il testo in ingresso contiene un warning
      */
 
@@ -1771,6 +1821,7 @@ public abstract class LibWiki {
      * Estrae il valore del parametro continue dal testo JSON di una pagina
      *
      * @param textJSON in ingresso
+     *
      * @return parametro continue
      */
     public static String creaCatContinue(String textJSON) {
@@ -1818,6 +1869,7 @@ public abstract class LibWiki {
      * Utilizzo solo il pageid (Integer)
      *
      * @param listaIn standard (valori String) in ingresso
+     *
      * @return mappa typizzata secondo PagePar
      */
     private static ArrayList<Integer> converteListaCat(ArrayList listaIn) {
@@ -1836,6 +1888,7 @@ public abstract class LibWiki {
      * Crea una stringa di testo, con tutti i valori della lista, separati dal pipe
      *
      * @param lista (valori Integer) in ingresso
+     *
      * @return stringa di valori
      */
     public static String creaListaPageids(ArrayList<Long> lista) {
@@ -1856,6 +1909,7 @@ public abstract class LibWiki {
      * Formato: 2015-06-30T10:18:05Z
      *
      * @param timestampText in ingresso
+     *
      * @return data in uscita
      */
     public static Timestamp convertTxtTime(String timestampText) {
@@ -1867,6 +1921,7 @@ public abstract class LibWiki {
      * Formato: 2015-06-30T10:18:05Z
      *
      * @param dataTxt in ingresso
+     *
      * @return data in uscita
      */
     public static Date convertTxtData(String dataTxt) {
@@ -1960,6 +2015,7 @@ public abstract class LibWiki {
      *
      * @param par     parametro PagePar in ingresso
      * @param valueIn in ingresso
+     *
      * @return valore della classe corretta
      */
     private static Object fixValueMap(PagePar par, Object valueIn) {
@@ -2026,6 +2082,7 @@ public abstract class LibWiki {
      *
      * @param key     del parametro PagePar in ingresso
      * @param valueIn in ingresso
+     *
      * @return valore della classe corretta
      */
     private static Object fixValueMap(String key, Object valueIn) {
@@ -2037,6 +2094,7 @@ public abstract class LibWiki {
      *
      * @param primo   array
      * @param secondo array
+     *
      * @return differenza
      */
     public static ArrayList delta(ArrayList primo, ArrayList secondo) {
@@ -2152,6 +2210,7 @@ public abstract class LibWiki {
      * Elimina spazi vuoti iniziali e finali
      *
      * @param stringaIn in ingresso
+     *
      * @return stringa con doppie graffe eliminate
      */
     public static String setNoGraffe(String stringaIn) {
@@ -2175,6 +2234,7 @@ public abstract class LibWiki {
      * Elimina spazi vuoti iniziali e finali
      *
      * @param stringaIn in ingresso
+     *
      * @return stringa con doppie quadre eliminate
      */
     public static String setNoQuadre(String stringaIn) {
@@ -2199,6 +2259,7 @@ public abstract class LibWiki {
      * Elimina spazi vuoti iniziali e finali
      *
      * @param stringaIn in ingresso
+     *
      * @return stringa con tripli apici eliminati
      */
     public static String setNoBold(String stringaIn) {
@@ -2220,6 +2281,7 @@ public abstract class LibWiki {
      * Elimina spazi vuoti iniziali e finali
      *
      * @param stringaIn in ingresso
+     *
      * @return stringa con doppi uguali eliminati
      */
     public static String setNoParagrafo(String stringaIn) {
@@ -2243,6 +2305,7 @@ public abstract class LibWiki {
      * Elimina eventuali graffe già presenti, per evitare di metterle doppi
      *
      * @param stringaIn in ingresso
+     *
      * @return stringa con doppie graffe aggiunte
      */
     public static String setGraffe(String stringaIn) {
@@ -2268,6 +2331,7 @@ public abstract class LibWiki {
      * Elimina eventuali quadre già presenti, per evitare di metterle doppi
      *
      * @param stringaIn in ingresso
+     *
      * @return stringa con doppie quadre aggiunte
      */
     public static String setQuadre(String stringaIn) {
@@ -2292,6 +2356,7 @@ public abstract class LibWiki {
      * Elimina eventuali quadre già presenti, per evitare di metterle doppi
      *
      * @param paginaWiki da linkare
+     *
      * @return stringa con doppie quadre aggiunte
      */
     public static String setLink(String paginaWiki) {
@@ -2307,6 +2372,7 @@ public abstract class LibWiki {
      *
      * @param paginaWiki   da linkare
      * @param nomeVisibile da mostrare
+     *
      * @return stringa con doppie quadre aggiunte
      */
     public static String setLink(String paginaWiki, String nomeVisibile) {
@@ -2322,6 +2388,7 @@ public abstract class LibWiki {
      * Elimina eventuali apici già presenti, per evitare di metterli doppi
      *
      * @param stringaIn in ingresso
+     *
      * @return stringa con tripli apici aggiunte
      */
     public static String setBold(String stringaIn) {
@@ -2342,6 +2409,7 @@ public abstract class LibWiki {
      * Aggiunge tripli apici (grassetto) in testa ed in coda al numero.
      *
      * @param numero in ingresso
+     *
      * @return stringa con tripli apici aggiunte
      */
     public static String setBold(Number numero) {
@@ -2356,15 +2424,36 @@ public abstract class LibWiki {
      * Elimina eventuali uguali già presenti, per evitare di metterle doppi
      *
      * @param stringaIn in ingresso
+     *
      * @return stringa con doppi uguali aggiunti
      */
     public static String setParagrafo(String stringaIn) {
-        String stringaOut = stringaIn;
+        return setParagrafo(stringaIn, 0);
+    } // fine del metodo
+
+
+    /**
+     * Aggiunge doppi uguali in testa e coda alla stringa per creare un paragrafo.
+     * Aggiunge SOLO se gia non esistono (ne doppie, ne singole)
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     * Elimina eventuali uguali già presenti, per evitare di metterle doppi
+     *
+     * @param stringaIn in ingresso
+     * @param numVoci   nel paragrafo
+     *
+     * @return stringa con doppi uguali aggiunti
+     */
+    public static String setParagrafo(String stringaIn, int numVoci) {
+        String stringaOut = "";
         String stringaPulita;
 
         if (stringaIn != null && stringaIn.length() > 0) {
             stringaPulita = setNoParagrafo(stringaIn);
             if (!stringaPulita.equals("")) {
+                if (numVoci > 0) {
+                    stringaPulita += " <small><small>(" + numVoci + ")</small></small>";
+                }// end of if cycle
                 stringaOut = PARAGRAFO + stringaPulita + PARAGRAFO;
             }// fine del blocco if-else
         }// fine del blocco if
@@ -2378,6 +2467,7 @@ public abstract class LibWiki {
      * Elimina spazi vuoti iniziali e finali
      *
      * @param stringaIn in ingresso
+     *
      * @return stringa con i tag ref iniziale e finale
      */
     public static String setRef(String stringaIn) {
@@ -2394,6 +2484,7 @@ public abstract class LibWiki {
      * Crea una lista standard (valori String) dewlle chiavi del testo JSON di una pagina
      *
      * @param textJSON in ingresso
+     *
      * @return lista standard di chiavi (valori String)
      */
     public static ArrayList<String> creaListaKeys(String textJSON) {
@@ -2451,6 +2542,7 @@ public abstract class LibWiki {
      * Legge il modulo dal testo della pagina
      *
      * @param testo da cui recuperare il modulo
+     *
      * @return testo del modulo
      */
     public static String estraeTestoModulo(String testo) {
@@ -2477,6 +2569,7 @@ public abstract class LibWiki {
      * Legge il modulo dalla pagina
      *
      * @param titolo della pagina da cui recuperare il modulo
+     *
      * @return testo del modulo
      */
     public static String leggeModulo(String titolo) {
@@ -2497,6 +2590,7 @@ public abstract class LibWiki {
      * Legge la mappa del modulo della pagina
      *
      * @param titolo della pagina da cui recuperare la mappa
+     *
      * @return mappa chiave/valore dei campi singolare/plurale
      */
     public static LinkedHashMap<String, Object> leggeMappaModulo(String titolo) {
@@ -2554,6 +2648,7 @@ public abstract class LibWiki {
      * Suddivide la lista in due colonne.
      *
      * @param testoIn in ingresso
+     *
      * @return listaOut in uscita
      */
     public static String listaDueColonne(String testoIn) {
@@ -2591,6 +2686,7 @@ public abstract class LibWiki {
      * Sono formattati se la colonna NON è sortable
      *
      * @param mappa con i vari parametri e valori
+     *
      * @return testo
      */
     public static String creaTable(HashMap mappa) {
@@ -2644,6 +2740,7 @@ public abstract class LibWiki {
      * Cost.KEY_MAPPA_LISTA
      *
      * @param mappa con i vari parametri e valori
+     *
      * @return testo
      */
     @SuppressWarnings("all")
@@ -3160,5 +3257,63 @@ public abstract class LibWiki {
 
         return rigaOut;
     } // fine del metodo
+
+    /**
+     * Aggiunge il tag html small in testa ed in coda alla stringa
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa con i tag ref iniziale e finale
+     */
+    public static String setSmall(String stringaIn) {
+        String stringaOut = stringaIn;
+
+        if (stringaIn != null && stringaIn.length() > 0) {
+            stringaOut = "<small>" + stringaOut + "</small>";
+        }// fine del blocco if
+
+        return stringaOut.trim();
+    } // fine del metodo
+
+    /**
+     * Aggiunge il tag html italic in testa ed in coda alla stringa
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa con i tag ref iniziale e finale
+     */
+    public static String setItalic(String stringaIn) {
+        String stringaOut = stringaIn;
+
+        if (stringaIn != null && stringaIn.length() > 0) {
+            stringaOut = "<i>" + stringaOut + "</i>";
+        }// fine del blocco if
+
+        return stringaOut.trim();
+    } // fine del metodo
+
+    /**
+     * Aggiunge il tag html strong in testa ed in coda alla stringa
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa con i tag ref iniziale e finale
+     */
+    public static String setStrong(String stringaIn) {
+        String stringaOut = stringaIn;
+
+        if (stringaIn != null && stringaIn.length() > 0) {
+            stringaOut = "<b>" + stringaOut + "</b>";
+        }// fine del blocco if
+
+        return stringaOut.trim();
+    } // fine del metodo
+
 
 } // fine della classe astratta
