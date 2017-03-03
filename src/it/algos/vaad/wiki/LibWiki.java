@@ -365,6 +365,12 @@ public abstract class LibWiki {
 
         templateOut = templateIn.substring(posIni, posEnd + GRAFFE_END.length()).trim();
 
+        if (templateOut.length()<3) {
+            posEnd = templateIn.indexOf(GRAFFE_END);
+            templateOut = templateIn.substring(posIni, posEnd + GRAFFE_END.length()).trim();
+            return templateOut;
+        }// end of if cycle
+
         while (!pari) {
             posEnd = templateIn.indexOf(GRAFFE_END, posEnd + GRAFFE_END.length());
             if (posEnd != -1) {
